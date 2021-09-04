@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "pre-law-viewer"
+version = "0.1.0"
+description = "Making changes in laws more transparent."
+authors = ["Tobias Sterbak <hello@tobiassterbak.com>, Noa Tamir <hello@noatamir.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+jupyterlab = "^3.1.10"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+black = "^21.8b0"
+isort = "^5.9.3"
+pylint = "^2.10.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
