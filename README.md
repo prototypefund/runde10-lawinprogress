@@ -5,14 +5,19 @@ Das Online-Tool "Pre-Law-Viewer" soll Gesetzentwürfe und deren Konsequenzen fü
 
 # Overview
 
-├── pyproject.toml
-├── README.rst
-├── poetry_demo
+```
+├── pyproject.toml      --> Config for the project
+├── README.md           --> 
+├── LICENSE             --> MIT license 
+├── Makefile            --> Make target for setup, testing and cleaning
+├── data/               --> Folder with some data
+├── doc/                --> Documentation and notes
+├── notebooks/          --> Experimental notebooks
+├── pre_law_viewer/     --> Main package
 │   └── __init__.py
-└── tests
-    ├── __init__.py
-        └── test_poetry_demo.py
-
+└── tests/              --> Test for the main package
+    └── __init__.py
+```
 
 # Setup
 
