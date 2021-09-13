@@ -10,6 +10,8 @@ python = "^3.9"
 jupyterlab = "^3.1.10"
 pdfplumber = "^0.5.28"
 PyAwk = "^0.1.0"
+anytree = "^2.8.0"
+spacy = "^3.1.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
