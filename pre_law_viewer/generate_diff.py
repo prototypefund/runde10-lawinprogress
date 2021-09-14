@@ -8,17 +8,16 @@ import os
 import click
 
 from pre_law_viewer.apply_changes.apply_changes import apply_changes
-from pre_law_viewer.parsing.change_law_utils import (
-    expand_text,
+from pre_law_viewer.parsing.change_law_utils import expand_text, preprocess_raw_law
+from pre_law_viewer.parsing.parse_change_law import parse_change_request_line
+from pre_law_viewer.parsing.parse_source_law import LawTextNode, parse_source_law_tree
+from pre_law_viewer.parsing.proposal_pdf_to_artikles import (
     extract_law_titles,
     extract_raw_proposal,
     extract_seperate_change_proposals,
-    preprocess_raw_law,
     read_pdf_law,
     remove_inkrafttreten,
 )
-from pre_law_viewer.parsing.parse_change_law import parse_change_request_line
-from pre_law_viewer.parsing.parse_source_law import LawTextNode, parse_source_law_tree
 
 
 @click.command()
