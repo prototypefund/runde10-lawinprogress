@@ -1,10 +1,17 @@
 """Main functiosn to apply changes to parsed source laws."""
 import copy
-import regex as re
 from typing import List
+
+import regex as re
 from anytree import findall
+
+from pre_law_viewer.apply_changes.edit_functions import (
+    _delete_after,
+    _insert_after,
+    _rephrase,
+    _replace,
+)
 from pre_law_viewer.parsing.parse_source_law import LawTextNode
-from pre_law_viewer.apply_changes.edit_functions import _replace, _insert_after, _rephrase, _delete_after
 
 
 def _find_path(location_list: List[str], parse_tree: LawTextNode) -> List[LawTextNode]:
@@ -38,7 +45,7 @@ def apply_changes(law_tree: LawTextNode, changes: dict) -> LawTextNode:
         elif change_type == "insert_after":
             print("APPLIED {}:\n{}".format(change_type, change))
             res_law_tree = _insert_after(res_law_tree, path, change)
-        #elif change_type == "rephrase":
+        # elif change_type == "rephrase":
         #    print("APPLIED {}:\n{}".format(change_type, change))
         #    res_law_tree = _rephrase(res_law_tree, path, change)
         elif change_type == "delete_after":

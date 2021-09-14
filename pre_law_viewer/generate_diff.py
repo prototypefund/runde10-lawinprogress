@@ -4,30 +4,49 @@ Example usage:
     poetry run python ./pre_law_viewer/generate_diff.py -c data/0483-21.pdf
 """
 import os
+
 import click
-from pre_law_viewer.parsing.change_law_utils import read_pdf_law, preprocess_raw_law, expand_text
-from pre_law_viewer.parsing.change_law_utils import extract_raw_proposal, extract_seperate_change_proposals, extract_law_titles, remove_inkrafttreten
-from pre_law_viewer.parsing.parse_change_law import parse_change_request_line
-from pre_law_viewer.parsing.parse_source_law import parse_source_law_tree, LawTextNode
+
 from pre_law_viewer.apply_changes.apply_changes import apply_changes
+from pre_law_viewer.parsing.change_law_utils import (
+    expand_text,
+    extract_law_titles,
+    extract_raw_proposal,
+    extract_seperate_change_proposals,
+    preprocess_raw_law,
+    read_pdf_law,
+    remove_inkrafttreten,
+)
+from pre_law_viewer.parsing.parse_change_law import parse_change_request_line
+from pre_law_viewer.parsing.parse_source_law import LawTextNode, parse_source_law_tree
 
 
 @click.command()
-@click.option('change_law_path', '-c', help='Path to the change law pdf.', type=click.Path(exists=True))
-#@click.option('source_law_path', '-s', help='Path to the source law txt.', type=click.Path(exists=True))
-@click.option('output_path', '-o', help='Where to write the output (logs and modified laws).', default="./output/")
+@click.option(
+    "change_law_path",
+    "-c",
+    help="Path to the change law pdf.",
+    type=click.Path(exists=True),
+)
+# @click.option('source_law_path', '-s', help='Path to the source law txt.', type=click.Path(exists=True))
+@click.option(
+    "output_path",
+    "-o",
+    help="Where to write the output (logs and modified laws).",
+    default="./output/",
+)
 def generate_diff(change_law_path, output_path):
     """Generate the diff from the change law and the source law."""
     click.echo("Started parsing {}".format(change_law_path))
-    # read the change law 
+    # read the change law
     change_law_raw = read_pdf_law(change_law_path)
-    
+
     # idenfify the different laws affected
     change_law_extract = extract_raw_proposal(change_law_raw)
     proposals_list = extract_seperate_change_proposals(change_law_extract)
     law_titles = extract_law_titles(proposals_list)
     law_titles, proposals_list = remove_inkrafttreten(law_titles, proposals_list)
-    
+
     # parse and apply changes for every law that should be changed
     for law_title, change_law in zip(law_titles, proposals_list):
         # find and load the source law
@@ -39,7 +58,7 @@ def generate_diff(change_law_path, output_path):
         except:
             click.echo("Cannot find source law {}. SKIPPING".format(law_title))
             continue
-        
+
         # format the change requests
         clean_change_law = preprocess_raw_law(change_law)
         clean_text = expand_text(clean_change_law)
@@ -51,24 +70,24 @@ def generate_diff(change_law_path, output_path):
             change_requests.extend(res)
 
         # parse source law
-        
-        parsed_law_tree = parse_source_law_tree(
-            text=source_law_text
-        )
+
+        parsed_law_tree = parse_source_law_tree(text=source_law_text)
 
         # apply changes to the source law
         res_law_tree = apply_changes(parsed_law_tree, change_requests)
 
         #  save final version to file
-        write_path = "{}{}_modified_{}.txt".format(output_path, law_title, change_law_path.split("/")[-1])
+        write_path = "{}{}_modified_{}.txt".format(
+            output_path, law_title, change_law_path.split("/")[-1]
+        )
         click.echo("Write results to {}".format(write_path))
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        with open(write_path, 'w') as f:
+        with open(write_path, "w") as f:
             f.write(res_law_tree._to_text())
     click.echo("DONE.")
-    
-    
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     generate_diff()
