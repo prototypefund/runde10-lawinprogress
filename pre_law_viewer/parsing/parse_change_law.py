@@ -1,5 +1,5 @@
 """Functions to parse the change law from a line-by-line representation."""
-from typing import List, Tuple
+from typing import List
 
 import regex as re
 
@@ -65,7 +65,8 @@ def parse_change_text(line: str) -> List[str]:
 def parse_change_request_line(line: str) -> List[dict]:
     """Parse the actions of one line of change requests.
 
-    Look for certain keywords in the line (i.e. "eingefügt", "gestrichen", etc) to identify what should be done in this change.
+    Look for certain keywords in the line (i.e. "eingefügt", "gestrichen", etc)
+    to identify what should be done in this change.
     Then parse change location and change text.
 
     Args:
@@ -118,7 +119,8 @@ def parse_change_request_line(line: str) -> List[dict]:
         }
         res.append(res_dict)
     else:
-        # We assume every line is a change, so if nothing is found, we don't know yet how to handle it.
+        # We assume every line is a change, so if nothing is found,
+        # we don't know yet how to handle it.
         res_dict = {
             "location": parse_change_location(line),
             "text": parse_change_text(line),

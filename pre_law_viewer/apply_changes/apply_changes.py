@@ -2,7 +2,6 @@
 import copy
 from typing import List
 
-import regex as re
 from anytree import findall
 
 from pre_law_viewer.apply_changes.edit_functions import (
@@ -15,7 +14,15 @@ from pre_law_viewer.parsing.parse_source_law import LawTextNode
 
 
 def _find_path(location_list: List[str], parse_tree: LawTextNode) -> List[LawTextNode]:
-    # find path to node
+    """Find path to node in the provided tree.
+    
+    Args:
+        location_list: List of location identifiers that represent a path.
+        parse_tree: A tree of LawTextNodes to collect the nodes on the path from.
+    
+    Returns:
+        A list of LawTextNodes representing the path to the location.
+    """
     path = []
     res = parse_tree
     for loc in location_list:
@@ -35,6 +42,15 @@ def _find_path(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
 
 
 def apply_changes(law_tree: LawTextNode, changes: dict) -> LawTextNode:
+    """Apply the provided changes to the provided tree.
+    
+    Args:
+        law_tree: A tree of LawTextNodes
+        changes: A dict with changes, containing "location", "how" and "text" to specify the changes.
+    
+    Returns:
+        Tree of LawTextNodes with the requested changes if we where able to apply them.
+    """
     res_law_tree = copy.deepcopy(law_tree)
     for change in changes:
         path = _find_path(location_list=change["location"], parse_tree=res_law_tree)

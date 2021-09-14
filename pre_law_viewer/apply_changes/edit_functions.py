@@ -21,7 +21,8 @@ def _insert_after(
     law_tree: LawTextNode, path: List[LawTextNode], change: dict
 ) -> LawTextNode:
     # insert text after a given text
-    # assumes list of change["text"] to be of even length, uneven positions are the location after which to insert, even positions are the text to insert.
+    # assumes list of change["text"] to be of even length, uneven positions are the location
+    # after which to insert, even positions are the text to insert.
     if len(change["text"]) % 2 == 0:
         for idx in range(len(change["text"]) // 2):
             path[-1].text = re.sub(
@@ -37,7 +38,8 @@ def _insert_after(
             re.match(r"^\([a-z1-9]\)", change["text"][0]),
         ]
     ):
-        # if there is only one text to insert and it starts with a bulletidentifier, add a new node to the tree
+        # if there is only one text to insert and 
+        # it starts with a bulletidentifier add a new node to the tree
         _ = LawTextNode(
             text=change["text"][0], bulletpoint="(new)", parent=path[-1].parent
         )

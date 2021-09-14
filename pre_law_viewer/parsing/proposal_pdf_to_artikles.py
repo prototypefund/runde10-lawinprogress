@@ -1,4 +1,3 @@
-import glob
 from typing import List, Tuple
 
 import pdfplumber
@@ -34,15 +33,15 @@ def read_pdf_law(filename: str) -> str:
 
 
 def extract_raw_proposal(text: str) -> str:
-    text = re.split("\nArtikel 1.*?\n", text, maxsplit=1)[1].split("Begründung")[0]
+    text = re.split(r"\nArtikel 1.*?\n", text, maxsplit=1)[1].split("Begründung")[0]
     return text
 
 
 def extract_seperate_change_proposals(text: str) -> List[str]:
     proposals = []
-    proposals.extend(re.split("Artikel\s{1,2}([1-9]|[1-9][0-9]|100)\s{0,2}\n", text))
+    proposals.extend(re.split(r"Artikel\s{1,2}([1-9]|[1-9][0-9]|100)\s{0,2}\n", text))
 
-    artikels = re.findall("Artikel\s{1,2}([1-9]|[1-9][0-9]|100)\s{0,2}\n", text)
+    artikels = re.findall(r"Artikel\s{1,2}([1-9]|[1-9][0-9]|100)\s{0,2}\n", text)
     artikels_int = [int(artikel) for artikel in artikels]
     # compute the sum of the artikel numbers using the formula for an arithmetic series
     # using only the first and last artikel numbers, and the length of the list
@@ -53,9 +52,11 @@ def extract_seperate_change_proposals(text: str) -> List[str]:
     # uncomment next line to see if see if the next condition is met or not
     ## print(int(raw_sum_artikels), int(math_sum_artikels))
 
-    # if the direct sum is larger than the arithmetic series, then we had an artikel from some paragraph
+    # if the direct sum is larger than the arithmetic series,
+    # then we had an artikel from some paragraph
     # sneak into the titel list, by mentioned as "Artikel [1-100]" just before a line break :(((
-    # in this case we need to go through the list and check that the artikel numbers are regularly increasing by 1
+    # in this case we need to go through the list and check that
+    # the artikel numbers are regularly increasing by 1
     if int(raw_sum_artikels) != int(math_sum_artikels):
         proposal_list = []
         proposal_list.append(proposals[0])
@@ -68,9 +69,10 @@ def extract_seperate_change_proposals(text: str) -> List[str]:
             except:
                 pass
     else:
+        # remove odd indexed items since they contain the artikel number only and we don't need it
         proposal_list = proposals[
             0::2
-        ]  # remove odd indexed items since they contain the artikel number only and we don't need it
+        ]
 
     return proposal_list
 
@@ -80,7 +82,7 @@ def extract_law_titles(proposals_list: List[str]) -> List[str]:
         list(nlp(proposal.replace("\n", " ")).sents)[0].text
         for proposal in proposals_list
     ]
-    titles_clean_par_sign = [re.split("§", title)[0] for title in raw_titles_list]
+    titles_clean_par_sign = [re.split(r"§", title)[0] for title in raw_titles_list]
     titles_clean_aenderung = []
     for title in titles_clean_par_sign:
         if re.search(r"Änderung \b(de[rs])\b ", title) is not None:
@@ -93,7 +95,7 @@ def extract_law_titles(proposals_list: List[str]) -> List[str]:
 
 
 def remove_inkrafttreten(titles: List[str], props: List[str]) -> Tuple[List, List]:
-    if re.search("^Inkrafttreten", titles[-1]) is not None:
+    if re.search(r"^Inkrafttreten", titles[-1]) is not None:
         titles = titles[:-1]
         props = props[:-1]
 

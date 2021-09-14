@@ -10,7 +10,7 @@ import click
 from pre_law_viewer.apply_changes.apply_changes import apply_changes
 from pre_law_viewer.parsing.change_law_utils import expand_text, preprocess_raw_law
 from pre_law_viewer.parsing.parse_change_law import parse_change_request_line
-from pre_law_viewer.parsing.parse_source_law import LawTextNode, parse_source_law_tree
+from pre_law_viewer.parsing.parse_source_law import parse_source_law_tree
 from pre_law_viewer.parsing.proposal_pdf_to_artikles import (
     extract_law_titles,
     extract_raw_proposal,
@@ -27,7 +27,6 @@ from pre_law_viewer.parsing.proposal_pdf_to_artikles import (
     help="Path to the change law pdf.",
     type=click.Path(exists=True),
 )
-# @click.option('source_law_path', '-s', help='Path to the source law txt.', type=click.Path(exists=True))
 @click.option(
     "output_path",
     "-o",
@@ -51,8 +50,8 @@ def generate_diff(change_law_path, output_path):
         # find and load the source law
         source_law_path = "data/source_laws/{}.txt".format(law_title)
         try:
-            with open(source_law_path, "r") as f:
-                source_law_text = f.read()
+            with open(source_law_path, "r") as file:
+                source_law_text = file.read()
             click.echo("Apply changes to {}".format(law_title))
         except:
             click.echo("Cannot find source law {}. SKIPPING".format(law_title))
@@ -83,10 +82,11 @@ def generate_diff(change_law_path, output_path):
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        with open(write_path, "w") as f:
-            f.write(res_law_tree._to_text())
+        with open(write_path, "w") as file:
+            file.write(res_law_tree.to_text())
     click.echo("DONE.")
 
 
 if __name__ == "__main__":
+    # pylint: disable=no-value-for-parameter
     generate_diff()
