@@ -41,7 +41,6 @@ def parse_source_law_tree(text: str, source_node = LawTextNode(text="source", bu
     patterns = [r"\n§\s\d{1,3}[a-z]?", r"\n\s*\([a-z1-9]\)", r"\n\s*\d{1,2}\.", r"\n\s*[a-z]\)"]
     
     # build the tree
-    new_nodes = []
     for pattern in patterns:
         used_texts = []
         # search the pattern in the text

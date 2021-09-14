@@ -6,7 +6,7 @@ Example usage:
 import click
 from pre_law_viewer.parsing.change_law_utils import read_pdf_law, preprocess_raw_law, expand_text
 from pre_law_viewer.parsing.parse_change_law import parse_change_request_line
-from pre_law_viewer.parsing.parse_source_law import parse_source_law_tree
+from pre_law_viewer.parsing.parse_source_law import parse_source_law_tree, LawTextNode
 from pre_law_viewer.apply_changes.apply_changes import apply_changes
 
 
@@ -29,9 +29,9 @@ def generate_diff(change_law_path, source_law_path):
         
     # 3. load and parse source law
     source_law_text = open(source_law_path, "r").read()
-    parsed_law_tree = parse_source_law_tree(source_law_text)
-    
-    print(parsed_law_tree.__repr__())
+    parsed_law_tree = parse_source_law_tree(
+        text=source_law_text
+    )
     
     # 4 apply changes to the source law
     res_law_tree = apply_changes(parsed_law_tree, change_requests)

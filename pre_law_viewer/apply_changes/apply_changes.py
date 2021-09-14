@@ -2,6 +2,7 @@
 import copy
 import regex as re
 from typing import List
+from anytree import findall
 from pre_law_viewer.parsing.parse_source_law import LawTextNode
 from pre_law_viewer.apply_changes.edit_functions import _replace, _insert_after, _rephrase, _delete_after
 
