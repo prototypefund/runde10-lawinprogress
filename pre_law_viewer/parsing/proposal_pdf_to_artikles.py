@@ -70,9 +70,7 @@ def extract_seperate_change_proposals(text: str) -> List[str]:
                 pass
     else:
         # remove odd indexed items since they contain the artikel number only and we don't need it
-        proposal_list = proposals[
-            0::2
-        ]
+        proposal_list = proposals[0::2]
 
     return proposal_list
 

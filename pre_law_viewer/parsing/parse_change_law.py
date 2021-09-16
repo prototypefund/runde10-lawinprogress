@@ -75,57 +75,46 @@ def parse_change_request_line(line: str) -> List[dict]:
     Returns:
         A list of dicts with required changes extracted from this line.
     """
-    res = []
-    if "eingefügt" in line:
-        res_dict = {
-            "location": parse_change_location(line),
-            "text": parse_change_text(line),
-            "how": "insert_after",
-        }
-        res.append(res_dict)
-    elif "ersetzt" in line:
-        res_dict = {
-            "location": parse_change_location(line),
-            "text": parse_change_text(line),
-            "how": "replace",
-        }
-        res.append(res_dict)
-    elif "gefasst" in line:
-        res_dict = {
-            "location": parse_change_location(line),
-            "text": parse_change_text(line),
-            "how": "rephrase",
-        }
-        res.append(res_dict)
-    elif "angefügt" in line:
-        res_dict = {
-            "location": parse_change_location(line),
-            "text": parse_change_text(line),
-            "how": "append",
-        }
-        res.append(res_dict)
-    elif "gestrichen" in line:
-        res_dict = {
-            "location": parse_change_location(line),
-            "text": parse_change_text(line),
-            "how": "delete_after",
-        }
-        res.append(res_dict)
-    elif "aufgehoben" in line:
-        res_dict = {
-            "location": parse_change_location(line),
-            "text": parse_change_text(line),
-            "how": "cancelled",
-        }
-        res.append(res_dict)
-    else:
+    res = [] # could be multiple changes in one line; right now we only allow one
+
+    keyword_type_pairs = [
+        ("eingefügt", "insert_after"),
+        ("ersetzt", "replace"),
+        ("gefasst", "rephrase"),
+        ("angefügt", "append"),
+        ("gestrichen", "delete_after"),
+        ("aufgehoben", "cancelled"),
+    ]
+
+    # parse change location and change text
+    location = parse_change_location(line)
+    change_text =parse_change_text(line)
+    # determine the type of change
+    for keyword, change_type in keyword_type_pairs:
+        if keyword in line:
+            res_dict = {
+                "location": location,
+                "text": change_text,
+                "change_type": change_type
+            }
+            res.append(res_dict)
+    if len(res) == 0:
         # We assume every line is a change, so if nothing is found,
         # we don't know yet how to handle it.
         res_dict = {
-            "location": parse_change_location(line),
-            "text": parse_change_text(line),
-            "how": "UNKNOWN",
+            "location": location,
+            "text": change_text,
+            "change_type": "UNKNOWN",
         }
         res.append(res_dict)
+    elif len(res) > 1:
+        # we only allow one change per line for now
+        # if multiple changes present, we
+        res_dict = {
+            "location": location,
+            "text": change_text,
+            "change_type": "MULTIPLE_CHANGES",
+        }
+        res = [res_dict]
 
     return res

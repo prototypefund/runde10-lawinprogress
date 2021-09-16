@@ -15,46 +15,55 @@ from pre_law_viewer.parsing.parse_source_law import LawTextNode
 
 def _find_path(location_list: List[str], parse_tree: LawTextNode) -> List[LawTextNode]:
     """Find path to node in the provided tree.
-    
+
     Args:
         location_list: List of location identifiers that represent a path.
         parse_tree: A tree of LawTextNodes to collect the nodes on the path from.
-    
+
     Returns:
         A list of LawTextNodes representing the path to the location.
     """
     path = []
-    res = parse_tree
+    current_node = parse_tree
     for loc in location_list:
+        # replace some text bulletpoints to match the bulletpoints in the source laws
         if loc.startswith("Absatz "):
             loc = loc.replace("Absatz ", "(") + ")"
         elif loc.startswith("Nummer "):
             loc = loc.replace("Nummer ", "") + "."
         elif loc.startswith("Buchstabe "):
             loc = loc.replace("Buchstabe ", "") + ")"
-        try:
-            res = findall(res, filter_=lambda node: loc == node.bulletpoint)[0]
-            path.append(res)
-        except:
-            # print("Location {} not found".format(loc))
-            pass
+
+        # find the node in question in the tree
+        search_result = findall(current_node, filter_=lambda node: loc == node.bulletpoint)
+        if len(search_result) == 0:
+            # no path found
+            print("Location {} not found.".format(loc))
+        elif len(search_result) == 1:
+            # exactly one path found; as it should be
+            current_node = search_result[0]
+            path.append(current_node)
+        else:
+            # more than one path found; should not happen
+            print("Multiple paths to location {} found.".format(loc))
+
     return path
 
 
 def apply_changes(law_tree: LawTextNode, changes: dict) -> LawTextNode:
     """Apply the provided changes to the provided tree.
-    
+
     Args:
         law_tree: A tree of LawTextNodes
         changes: A dict with changes, containing "location", "how" and "text" to specify the changes.
-    
+
     Returns:
         Tree of LawTextNodes with the requested changes if we where able to apply them.
     """
     res_law_tree = copy.deepcopy(law_tree)
     for change in changes:
         path = _find_path(location_list=change["location"], parse_tree=res_law_tree)
-        change_type = change["how"]
+        change_type = change["change_type"]
         if change_type == "replace":
             print("APPLIED {}:\n{}".format(change_type, change))
             res_law_tree = _replace(res_law_tree, path, change)
