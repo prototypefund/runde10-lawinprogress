@@ -1,6 +1,6 @@
-# Pre-Law-Viewer
+# Law in Progress
 
-Das Online-Tool "Pre-Law-Viewer" soll Gesetzentwürfe und deren Konsequenzen für bestehende Gesetze durch automatische Erstellung einer Synopse sichtbar und nachvollziehbar zu machen.
+Das Online-Tool "Law in Progress" soll Gesetzentwürfe und deren Konsequenzen für bestehende Gesetze durch automatische Erstellung einer Synopse sichtbar und nachvollziehbar zu machen.
 
 
 # Overview
@@ -13,7 +13,7 @@ Das Online-Tool "Pre-Law-Viewer" soll Gesetzentwürfe und deren Konsequenzen fü
 ├── data/               --> Folder with some data
 ├── doc/                --> Documentation and notes
 ├── notebooks/          --> Experimental notebooks
-├── pre_law_viewer/     --> Main package
+├── lawinprogress/      --> Main package
 │   └── __init__.py
 └── tests/              --> Test for the main package
     └── __init__.py

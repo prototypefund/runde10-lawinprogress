@@ -3,7 +3,7 @@ from typing import List
 
 import regex as re
 
-from pre_law_viewer.parsing.parse_source_law import LawTextNode
+from lawinprogress.parsing.parse_source_law import LawTextNode
 
 
 def _replace(
@@ -38,7 +38,7 @@ def _insert_after(
             re.match(r"^\([a-z1-9]\)", change["text"][0]),
         ]
     ):
-        # if there is only one text to insert and 
+        # if there is only one text to insert and
         # it starts with a bulletidentifier add a new node to the tree
         _ = LawTextNode(
             text=change["text"][0], bulletpoint="(new)", parent=path[-1].parent
