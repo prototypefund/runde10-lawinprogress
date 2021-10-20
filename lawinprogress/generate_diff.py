@@ -1,17 +1,17 @@
 """Main script to generate diffs from change law pdf.
 
 Example usage:
-    poetry run python ./pre_law_viewer/generate_diff.py -c data/0483-21.pdf
+    poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf
 """
 import os
 
 import click
 
-from pre_law_viewer.apply_changes.apply_changes import apply_changes
-from pre_law_viewer.parsing.change_law_utils import expand_text, preprocess_raw_law
-from pre_law_viewer.parsing.parse_change_law import parse_change_request_line
-from pre_law_viewer.parsing.parse_source_law import parse_source_law_tree
-from pre_law_viewer.parsing.proposal_pdf_to_artikles import (
+from lawinprogress.apply_changes.apply_changes import apply_changes
+from lawinprogress.parsing.change_law_utils import expand_text, preprocess_raw_law
+from lawinprogress.parsing.parse_change_law import parse_change_request_line
+from lawinprogress.parsing.parse_source_law import parse_source_law_tree
+from lawinprogress.parsing.proposal_pdf_to_artikles import (
     extract_law_titles,
     extract_raw_proposal,
     extract_seperate_change_proposals,

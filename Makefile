@@ -11,7 +11,7 @@ jupyter:
 check:
 	poetry run isort .
 	poetry run black . 
-	poetry run pylint pre_law_viewer/ tests/
+	poetry run pylint lawinprogress/ tests/
 
 test:
 	poetry run pytest tests/

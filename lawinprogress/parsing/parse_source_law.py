@@ -5,10 +5,10 @@ from anytree import NodeMixin, RenderTree
 
 class LawTextNode(NodeMixin):
     """Data sctructure to represent a node in anytree.
-    
+
     Used for parsing the source laws.
     """
-    
+
     def __init__(self, text, bulletpoint, parent=None, children=None):
         self.text = text
         self.bulletpoint = bulletpoint
