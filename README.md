@@ -14,7 +14,8 @@ Das Online-Tool "Law in Progress" soll Gesetzentwürfe und deren Konsequenzen f�
 ├── doc/                --> Documentation and notes
 ├── notebooks/          --> Experimental notebooks
 ├── lawinprogress/      --> Main package
-│   └── __init__.py
+│   ├── __init__.py
+│   └── generate_diff.py --> main script to generate a diff from a change law
 └── tests/              --> Test for the main package
     └── __init__.py
 ```
@@ -22,3 +23,18 @@ Das Online-Tool "Law in Progress" soll Gesetzentwürfe und deren Konsequenzen f�
 # Setup
 
 Clone the repo and run `make install` to setup poetry and the relevant requriements.
+
+
+# Code checks & tests
+
+You can run the code checks (with isort, black and pylint) by running `make check`.
+This will first sort the imports with `isort` and then format the code with `black`.
+These tools might not agree on something, but in the end the code looks nice.
+Finally, some properties of code "quality" are checked with `pylint`.
+Try to resolve as many warnings as reasonably possible. If you are sure you want to ignore a warning,
+you can comment the line (or in the line before the warning) in the source code
+```
+# pylint: disable=<name-of-the-warning>
+```
+
+To run the tests, run `make test`.
