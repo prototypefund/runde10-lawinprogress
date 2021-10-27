@@ -8,8 +8,12 @@ import os
 import click
 
 from lawinprogress.apply_changes.apply_changes import apply_changes
-from lawinprogress.parsing.change_law_utils import expand_text, preprocess_raw_law
-from lawinprogress.parsing.parse_change_law import parse_change_request_line
+from lawinprogress.parsing.change_law_utils import preprocess_raw_law
+from lawinprogress.parsing.lawtree import LawTextNode
+from lawinprogress.parsing.parse_change_law import (
+    parse_change_law_tree,
+    parse_change_request_line,
+)
 from lawinprogress.parsing.parse_source_law import parse_source_law_tree
 from lawinprogress.parsing.proposal_pdf_to_artikles import (
     extract_law_titles,
@@ -57,19 +61,37 @@ def generate_diff(change_law_path, output_path):
             click.echo("Cannot find source law {}. SKIPPING".format(law_title))
             continue
 
-        # format the change requests
+        # format the change requests and parse them to tree
         clean_change_law = preprocess_raw_law(change_law)
-        clean_text = expand_text(clean_change_law)
+        parsed_change_law_tree = LawTextNode(text=law_title, bulletpoint="change")
+        parsed_change_law_tree = parse_change_law_tree(
+            text=clean_change_law, source_node=parsed_change_law_tree
+        )
 
-        # parse the change requests in a structured format
+        # parse the change requests in a structured line format
+        all_change_lines = []
+        # collect all paths to tree leaves and join them in the right order
+        for leave_node in parsed_change_law_tree.leaves:
+            path = [str(leave_node)]
+            node = leave_node
+            while node.parent:
+                node = node.parent
+                path.append(str(node))
+            change_line = " ".join(path[::-1][1:])
+            all_change_lines.append(change_line)
+
+        # parse the change request lines to changes
         change_requests = []
-        for change_request_line in clean_text.split("\n"):
+        for change_request_line in all_change_lines:
             res = parse_change_request_line(change_request_line)
-            change_requests.extend(res)
+            if res:
+                change_requests.extend(res)
 
         # parse source law
-
-        parsed_law_tree = parse_source_law_tree(text=source_law_text)
+        parsed_law_tree = LawTextNode(text="law_title", bulletpoint="source")
+        parsed_law_tree = parse_source_law_tree(
+            text=source_law_text, source_node=parsed_law_tree
+        )
 
         # apply changes to the source law
         res_law_tree = apply_changes(parsed_law_tree, change_requests)
@@ -78,12 +100,17 @@ def generate_diff(change_law_path, output_path):
         write_path = "{}{}_modified_{}.txt".format(
             output_path, law_title, change_law_path.split("/")[-1]
         )
+        source_write_path = "{}{}_source_{}.txt".format(
+            output_path, law_title, change_law_path.split("/")[-1]
+        )
         click.echo("Write results to {}".format(write_path))
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
         with open(write_path, "w") as file:
             file.write(res_law_tree.to_text())
+        with open(source_write_path, "w") as file:
+            file.write(parsed_law_tree.to_text())
     click.echo("DONE.")
 
 
