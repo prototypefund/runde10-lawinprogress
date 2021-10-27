@@ -14,6 +14,5 @@ check:
 	poetry run pylint lawinprogress/ tests/
 
 test:
-	poetry run pytest tests/
-
+	poetry run pytest --cov="lawinprogress/" tests/
 

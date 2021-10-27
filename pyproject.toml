@@ -12,6 +12,9 @@ click = "^7.1.2"
 pdfplumber = "^0.5.28"
 anytree = "^2.8.0"
 spacy = "^3.1.2"
+colorama = "^0.4.4"
+natsort = "^7.1.1"
+pytest-cov = "2.12.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
