@@ -25,7 +25,7 @@ def __split_text_to_sentences(text: str) -> List[str]:
         if not sent.text.endswith("BGBl."):
             sentences.append(sent_text)
             sent_text = ""
-    return sentences
+    return [sent for sent in sentences if sent.strip()]
 
 
 def __clean_text(text: str) -> str:
@@ -192,7 +192,7 @@ def _delete_after(
     if len(change.text) == 1:
         # If only one string in text, then delete that string from
         # the respective source law location.
-        node.text = node.text.replace(change.text[0], "")
+        node.text = node.text.replace(change.text[0], "").replace("  ", " ")
     elif len(change.text) > 1:
         # if more than one string in text, replace all following texts.
         node.text = node.text.replace("".join(change.text[1:]), "")
