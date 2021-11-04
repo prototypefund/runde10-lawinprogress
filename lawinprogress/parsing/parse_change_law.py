@@ -150,7 +150,7 @@ def parse_change_text(line: str) -> List[str]:
     ]
 
 
-def parse_change_request_line(line: str) -> List[dict]:
+def parse_change_request_line(line: str) -> List[Change]:
     """Parse the actions of one line of change requests.
 
     Look for certain keywords in the line (i.e. "eingefügt", "gestrichen", etc)
@@ -161,7 +161,7 @@ def parse_change_request_line(line: str) -> List[dict]:
         line: One line of text. Contains exactly one change request.
 
     Returns:
-        A list of dicts with required changes extracted from this line.
+        A list of Changes with required changes extracted from this line.
     """
     # if the change is of type "Absatz 7 wird Absatz 8" skip here.
     renumbering = False
@@ -174,6 +174,7 @@ def parse_change_request_line(line: str) -> List[dict]:
 
     changes = []  # could be multiple changes in one line; right now we only allow one
 
+    # TODO Tobias: Move these to enumeration type and improt from there.
     keyword_type_pairs = [
         ("eingefügt", "insert_after"),
         ("ersetzt", "replace"),

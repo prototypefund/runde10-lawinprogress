@@ -1,9 +1,16 @@
 """Test the edit functions to apply changes."""
+from lawinprogress.apply_changes.edit_functions import (
+    __clean_text,
+    __split_text_to_sentences,
+    _append,
+    _cancelled,
+    _delete_after,
+    _insert_after,
+    _rephrase,
+    _replace,
+)
 from lawinprogress.parsing.lawtree import LawTextNode
 from lawinprogress.parsing.parse_change_law import Change
-
-from lawinprogress.apply_changes.edit_functions import _replace, _insert_after, _rephrase, _append, _delete_after, _cancelled
-from lawinprogress.apply_changes.edit_functions import __clean_text, __split_text_to_sentences
 
 
 def test_clean_text():
@@ -44,7 +51,12 @@ def test_split_text_to_sentences_one_sentence():
 def test_replace_success():
     """Test if text in a node can be replaced properly."""
     node = LawTextNode(bulletpoint="(1)", text="Test text to replace;")
-    change = Change(location="(1)", sentences=[], text=["text to replace", "replaced"], change_type="replace")
+    change = Change(
+        location="(1)",
+        sentences=[],
+        text=["text to replace", "replaced"],
+        change_type="replace",
+    )
 
     status = _replace(node, change)
 
@@ -55,7 +67,9 @@ def test_replace_success():
 def test_replace_failure():
     """Test if replace fails as expected."""
     node = LawTextNode(bulletpoint="(1)", text="Test text to replace;")
-    change = Change(location="(1)", sentences=[], text=["text to replace"], change_type="replace")
+    change = Change(
+        location="(1)", sentences=[], text=["text to replace"], change_type="replace"
+    )
 
     status = _replace(node, change)
 
@@ -66,7 +80,12 @@ def test_replace_failure():
 def test_insert_after_with_paired_texts():
     """Test if insert_after works fine if the text comes in pairs (location, text_to_insert)."""
     node = LawTextNode(bulletpoint="(1)", text="Test text insert here;")
-    change = Change(location="(1)", sentences=[], text=["insert", "inserted"], change_type="insert_after")
+    change = Change(
+        location="(1)",
+        sentences=[],
+        text=["insert", "inserted"],
+        change_type="insert_after",
+    )
 
     status = _insert_after(node, change)
 
@@ -77,8 +96,15 @@ def test_insert_after_with_paired_texts():
 def test_insert_after_bulletpointmatch_exists():
     """Test if insert_after works fine if a bulletpoint match with one text happens and the node already exists in the tree."""
     parent_node = LawTextNode(bulletpoint="§ 1", text="Test parent node")
-    node = LawTextNode(bulletpoint="(1)", text="Test text insert here;", parent=parent_node)
-    change = Change(location="(1)", sentences=[], text=["(1) New inserted node text"], change_type="insert_after")
+    node = LawTextNode(
+        bulletpoint="(1)", text="Test text insert here;", parent=parent_node
+    )
+    change = Change(
+        location="(1)",
+        sentences=[],
+        text=["(1) New inserted node text"],
+        change_type="insert_after",
+    )
 
     status = _insert_after(node, change)
 
@@ -93,8 +119,15 @@ def test_insert_after_bulletpointmatch_exists():
 def test_insert_after_bulletpointmatch_doesnt_exist():
     """Test if insert_after works fine if a bulletpoint match with one text happens and the node doesnt exists in the tree."""
     parent_node = LawTextNode(bulletpoint="§ 1", text="Test parent node")
-    node = LawTextNode(bulletpoint="(1)", text="Test text insert here;", parent=parent_node)
-    change = Change(location="(1)", sentences=[], text=["(2) New inserted node text"], change_type="insert_after")
+    node = LawTextNode(
+        bulletpoint="(1)", text="Test text insert here;", parent=parent_node
+    )
+    change = Change(
+        location="(1)",
+        sentences=[],
+        text=["(2) New inserted node text"],
+        change_type="insert_after",
+    )
 
     status = _insert_after(node, change)
 
@@ -108,13 +141,24 @@ def test_insert_after_bulletpointmatch_doesnt_exist():
 
 def test_insert_after_with_paired_texts():
     """Test if insert_after works fine with one text and a sentence specified."""
-    node = LawTextNode(bulletpoint="(1)", text="Test text insert after this sentence. And before this sentence.")
-    change = Change(location="(1)", sentences=["nach Satz 1"], text=["Inserted sentence."], change_type="insert_after")
+    node = LawTextNode(
+        bulletpoint="(1)",
+        text="Test text insert after this sentence. And before this sentence.",
+    )
+    change = Change(
+        location="(1)",
+        sentences=["nach Satz 1"],
+        text=["Inserted sentence."],
+        change_type="insert_after",
+    )
 
     status = _insert_after(node, change)
 
     assert status == 1
-    assert node.text == "Test text insert after this sentence. Inserted sentence. And before this sentence."
+    assert (
+        node.text
+        == "Test text insert after this sentence. Inserted sentence. And before this sentence."
+    )
 
 
 def test_insert_after_fails_with_no_text():
@@ -130,7 +174,12 @@ def test_insert_after_fails_with_no_text():
 def test_rephrase_with_one_text_no_sentence():
     """Test if rephrasing works with one text and no sentences given."""
     node = LawTextNode(bulletpoint="(1)", text="Text to rephrase in this sentence.")
-    change = Change(location="(1)", sentences=[], text=["(1) Rephrased text."], change_type="rephrase")
+    change = Change(
+        location="(1)",
+        sentences=[],
+        text=["(1) Rephrased text."],
+        change_type="rephrase",
+    )
 
     status = _rephrase(node, change)
 
@@ -140,8 +189,16 @@ def test_rephrase_with_one_text_no_sentence():
 
 def test_rephrase_with_one_text_one_sentence():
     """Test if rephrasing works with one text and one sentences given."""
-    node = LawTextNode(bulletpoint="(1)", text="Here is nothing to do. Text to rephrase in this sentence.")
-    change = Change(location="(1)", sentences=["Satz 2"], text=["Text to rephrase."], change_type="rephrase")
+    node = LawTextNode(
+        bulletpoint="(1)",
+        text="Here is nothing to do. Text to rephrase in this sentence.",
+    )
+    change = Change(
+        location="(1)",
+        sentences=["Satz 2"],
+        text=["Text to rephrase."],
+        change_type="rephrase",
+    )
 
     status = _rephrase(node, change)
 
@@ -151,7 +208,10 @@ def test_rephrase_with_one_text_one_sentence():
 
 def test_rephrase_fails_without_text():
     """Test if rephrasing fails without text given."""
-    node = LawTextNode(bulletpoint="(1)", text="Here is nothing to do. Text to rephrase in this sentence.")
+    node = LawTextNode(
+        bulletpoint="(1)",
+        text="Here is nothing to do. Text to rephrase in this sentence.",
+    )
     change = Change(location="(1)", sentences=[], text=[], change_type="rephrase")
 
     status = _rephrase(node, change)
@@ -163,7 +223,9 @@ def test_rephrase_fails_without_text():
 def test_append_success_one_text():
     """Test if appending the text to a specific location works."""
     node = LawTextNode(bulletpoint="(1)", text="Current text to append to.")
-    change = Change(location="(1)", sentences=[], text=["Appended text."], change_type="append")
+    change = Change(
+        location="(1)", sentences=[], text=["Appended text."], change_type="append"
+    )
 
     status = _append(node, change)
 
@@ -174,7 +236,12 @@ def test_append_success_one_text():
 def test_append_fails_too_much_texts():
     """Test if appending fails with too much text."""
     node = LawTextNode(bulletpoint="(1)", text="Current text to append to.")
-    change = Change(location="(1)", sentences=[], text=["Appended text.", "More text"], change_type="append")
+    change = Change(
+        location="(1)",
+        sentences=[],
+        text=["Appended text.", "More text"],
+        change_type="append",
+    )
 
     status = _append(node, change)
 
@@ -196,7 +263,9 @@ def test_append_fails_too_little_texts():
 def test_delete_after_one_text():
     """Test if deleting a specific text works."""
     node = LawTextNode(bulletpoint="(1)", text="Current to delete text.")
-    change = Change(location="(1)", sentences=[], text=["to delete"], change_type="delete_after")
+    change = Change(
+        location="(1)", sentences=[], text=["to delete"], change_type="delete_after"
+    )
 
     status = _delete_after(node, change)
 
@@ -207,7 +276,12 @@ def test_delete_after_one_text():
 def test_delete_after_two_texts():
     """Test if deleting after a specific text works."""
     node = LawTextNode(bulletpoint="(1)", text="Current to delete text.")
-    change = Change(location="(1)", sentences=[], text=["to delete", "text"], change_type="delete_after")
+    change = Change(
+        location="(1)",
+        sentences=[],
+        text=["to delete", "text"],
+        change_type="delete_after",
+    )
 
     status = _delete_after(node, change)
 
@@ -230,7 +304,9 @@ def test_cancelled_remove_node():
     """Test if cancelling a node works."""
     parent_node = LawTextNode(bulletpoint="§ 1", text="Test parent node")
     node = LawTextNode(bulletpoint="(1)", text="Node to remove.", parent=parent_node)
-    other_node = LawTextNode(bulletpoint="(2)", text="Node to remain.", parent=parent_node)
+    other_node = LawTextNode(
+        bulletpoint="(2)", text="Node to remain.", parent=parent_node
+    )
     change = Change(location="(1)", sentences=[], text=[], change_type="cancelled")
 
     status = _cancelled(node, change)
