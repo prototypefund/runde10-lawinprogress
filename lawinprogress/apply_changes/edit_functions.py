@@ -25,7 +25,7 @@ def __split_text_to_sentences(text: str) -> List[str]:
         if not sent.text.endswith("BGBl."):
             sentences.append(sent_text)
             sent_text = ""
-    return sentences
+    return [sent for sent in sentences if sent.strip()]
 
 
 def __clean_text(text: str) -> str:
@@ -36,9 +36,7 @@ def __clean_text(text: str) -> str:
     return " ".join(token for token in text.split(" ") if token)
 
 
-def _replace(
-    node: LawTextNode, change: Change
-) -> int:
+def _replace(node: LawTextNode, change: Change) -> int:
     """Replace text in the node."""
     status = 1
     if len(change.text) == 2:
@@ -51,9 +49,7 @@ def _replace(
     return status
 
 
-def _insert_after(
-    node: LawTextNode, change: Change
-) -> int:
+def _insert_after(node: LawTextNode, change: Change) -> int:
     """Insert text after a given text or section.
 
     Assumes list of change.text to be of even length, uneven positions are the location
@@ -87,9 +83,7 @@ def _insert_after(
         bulletpoint_match = change.text[0][match.span()[0] : match.span()[1]]
         # if there is only one text to insert and
         # it starts with a bulletidentifier add a new node to the tree
-        if bulletpoint_match in [
-            child.bulletpoint for child in node.parent.children
-        ]:
+        if bulletpoint_match in [child.bulletpoint for child in node.parent.children]:
             node.parent.insert_child(
                 text=change.text[0][match.span()[1] + 1 :],
                 bulletpoint=bulletpoint_match,
@@ -124,9 +118,7 @@ def _insert_after(
     return status
 
 
-def _rephrase(
-    node: LawTextNode, change: Change
-) -> int:
+def _rephrase(node: LawTextNode, change: Change) -> int:
     """Rephrase the text in the specific location."""
     status = 1
     if len(change.text) == 1 and len(change.sentences) == 0:
@@ -171,9 +163,7 @@ def _rephrase(
     return status
 
 
-def _append(
-    node: LawTextNode, change: Change
-) -> int:
+def _append(node: LawTextNode, change: Change) -> int:
     """Add given text after the given location."""
     status = 1
     if len(change.text) == 1:
@@ -184,15 +174,13 @@ def _append(
     return status
 
 
-def _delete_after(
-    node: LawTextNode, change: Change
-) -> int:
+def _delete_after(node: LawTextNode, change: Change) -> int:
     """Delete some text at the requested location."""
     status = 1
     if len(change.text) == 1:
         # If only one string in text, then delete that string from
         # the respective source law location.
-        node.text = node.text.replace(change.text[0], "")
+        node.text = node.text.replace(change.text[0], "").replace("  ", " ")
     elif len(change.text) > 1:
         # if more than one string in text, replace all following texts.
         node.text = node.text.replace("".join(change.text[1:]), "")
@@ -202,9 +190,7 @@ def _delete_after(
     return status
 
 
-def _cancelled(
-    node: LawTextNode, change: Change
-) -> int:
+def _cancelled(node: LawTextNode, change: Change) -> int:
     """Remove the node in question from the tree."""
     status = 1
     if len(change.text) == 0 and len(change.sentences) == 0:

@@ -11,7 +11,7 @@ jupyter:
 check:
 	poetry run isort .
 	poetry run black . 
-	poetry run pylint lawinprogress/ tests/
+	poetry run pylint lawinprogress/
 
 test:
 	poetry run pytest --cov="lawinprogress/" tests/
