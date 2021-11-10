@@ -2,6 +2,43 @@
 import regex as re
 
 
+def remove_newline_in_quoted_text(text: str) -> str:
+    """Remove newlines between quotation marks.
+
+    Text in quotation marks is text that should be replaced or modified in the affected law.
+    Since there can be §, sections or other bulletpoint identifiers, we remove all newlines
+    in this text (so lines don't start with bullet point identifiers).
+
+    Args:
+        text: String of text to process
+
+    Returns:
+        Processed text as a string.
+
+    Raises:
+        Exception, if there are open quotes left at the end.
+    """
+    # find all open and closing pairs
+    open_quotes = []
+    quote_pairs = []
+    for char_idx, char in enumerate(text):
+        if char == "„":
+            open_quotes.append(char_idx)
+        if char == "“":
+            open_quote_idx = open_quotes.pop()
+            quote_pairs.append((open_quote_idx, char_idx))
+            # remove the newlines between pairs of open-closing quotes
+            text = (
+                text[:open_quote_idx]
+                + text[open_quote_idx:char_idx].replace("\n", " ")
+                + text[char_idx:]
+            )
+    if len(open_quotes) != 0:
+        # not even; raise here
+        raise Exception("Something with the quotes is wrong.")
+    return text
+
+
 def preprocess_raw_law(text: str) -> str:
     """Apply some preprocessing to the raw text of the laws.
 
@@ -23,16 +60,8 @@ def preprocess_raw_law(text: str) -> str:
         r"wird[\s,\n]{0,3}wie[\s,\n]{0,3}folgt[\s,\n]{0,3}geändert:", text, maxsplit=1
     )[1].split("Begründung", 1)[0]
 
-    # remove newlines between quotation marks
-    # > text in quotation marks is text that should be replaced or modified in the affected law.
-    # > Since there can be §, sections or other bulletpoint identifiers,
-    # > we remove all newlines in this text (so lines don't start with bullet point identifiers)
-    for match in re.finditer(r"(?<=„)(.|\n)*?(?=“)", text, re.MULTILINE):
-        text = (
-            text[: match.span()[0]]
-            + text[match.span()[0] : match.span()[1]].replace("\n", " ")
-            + text[match.span()[1] :]
-        )
+    # Remove newlines between quotation marks
+    text = remove_newline_in_quoted_text(text)
 
     # remove text artifacts from the page
     text = re.sub(r"\.?Drucksache \d{2,3}\/\d{1,2}", "", text)  # Drucksache...
@@ -45,7 +74,14 @@ def preprocess_raw_law(text: str) -> str:
         line = line.strip()
         # if a line starts with a single digit, we suppose its a page number and remove it
         line = re.sub(r"^\d{1,2}\s", "", line)
-        if any(string in line for string in ["*", "Drucksache"]):
+        #  remove drucksache page break stuff
+        line = re.sub(
+            r"Deutscher\s{1,5}Bundestag\s{1,5}\S\s{1,5}\d{1,2}\. Wahlperiode\s{1,5}\S\s{1,5}\d{1,3}\s{1,5}\S\s{1,5}Drucksache\s{1,5}\d{1,3}\/\d{1,7}",
+            "",
+            line,
+        )
+        # remove lines with a footnote star *
+        if any(pattern in line for pattern in ["*", "Drucksache"]):
             line = ""
         # check if line starts with a bullet point identifier
         # > if yes, put it in a new line, otherwise just append the linetext to the text
