@@ -95,6 +95,7 @@ def parse_change_location(line: str) -> List[str]:
         except:
             # if the identifier is not found, pass
             pass
+    # return a list of locations, but replace any multiple whitespace as a single whitespace
     return [re.sub(r"\s+", " ", loc) for loc in location]
 
 
