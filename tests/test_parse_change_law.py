@@ -97,7 +97,7 @@ def test_parse_change_law_tree():
 
 
 def test_parse_multispace_location():
-    """Test if a change location with more than one space between teh location and hte numerator can be parsed successfuly, i.e. converted to a single space"""
+    """Test if a change location with more than one space between the location and the numerator can be parsed successfully, i.e. converted to a single space"""
     line = "8. - § 183 wird wie folgt geändert: b) - In Absatz  5 Satz 1  werden nach dem  Wort  „Rückschein“ die Wörter  „oder  ein gleichwertiger  Nachweis“ eingefügt."
     location = parse_change_location(line)
 
