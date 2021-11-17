@@ -103,4 +103,3 @@ def test_parse_multispace_location():
 
     assert len(location) == 2
     assert location[1] == "Absatz 5"
-
