@@ -73,11 +73,11 @@ def parse_change_location(line: str) -> List[str]:
     """
     location_identifiers = [
         r"Inhaltsübersicht?",
-        r"§ \d{1,3}[a-z]?",
+        r"§\s+\d{1,3}[a-z]?",
         r"Überschrift",
-        r"Absatz \d{1,3}",
-        r"Nummer \d{1,3}",
-        r"Buchstabe [a-z]",
+        r"Absatz\s+\d{1,3}",
+        r"Nummer\s+\d{1,3}",
+        r"Buchstabe\s+[a-z]",
     ]
 
     location = []
@@ -95,7 +95,8 @@ def parse_change_location(line: str) -> List[str]:
         except:
             # if the identifier is not found, pass
             pass
-    return location
+    # return a list of locations, but replace any multiple whitespace as a single whitespace
+    return [re.sub(r"\s+", " ", loc) for loc in location]
 
 
 def parse_change_sentences(line: str) -> List[str]:

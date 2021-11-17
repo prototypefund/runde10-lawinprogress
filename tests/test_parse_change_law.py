@@ -94,3 +94,12 @@ def test_parse_change_law_tree():
     3. In § 5 Absatz 1 Satz 2 werden die Wörter „auf Antrag und“ gestrichen.
 """
     assert parsed_change_law_tree.to_text() == expected_tree
+
+
+def test_parse_multispace_location():
+    """Test if a change location with more than one space between the location and the numerator can be parsed successfully, i.e. converted to a single space"""
+    line = "8. - § 183 wird wie folgt geändert: b) - In Absatz  5 Satz 1  werden nach dem  Wort  „Rückschein“ die Wörter  „oder  ein gleichwertiger  Nachweis“ eingefügt."
+    location = parse_change_location(line)
+
+    assert len(location) == 2
+    assert location[1] == "Absatz 5"
