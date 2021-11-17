@@ -62,12 +62,15 @@ def preprocess_raw_law(text: str) -> str:
 
     # Remove newlines between quotation marks
     text = remove_newline_in_quoted_text(text)
+    
+    # try to remove footnotes
+    # Inpired by the footnote on page 7 in 1928399.pdf
+    text = re.sub(r"\s\*(.|\n)*?Wahlperiode\s", "", text)
 
-    # remove text artifacts from the page
-    text = re.sub(r"\.?Drucksache \d{2,3}\/\d{1,2}", "", text)  # Drucksache...
-    text = re.sub(r"- \d -", "", text)  # page numbering
+    # remove more text artifacts from the page
+    # text = re.sub(r"- \d -", "", text)  # page numbering
     text = text.strip()  # remove trailing whitespace or newlines
-
+    
     # pull every bulletpoint content to one line
     outtext = ""
     for line in text.split("\n"):
@@ -75,14 +78,15 @@ def preprocess_raw_law(text: str) -> str:
         # if a line starts with a single digit, we suppose its a page number and remove it
         line = re.sub(r"^\d{1,2}\s", "", line)
         #  remove drucksache page break stuff
-        line = re.sub(
-            r"Deutscher\s{1,5}Bundestag\s{1,5}\S\s{1,5}\d{1,2}\. Wahlperiode\s{1,5}\S\s{1,5}\d{1,3}\s{1,5}\S\s{1,5}Drucksache\s{1,5}\d{1,3}\/\d{1,7}",
-            "",
-            line,
-        )
+        drucksache_regexs = [
+            r"\sDeutscher\s{1,5}Bundestag\s{1,5}\S\s{1,5}\d{1,2}\.\s{1,3}Wahlperiode\s{1,5}\S\s{1,5}\d{1,3}\s{1,5}\S\s{1,5}Drucksache\s{1,5}\d{1,3}\/\d{1,7}",
+            r"\sDrucksache\s{1,5}\d{1,3}\/\d{1,7}\s{1,5}\S\s{1,5}\d{1,2}\s{1,5}\S\s{1,5}Deutscher\s{1,3}Bundestag\s{1,5}\S\s{1,5}\d{1,2}\.\s{1,3}Wahlperiode\s",
+        ]
+        for drucksache_regex in drucksache_regexs:
+            line = re.sub(drucksache_regex, "", line)
         # remove lines with a footnote star *
-        if any(pattern in line for pattern in ["*", "Drucksache"]):
-            line = ""
+        #if any(pattern in line for pattern in ["*", "Drucksache"]):
+        #    line = ""
         # check if line starts with a bullet point identifier
         # > if yes, put it in a new line, otherwise just append the linetext to the text
         if any(
