@@ -206,8 +206,8 @@ def _cancelled(node: LawTextNode, change: Change) -> int:
         elif "und" in change.sentences[0]:
             # multiple sentences
             numbers = re.findall(r"\d{1,3}", change.sentences[0])
-            for n in numbers[::-1]:
-                sentences.pop(int(n) - 1)
+            for num in numbers[::-1]:
+                sentences.pop(int(num) - 1)
             node.text = " ".join(sentences)
         else:
             # single sentence

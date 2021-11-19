@@ -16,6 +16,25 @@ from lawinprogress.parsing.parse_change_law import Change
 from lawinprogress.parsing.parse_source_law import LawTextNode
 
 
+def _adapt_change_location_for_source_law(location: str) -> str:
+    """Adapt a chnage law location string to fit the naming of locations in the source law.
+
+    Args:
+        location: String of a change law location identifier.
+
+    Returns:
+        A string representing a location identifier in a source law.
+    """
+    # replace some text bulletpoints to match the bulletpoints in the source laws
+    if location.startswith("Absatz "):
+        location = location.replace("Absatz ", "(") + ")"
+    elif location.startswith("Nummer "):
+        location = location.replace("Nummer ", "") + "."
+    elif location.startswith("Buchstabe "):
+        location = location.replace("Buchstabe ", "") + ")"
+    return location
+
+
 def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTextNode]:
     """The node by location in the provided tree.
 
@@ -27,29 +46,21 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
         The LawTextNode found at the end of the path to the location.
     """
     current_node = parse_tree
-    for loc in location_list:
-        # replace some text bulletpoints to match the bulletpoints in the source laws
-        if loc.startswith("Absatz "):
-            loc = loc.replace("Absatz ", "(") + ")"
-        elif loc.startswith("Nummer "):
-            loc = loc.replace("Nummer ", "") + "."
-        elif loc.startswith("Buchstabe "):
-            loc = loc.replace("Buchstabe ", "") + ")"
-
+    for location in location_list:
         # find the node in question in the tree
         search_result = findall(
-            current_node, filter_=lambda node: loc == node.bulletpoint
+            current_node, filter_=lambda node: location == node.bulletpoint
         )
         if len(search_result) == 0:
             # no path found
-            print("Location {} not found.".format(loc))
+            print("Location {} not found.".format(location))
             return None
         elif len(search_result) == 1:
             # exactly one path found; as it should be
             current_node = search_result[0]
         else:
             # more than one path found; should not happen - Stop here
-            print("Multiple paths to location {} found. Stopping.".format(loc))
+            print("Multiple paths to location {} found. Stopping.".format(location))
             return None
 
     return current_node
@@ -60,7 +71,8 @@ def apply_changes(law_tree: LawTextNode, changes: List[Change]) -> LawTextNode:
 
     Args:
         law_tree: A tree of LawTextNodes
-        changes: A dict with changes, containing "location", "how" and "text" to specify the changes.
+        changes: A dict with changes, containing "location", "how" and "text"
+                 to specify the changes.
 
     Returns:
         Tree of LawTextNodes with the requested changes if we where able to apply them.
@@ -69,8 +81,13 @@ def apply_changes(law_tree: LawTextNode, changes: List[Change]) -> LawTextNode:
     n_succesfull_applied_changes = 0
     for change in changes:
         status = 0
+        # change location identifiers from the change law format to the source law format
+        location_list = [
+            _adapt_change_location_for_source_law(location)
+            for location in change.location
+        ]
         # find the node that needs to be changed
-        node = _find_node(location_list=change.location, parse_tree=res_law_tree)
+        node = _find_node(location_list=location_list, parse_tree=res_law_tree)
         # if we found no path, we skip
         if not node:
             print("No path found in {}. SKIPPING".format(change))
