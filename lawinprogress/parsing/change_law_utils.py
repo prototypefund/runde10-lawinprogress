@@ -16,7 +16,7 @@ def remove_newline_in_quoted_text(text: str) -> str:
         Processed text as a string.
 
     Raises:
-        Exception, if there are open quotes left at the end.
+        Exception, if there is an unequal number of opening and closing quotes.
     """
     # find all open and closing pairs
     open_quotes = []
@@ -25,7 +25,14 @@ def remove_newline_in_quoted_text(text: str) -> str:
         if char == "„":
             open_quotes.append(char_idx)
         if char == "“":
-            open_quote_idx = open_quotes.pop()
+            try:
+                open_quote_idx = open_quotes.pop()
+            except IndexError as err:
+                # more closing quotes than opening quotes.
+                raise Exception(
+                    "Quote error: Found more closing quotes than opening quotes."
+                )
+
             quote_pairs.append((open_quote_idx, char_idx))
             # remove the newlines between pairs of open-closing quotes
             text = (
@@ -34,19 +41,21 @@ def remove_newline_in_quoted_text(text: str) -> str:
                 + text[char_idx:]
             )
     if len(open_quotes) != 0:
-        # not even; raise here
-        raise Exception("Something with the quotes is wrong.")
+        # more open quotes than closing quotes.
+        raise Exception("Quote error: Found more opening quotes than closing quotes.")
     return text
 
 
-def clean_line(line: str):
-    """Apply some cleaning steps to a line of change law text.strip
+def remove_header_footer_artifacts_from_line(line: str):
+    """Apply cleaning steps to remove artifacts from page headers and footers.
+
+    Example artifacts are Drucksache and Pagenumbering.
 
     Args:
         line: String of a line
 
     Returns:
-        cleaned line
+        String of the line with the artifacts removed.
     """
     line = line.strip()
 
@@ -67,6 +76,9 @@ def clean_line(line: str):
 def remove_footnotes(text: str):
     """Remove footnotes from the full text of the change law.
 
+    Currently this is only a simple approach that worked in one case
+    removing the text between * and Wahlperiode.
+
     Args:
         text: Text of the law.
 
@@ -74,7 +86,8 @@ def remove_footnotes(text: str):
         Text without footnotes.
     """
     # try to remove footnotes
-    # Inspired by the footnote on page 7 in 1928399.pdf
+    # remove the text between * and Wahlperiode\s
+    # Inspired by the footnote on page 7 in 1928399.pdf where it works.
     return re.sub(r"\*(.|\n)*?Wahlperiode\s", "", text)
 
 
@@ -103,6 +116,7 @@ def preprocess_raw_law(text: str) -> str:
     text = remove_footnotes(text)
 
     # Remove newlines between quotation marks
+    # TODO: think about how we should fail here if the quotes don't match
     text = remove_newline_in_quoted_text(text)
 
     text = text.strip()  # remove trailing whitespace or newlines
@@ -111,7 +125,7 @@ def preprocess_raw_law(text: str) -> str:
     outtext = ""
     for line in text.split("\n"):
         # apply some cleaning
-        line = clean_line(line)
+        line = remove_header_footer_artifacts_from_line(line)
 
         # check if line starts with a bullet point identifier
         # > if yes, put it in a new line, otherwise just append the linetext to the text

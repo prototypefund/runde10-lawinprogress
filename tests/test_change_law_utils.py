@@ -2,9 +2,9 @@
 import pytest
 
 from lawinprogress.parsing.change_law_utils import (
-    clean_line,
     preprocess_raw_law,
     remove_footnotes,
+    remove_header_footer_artifacts_from_line,
     remove_newline_in_quoted_text,
 )
 
@@ -27,8 +27,8 @@ def test_remove_newline_in_quoted_text_nested_quotes():
     assert result_text == "The following\n text „is  in „quotes multiple“ times“."
 
 
-def test_remove_newline_in_quoted_text_uneven_numbered_quotes():
-    """Test if the function raises an exception if the number of opening and closing quotes is not equal."""
+def test_remove_newline_in_quoted_text_too_many_opening_quotes():
+    """Test if the function raises an exception if the number of opening excedes the number of closing quotes."""
     test_text = (
         "The following\n text „is \nin quotes“. „This is missing closing quotes."
     )
@@ -36,7 +36,23 @@ def test_remove_newline_in_quoted_text_uneven_numbered_quotes():
     with pytest.raises(Exception) as err:
         result_text = remove_newline_in_quoted_text(test_text)
 
-    assert str(err.value) == "Something with the quotes is wrong."
+    assert (
+        str(err.value) == "Quote error: Found more opening quotes than closing quotes."
+    )
+
+
+def test_remove_newline_in_quoted_text_too_many_closing_quotes():
+    """Test if the function raises an exception if the number of closing excedes the number of opening quotes."""
+    test_text = (
+        "The following\n text „is \nin quotes“. This is missing closing quotes“."
+    )
+
+    with pytest.raises(Exception) as err:
+        result_text = remove_newline_in_quoted_text(test_text)
+
+    assert (
+        str(err.value) == "Quote error: Found more closing quotes than opening quotes."
+    )
 
 
 def test_remove_footnotes():
@@ -59,9 +75,9 @@ dd)  Folgender Satz wird angefügt:"""
     assert text_without_footnote == remove_footnotes(text_with_footnote)
 
 
-def test_clean_line():
-    """Test if a line of change law text can be properly cleaned."""
+def test_remove_header_footer_artifacts_from_line():
+    """Test if header/footer artifacts in a line of change law text can be properly removed."""
     test_line = """(2)  Eine Zustellung gegen Empfangsbekenntnis  kann auch  durch Telekopie  erfolgen.  Die  Übermittlung soll  mit dem Hinweis  „Zustellung gegen Empfangsbekenntnis“ eingeleitet werden und die absendende  Deutscher  Bundestag – 19. Wahlperiode   – 9 –   Drucksache  19/28399 Stelle, den  Namen und  die Anschrift  des  Zustellungsadressaten sowie den  Namen  des  Justizbediensteten"""
     clean_test_line = """(2)  Eine Zustellung gegen Empfangsbekenntnis  kann auch  durch Telekopie  erfolgen.  Die  Übermittlung soll  mit dem Hinweis  „Zustellung gegen Empfangsbekenntnis“ eingeleitet werden und die absendende  Stelle, den  Namen und  die Anschrift  des  Zustellungsadressaten sowie den  Namen  des  Justizbediensteten"""
 
-    assert clean_test_line == clean_line(test_line)
+    assert clean_test_line == remove_header_footer_artifacts_from_line(test_line)

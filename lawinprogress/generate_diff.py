@@ -54,10 +54,10 @@ def generate_diff(change_law_path, output_path):
         # find and load the source law
         source_law_path = "data/source_laws/{}.txt".format(law_title)
         try:
-            with open(source_law_path, "r") as file:
+            with open(source_law_path, "r", encoding="utf8") as file:
                 source_law_text = file.read()
             click.echo("Apply changes to {}".format(law_title))
-        except:
+        except Exception as err:
             click.echo("Cannot find source law {}. SKIPPING".format(law_title))
             continue
 
@@ -107,9 +107,9 @@ def generate_diff(change_law_path, output_path):
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        with open(write_path, "w") as file:
+        with open(write_path, "w", encoding="utf8") as file:
             file.write(res_law_tree.to_text())
-        with open(source_write_path, "w") as file:
+        with open(source_write_path, "w", encoding="utf8") as file:
             file.write(parsed_law_tree.to_text())
     click.echo("DONE.")
 

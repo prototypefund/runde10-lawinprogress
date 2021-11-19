@@ -37,11 +37,11 @@ def parse_change_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
     # build the tree
     for pattern in patterns:
         used_texts = []
-        p = re.compile(pattern, re.MULTILINE)
+        regex_pattern = re.compile(pattern, re.MULTILINE)
         # search the pattern in the text
-        if p.search(text):
+        if regex_pattern.search(text):
             # split the text at the found pattern
-            split_text = p.split(text)
+            split_text = regex_pattern.split(text)
             # create new nodes from the matches
             for idx, match in enumerate(p.finditer(text)):
                 new_node = LawTextNode(
