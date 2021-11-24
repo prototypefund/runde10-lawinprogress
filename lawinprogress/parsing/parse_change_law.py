@@ -167,7 +167,7 @@ def parse_change_request_line(line: str) -> List[Change]:
     # if the change is of type "Absatz 7 wird Absatz 8" skip here.
     renumbering = False
     regex_str_singular = r"(Absatz|Paragraph|Nummer)\s(\d{1,2}|[a-z]{1,2}\)?)\swird\s(Absatz|Paragraph|Nummer)\s(\d{1,2}|[a-z]{1,2}\)?)"
-    regex_str_multiple = r"(Absatz|Paragraph|Nummern)\s(\d{1,2}|[a-z]{1,2}\)?)\s(bis|und)\s(\d{1,2}|[a-z]{1,2}\)?)\swerden\s(der|die|das)\s(Absatz|Paragraph|Nummern)\s(\d{1,2}|[a-z]{1,2}\)?)\s(bis|und)\s(\d{1,2}|[a-z]{1,2}\)?)"
+    regex_str_multiple = r"(Absatz|Absätze|Abätze|Paragraph|Nummern)\s(\d{1,2}|[a-z]{1,2}\)?)\s(bis|und)\s(\d{1,2}|[a-z]{1,2}\)?)\swerden\s(der|die|das)?\s?(Absatz|Absätze|Abätze|Paragraph|Nummern)\s(\d{1,2}|[a-z]{1,2}\)?)\s(bis|und)\s(\d{1,2}|[a-z]{1,2}\)?)"
     if re.search(regex_str_singular, line) or re.search(regex_str_multiple, line):
         renumbering = True
     line = re.sub(regex_str_singular, "", line)

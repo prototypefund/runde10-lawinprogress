@@ -64,12 +64,12 @@ def remove_header_footer_artifacts_from_line(line: str):
     # line = re.sub(r"- \d -", "", line)
 
     #  remove drucksache page break stuff
-    #drucksache_regexs = [
-    #    r"\sDeutscher\s{1,5}Bundestag\s{1,5}\S\s{1,5}\d{1,2}\.\s{1,3}Wahlperiode\s{1,5}\S\s{1,5}\d{1,3}\s{1,5}\S\s{1,5}Drucksache\s{1,5}\d{1,3}\/\d{1,7}",
-    #    r"\sDrucksache\s{1,5}\d{1,3}\/\d{1,7}\s{1,5}\S\s{1,5}\d{1,2}\s{1,5}\S\s{1,5}Deutscher\s{1,3}Bundestag\s{1,5}\S\s{1,5}\d{1,2}\.\s{1,3}Wahlperiode\s",
-    #]
-    #for drucksache_regex in drucksache_regexs:
-    #    line = re.sub(drucksache_regex, "", line)
+    drucksache_regexs = [
+        r"\sDeutscher\s{1,5}Bundestag\s{1,5}\S\s{1,5}\d{1,2}\.\s{1,3}Wahlperiode\s{1,5}\S\s{1,5}\d{1,3}\s{1,5}\S\s{1,5}Drucksache\s{1,5}\d{1,3}\/\d{1,7}",
+        r"\sDrucksache\s{1,5}\d{1,3}\/\d{1,7}\s{1,5}\S\s{1,5}\d{1,2}\s{1,5}\S\s{1,5}Deutscher\s{1,3}Bundestag\s{1,5}\S\s{1,5}\d{1,2}\.\s{1,3}Wahlperiode\s",
+    ]
+    for drucksache_regex in drucksache_regexs:
+        line = re.sub(drucksache_regex, "", line)
     if "drucksache" in line.lower():
         return "\n"
     return line
@@ -105,7 +105,7 @@ def preprocess_raw_law(text: str) -> str:
         String with preprocessing applied.
     """
     # remove linebreak wordsplits
-    text = text.replace("-\n", "")
+    text = re.sub(r"\b-\n\b", "", text)
 
     # extract the parts with change requests (here we assume only one law is affected for now)
     # > get the text between "wird wie folgt geändert" und "Begründung"

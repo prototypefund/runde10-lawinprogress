@@ -5,7 +5,7 @@ from click.testing import CliRunner
 from lawinprogress.generate_diff import generate_diff
 
 
-@pytest.mark.skip("End2end test skipped.")
+#@pytest.mark.skip("End2end test skipped.")
 def test_generate_diff():
     """Test of a diff is generated.
 
@@ -21,5 +21,5 @@ def test_generate_diff():
     print(result.output)
     assert not result.exception
     assert result.exit_code == 0
-    assert "Successfully applied 10 out of 11 changes (90.9%)" in result.output
+    assert "Successfully applied 10 out of 12 changes (83.3%)" in result.output
     assert "DONE." in result.output

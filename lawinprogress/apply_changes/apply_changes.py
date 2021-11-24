@@ -88,8 +88,8 @@ def apply_changes(law_tree: LawTextNode, changes: List[Change]) -> LawTextNode:
         ]
         # find the node that needs to be changed
         node = _find_node(location_list=location_list, parse_tree=res_law_tree)
-        # store the representation of the node to compare it with the node after the change
-        node_text_before = node.to_text()
+        # store the representation of the tree to compare it with the tree after the change
+        tree_text_before = res_law_tree.to_text()
         # if we found no path, we skip
         if not node:
             print("No path found in {}. SKIPPING".format(change))
@@ -113,13 +113,13 @@ def apply_changes(law_tree: LawTextNode, changes: List[Change]) -> LawTextNode:
             status = 1
         else:
             print("SKIPPED {}: {}".format(change_type, change))
-        if node.to_text() != node_text_before:
+        if res_law_tree.to_text() != tree_text_before:
             # if something changed, then we successfully applied something
             print("APPLIED {}: {}".format(change_type, change))
             n_succesfull_applied_changes += status
         else:
             # if nothign changed, we should be informed
-            if change_type != "RENUMBERING":
+            if change_type not in ["RENUMBERING", "MULTIPLE_CHANGES", "UNKNOWN"]:
                 print("WITHOUT CHANGE {}: {}".format(change_type, change))
     # print a status update
     print(
