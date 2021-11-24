@@ -27,7 +27,7 @@ def read_pdf_law(filename: str) -> str:
     pdf_file_obj = pdfplumber.open(filename)
 
     # join the pages
-    return "".join(
+    return "\n".join(
         [page for page in [page.extract_text() for page in pdf_file_obj.pages] if page]
     )
 

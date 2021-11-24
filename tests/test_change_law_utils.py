@@ -75,9 +75,16 @@ dd)  Folgender Satz wird angefügt:"""
     assert text_without_footnote == remove_footnotes(text_with_footnote)
 
 
-def test_remove_header_footer_artifacts_from_line():
-    """Test if header/footer artifacts in a line of change law text can be properly removed."""
-    test_line = """(2)  Eine Zustellung gegen Empfangsbekenntnis  kann auch  durch Telekopie  erfolgen.  Die  Übermittlung soll  mit dem Hinweis  „Zustellung gegen Empfangsbekenntnis“ eingeleitet werden und die absendende  Deutscher  Bundestag – 19. Wahlperiode   – 9 –   Drucksache  19/28399 Stelle, den  Namen und  die Anschrift  des  Zustellungsadressaten sowie den  Namen  des  Justizbediensteten"""
-    clean_test_line = """(2)  Eine Zustellung gegen Empfangsbekenntnis  kann auch  durch Telekopie  erfolgen.  Die  Übermittlung soll  mit dem Hinweis  „Zustellung gegen Empfangsbekenntnis“ eingeleitet werden und die absendende  Stelle, den  Namen und  die Anschrift  des  Zustellungsadressaten sowie den  Namen  des  Justizbediensteten"""
+def test_remove_header_footer_artifacts_from_line_no_artifacts():
+    """Test if header/footer removal doenst remove something if there is nothing to remove."""
+    test_line = """(2)  Eine Zustellung gegen Empfangsbekenntnis  kann auch  durch Telekopie  erfolgen.  Die  Übermittlung soll  mit dem Hinweis  „Zustellung gegen Empfangsbekenntnis“ eingeleitet werden und die absendende."""
+    clean_test_line = """(2)  Eine Zustellung gegen Empfangsbekenntnis  kann auch  durch Telekopie  erfolgen.  Die  Übermittlung soll  mit dem Hinweis  „Zustellung gegen Empfangsbekenntnis“ eingeleitet werden und die absendende."""
 
     assert clean_test_line == remove_header_footer_artifacts_from_line(test_line)
+
+
+def test_remove_header_footer_artifacts_from_line():
+    """Test if header/footer artifacts in a line of change law text can be properly removed."""
+    test_line = """Deutscher  Bundestag – 19. Wahlperiode   – 9 –   Drucksache  19/28399"""
+
+    assert "\n" == remove_header_footer_artifacts_from_line(test_line)
