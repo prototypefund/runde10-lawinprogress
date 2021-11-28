@@ -63,6 +63,7 @@ def _insert_after(node: LawTextNode, change: Change) -> int:
         return 0
 
     bulletpoint_matches = [
+        re.match(r"^Kapitel\s*\d{1,3}", change.text[0]),
         re.match(r"^\d\.", change.text[0]),
         re.match(r"^§\s\d{1,3}[a-z]?", change.text[0]),
         re.match(r"^[a-z]\)", change.text[0]),
@@ -194,7 +195,11 @@ def _cancelled(node: LawTextNode, change: Change) -> int:
     """Remove the node in question from the tree."""
     status = 1
     if len(change.text) == 0 and len(change.sentences) == 0:
-        node.parent.remove_child(bulletpoint=node.bulletpoint)
+        try:
+            node.parent.remove_child(bulletpoint=node.bulletpoint)
+        except AttributeError as err:
+            print("Failed to cancel! Node has no parent")
+            status = 0
     elif len(change.text) == 0 and len(change.sentences) == 1:
         # remove the sentences in question
         sentences = __split_text_to_sentences(node.text)

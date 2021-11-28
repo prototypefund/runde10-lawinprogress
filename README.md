@@ -24,6 +24,10 @@ Das Online-Tool "Law in Progress" soll Gesetzentw√ºrfe und deren Konsequenzen f√
 
 Clone the repo and run `make install` to setup poetry and the relevant requriements.
 
+# Example usage:
+
+```poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf```
+
 
 # Code checks & tests
 

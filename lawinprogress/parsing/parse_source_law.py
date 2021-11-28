@@ -16,6 +16,7 @@ def parse_source_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
         Structured output. A tree of LawTextNodes.
     """
     patterns = [
+        r"\nKapitel\s*\d{1,3}",
         r"\n§\s*\d{1,3}[a-z]?",
         r"\n\s*\([a-z1-9]\)",
         r"\n\s*\d{1,2}\.",
