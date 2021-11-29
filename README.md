@@ -22,7 +22,17 @@ Das Online-Tool "Law in Progress" soll Gesetzentw√ºrfe und deren Konsequenzen f√
 
 # Setup
 
-Clone the repo and run `make install` to setup poetry and the relevant requriements.
+Clone the repo and run `make poetry` and `make install` to setup poetry and the relevant requriements.
+
+
+# Example usage
+To generate a diff for an exisiting change law, run
+
+```bash
+poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf
+```
+
+This will generate a before and after version of the changed laws in `./output`. Currently only laws present in `./data/source_laws/` are supported. Other changes will be skipped.
 
 
 # Code checks & tests
@@ -32,9 +42,6 @@ This will first sort the imports with `isort` and then format the code with `bla
 These tools might not agree on something, but in the end the code looks nice.
 Finally, some properties of code "quality" are checked with `pylint`.
 Try to resolve as many warnings as reasonably possible. If you are sure you want to ignore a warning,
-you can comment the line (or in the line before the warning) in the source code
-```
-# pylint: disable=<name-of-the-warning>
-```
+you can comment the line (or in the line before the warning) in the source code ```# pylint: disable=<name-of-the-warning>```.
 
 To run the tests, run `make test`.
