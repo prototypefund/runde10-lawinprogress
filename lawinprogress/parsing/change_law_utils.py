@@ -70,6 +70,8 @@ def remove_header_footer_artifacts_from_line(line: str):
     ]
     for drucksache_regex in drucksache_regexs:
         line = re.sub(drucksache_regex, "", line)
+    if "drucksache" in line.lower():
+        return "\n"
     return line
 
 
@@ -103,7 +105,7 @@ def preprocess_raw_law(text: str) -> str:
         String with preprocessing applied.
     """
     # remove linebreak wordsplits
-    text = text.replace("-\n", "")
+    text = re.sub(r"\b-\n\b", "", text)
 
     # extract the parts with change requests (here we assume only one law is affected for now)
     # > get the text between "wird wie folgt geändert" und "Begründung"
@@ -112,6 +114,9 @@ def preprocess_raw_law(text: str) -> str:
         r"wird[\s,\n]{0,3}wie[\s,\n]{0,3}folgt[\s,\n]{0,3}geändert:", text, maxsplit=1
     )[1].split("Begründung", 1)[0]
 
+    # remove header and footer artifacts
+    text = "\n".join([remove_header_footer_artifacts_from_line(line) for line in text.split("\n")])
+    
     # remove footnotes
     text = remove_footnotes(text)
 
@@ -124,9 +129,6 @@ def preprocess_raw_law(text: str) -> str:
     # pull every bulletpoint content to one line
     outtext = ""
     for line in text.split("\n"):
-        # apply some cleaning
-        line = remove_header_footer_artifacts_from_line(line)
-
         # check if line starts with a bullet point identifier
         # > if yes, put it in a new line, otherwise just append the linetext to the text
         if any(

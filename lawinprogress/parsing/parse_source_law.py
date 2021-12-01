@@ -16,7 +16,8 @@ def parse_source_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
         Structured output. A tree of LawTextNodes.
     """
     patterns = [
-        r"\n§\s\d{1,3}[a-z]?",
+        r"\nKapitel\s*\d{1,3}",
+        r"\n§\s*\d{1,3}[a-z]?",
         r"\n\s*\([a-z1-9]\)",
         r"\n\s*\d{1,2}\.",
         r"\n\s*[a-z]\)",
@@ -30,7 +31,6 @@ def parse_source_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
             split_text = re.split(pattern, text)
             for idx, match in enumerate(re.finditer(pattern, text)):
                 new_node = LawTextNode(
-                    # text=split_text[idx + 1].strip().split("\n")[0],
                     text=re.split("|".join(patterns), split_text[idx + 1].strip())[0],
                     # store the text for this bullet point on this level
                     bulletpoint=text[match.span()[0] : match.span()[1]].strip(),
@@ -39,7 +39,8 @@ def parse_source_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
                 )
                 # get the next level associated with this node
                 _ = parse_source_law_tree(split_text[idx + 1], source_node=new_node)
-                used_texts.append(split_text[idx + 1])
+                # store the text already used to remove later. Store bulletpoint and text
+                used_texts.append(text[match.span()[0] : match.span()[1]] + split_text[idx + 1])
         # if parsing has happened for a piece of text, we remove it.
         for used_text in used_texts:
             text = text.replace(used_text, "")

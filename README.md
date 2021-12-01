@@ -34,6 +34,10 @@ poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf
 
 This will generate a before and after version of the changed laws in `./output`. Currently only laws present in `./data/source_laws/` are supported. Other changes will be skipped.
 
+# Example usage:
+
+```poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf```
+
 
 # Code checks & tests
 
