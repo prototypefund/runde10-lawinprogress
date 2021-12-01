@@ -43,7 +43,7 @@ def parse_change_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
             # split the text at the found pattern
             split_text = regex_pattern.split(text)
             # create new nodes from the matches
-            for idx, match in enumerate(p.finditer(text)):
+            for idx, match in enumerate(regex_pattern.finditer(text)):
                 new_node = LawTextNode(
                     text=split_text[idx + 1].strip().split("\n")[0],
                     # store the text for this bullet point on this level
