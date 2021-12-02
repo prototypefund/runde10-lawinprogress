@@ -21,5 +21,5 @@ def test_generate_diff():
     print(result.output)
     assert not result.exception
     assert result.exit_code == 0
-    assert "Successfully applied 10 out of 12 changes (83.3%)" in result.output
+    assert "Successfully applied 11 out of 12 changes (91.7%)" in result.output
     assert "DONE." in result.output

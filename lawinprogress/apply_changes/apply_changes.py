@@ -122,7 +122,7 @@ def apply_changes(
         elif change_type == "RENUMBERING":
             _log_change("SKIPPED", change, loglevel)
             # we skip it because the insertion code in Treelawnode should handle all of this
-            status = 1
+            n_succesfull_applied_changes += 1
         else:
             _log_change("SKIPPED", change, loglevel)
         if res_law_tree.to_text() != tree_text_before:
