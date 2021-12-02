@@ -15,6 +15,7 @@ class Change:
     sentences: List[str]
     text: List[str]
     change_type: str
+    raw_text: str
 
 
 def parse_change_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
@@ -164,6 +165,7 @@ def parse_change_request_line(line: str) -> List[Change]:
     Returns:
         A list of Changes with required changes extracted from this line.
     """
+    raw_line = line
     # if the change is of type "Absatz 7 wird Absatz 8" skip here.
     renumbering = False
     regex_str_singular = r"(Absatz|Paragraph|Nummer)\s(\d{1,2}|[a-z]{1,2}\)?)\swird\s(Absatz|Paragraph|Nummer)\s(\d{1,2}|[a-z]{1,2}\)?)"
@@ -199,6 +201,7 @@ def parse_change_request_line(line: str) -> List[Change]:
                     sentences=sentences,
                     text=change_text,
                     change_type=change_type,
+                    raw_text=raw_line,
                 )
             )
     if len(changes) == 0:
@@ -210,6 +213,7 @@ def parse_change_request_line(line: str) -> List[Change]:
                 sentences=sentences,
                 text=change_text,
                 change_type="RENUMBERING" if renumbering else "UNKNOWN",
+                raw_text=raw_line,
             )
         )
     elif len(changes) > 1:
@@ -221,6 +225,7 @@ def parse_change_request_line(line: str) -> List[Change]:
                 sentences=sentences,
                 text=change_text,
                 change_type="MULTIPLE_CHANGES",
+                raw_text=raw_line,
             )
         ]
     return changes

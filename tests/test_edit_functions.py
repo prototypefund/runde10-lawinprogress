@@ -56,6 +56,7 @@ def test_replace_success():
         sentences=[],
         text=["text to replace", "replaced"],
         change_type="replace",
+        raw_text="(1) - Replace something in this test."
     )
 
     status = _replace(node, change)
@@ -68,7 +69,7 @@ def test_replace_failure():
     """Test if replace fails as expected."""
     node = LawTextNode(bulletpoint="(1)", text="Test text to replace;")
     change = Change(
-        location="(1)", sentences=[], text=["text to replace"], change_type="replace"
+        location="(1)", sentences=[], text=["text to replace"], change_type="replace", raw_text="(1) - Replace some text, this is a test."
     )
 
     status = _replace(node, change)
@@ -85,6 +86,7 @@ def test_insert_after_with_paired_texts():
         sentences=[],
         text=["insert", "inserted"],
         change_type="insert_after",
+        raw_text="(1) - Insert some text, this is a test."
     )
 
     status = _insert_after(node, change)
@@ -104,6 +106,7 @@ def test_insert_after_bulletpointmatch_exists():
         sentences=[],
         text=["(1) New inserted node text"],
         change_type="insert_after",
+        raw_text="(1) - Insert some text, this is a test."
     )
 
     status = _insert_after(node, change)
@@ -127,6 +130,7 @@ def test_insert_after_bulletpointmatch_doesnt_exist():
         sentences=[],
         text=["(2) New inserted node text"],
         change_type="insert_after",
+        raw_text="(1) - Insert something in this test."
     )
 
     status = _insert_after(node, change)
@@ -150,6 +154,7 @@ def test_insert_after_with_paired_texts():
         sentences=["nach Satz 1"],
         text=["Inserted sentence."],
         change_type="insert_after",
+        raw_text="(1) - Insert some text, this is a test."
     )
 
     status = _insert_after(node, change)
@@ -164,7 +169,7 @@ def test_insert_after_with_paired_texts():
 def test_insert_after_fails_with_no_text():
     """Test if insert_after fails if no text is given."""
     node = LawTextNode(bulletpoint="(1)", text="Test text to replace;")
-    change = Change(location="(1)", sentences=[], text=[], change_type="insert_after")
+    change = Change(location="(1)", sentences=[], text=[], change_type="insert_after", raw_text="(1) - ")
 
     status = _insert_after(node, change)
 
@@ -179,6 +184,7 @@ def test_rephrase_with_one_text_no_sentence():
         sentences=[],
         text=["(1) Rephrased text."],
         change_type="rephrase",
+        raw_text="(1) - Rephrase some text, this is a test."
     )
 
     status = _rephrase(node, change)
@@ -198,6 +204,7 @@ def test_rephrase_with_one_text_one_sentence():
         sentences=["Satz 2"],
         text=["Text to rephrase."],
         change_type="rephrase",
+        raw_text="(1) - Rephrase some text, this is a test."
     )
 
     status = _rephrase(node, change)
@@ -212,7 +219,7 @@ def test_rephrase_fails_without_text():
         bulletpoint="(1)",
         text="Here is nothing to do. Text to rephrase in this sentence.",
     )
-    change = Change(location="(1)", sentences=[], text=[], change_type="rephrase")
+    change = Change(location="(1)", sentences=[], text=[], change_type="rephrase", raw_text="(1) - Rephrase some text, this is a test.")
 
     status = _rephrase(node, change)
 
@@ -224,7 +231,8 @@ def test_append_success_one_text():
     """Test if appending the text to a specific location works."""
     node = LawTextNode(bulletpoint="(1)", text="Current text to append to.")
     change = Change(
-        location="(1)", sentences=[], text=["Appended text."], change_type="append"
+        location="(1)", sentences=[], text=["Appended text."], change_type="append",
+        raw_text="(1) - Append some text, this is a test."
     )
 
     status = _append(node, change)
@@ -241,6 +249,7 @@ def test_append_fails_too_much_texts():
         sentences=[],
         text=["Appended text.", "More text"],
         change_type="append",
+        raw_text="(1) - Append some text, this is a test."
     )
 
     status = _append(node, change)
@@ -252,7 +261,7 @@ def test_append_fails_too_much_texts():
 def test_append_fails_too_little_texts():
     """Test if appending fails with too little text."""
     node = LawTextNode(bulletpoint="(1)", text="Current text to append to.")
-    change = Change(location="(1)", sentences=[], text=[], change_type="append")
+    change = Change(location="(1)", sentences=[], text=[], change_type="append", raw_text="(1) - Append some text, this is a test.")
 
     status = _append(node, change)
 
@@ -264,7 +273,8 @@ def test_delete_after_one_text():
     """Test if deleting a specific text works."""
     node = LawTextNode(bulletpoint="(1)", text="Current to delete text.")
     change = Change(
-        location="(1)", sentences=[], text=["to delete"], change_type="delete_after"
+        location="(1)", sentences=[], text=["to delete"], change_type="delete_after",
+        raw_text="(1) - Delete some text, this is a test."
     )
 
     status = _delete_after(node, change)
@@ -281,6 +291,7 @@ def test_delete_after_two_texts():
         sentences=[],
         text=["to delete", "text"],
         change_type="delete_after",
+        raw_text="(1) - Delete some text, this is a test."
     )
 
     status = _delete_after(node, change)
@@ -292,7 +303,7 @@ def test_delete_after_two_texts():
 def test_delete_after_fails_without_text():
     """Test if deleting after fails without text given."""
     node = LawTextNode(bulletpoint="(1)", text="Current to delete text.")
-    change = Change(location="(1)", sentences=[], text=[], change_type="delete_after")
+    change = Change(location="(1)", sentences=[], text=[], change_type="delete_after", raw_text="(1) - Delete some text, this is a test.")
 
     status = _delete_after(node, change)
 
@@ -307,7 +318,7 @@ def test_cancelled_remove_node():
     other_node = LawTextNode(
         bulletpoint="(2)", text="Node to remain.", parent=parent_node
     )
-    change = Change(location="(1)", sentences=[], text=[], change_type="cancelled")
+    change = Change(location="(1)", sentences=[], text=[], change_type="cancelled", raw_text="(1) - Cancel some text, this is a test.")
 
     status = _cancelled(node, change)
 

@@ -34,12 +34,20 @@ from lawinprogress.parsing.proposal_pdf_to_artikles import (
 @click.option(
     "output_path",
     "-o",
-    help="Where to write the output (logs and modified laws).",
+    help="Where to write the output (modified laws).",
     default="./output/",
 )
-def generate_diff(change_law_path, output_path):
+@click.option(
+    "loglevel",
+    "-l",
+    help="How details should logs be. Integer from 0 to 2.",
+    type=int,
+    default=1,
+)
+def generate_diff(change_law_path: str, output_path: str, loglevel: int):
     """Generate the diff from the change law and the source law."""
     click.echo("Started parsing {}".format(change_law_path))
+    click.echo("\n" + "#" * 150 + "\n")
     # read the change law
     change_law_raw = read_pdf_law(change_law_path)
 
@@ -60,6 +68,8 @@ def generate_diff(change_law_path, output_path):
         except Exception as err:
             click.echo("Cannot find source law {}. SKIPPING".format(law_title))
             continue
+
+        click.echo("\n" + "#" * 150 + "\n")
 
         # format the change requests and parse them to tree
         clean_change_law = preprocess_raw_law(change_law)
@@ -94,7 +104,7 @@ def generate_diff(change_law_path, output_path):
         )
 
         # apply changes to the source law
-        res_law_tree = apply_changes(parsed_law_tree, change_requests)
+        res_law_tree = apply_changes(parsed_law_tree, change_requests, loglevel)
 
         #  save final version to file
         write_path = "{}{}_modified_{}.txt".format(
@@ -111,6 +121,7 @@ def generate_diff(change_law_path, output_path):
             file.write(res_law_tree.to_text())
         with open(source_write_path, "w", encoding="utf8") as file:
             file.write(parsed_law_tree.to_text())
+        click.echo("\n" + "#" * 150 + "\n")
     click.echo("DONE.")
 
 

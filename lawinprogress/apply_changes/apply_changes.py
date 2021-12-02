@@ -16,6 +16,18 @@ from lawinprogress.parsing.parse_change_law import Change
 from lawinprogress.parsing.parse_source_law import LawTextNode
 
 
+def _log_change(result_text: str, change: Change, loglevel: int = 1):
+    """Convinience function to log a change application."""
+    if loglevel == 0:
+        print("{} {}".format(result_text, change.change_type))
+    elif loglevel == 1:
+        print("{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n".format(result_text, change.change_type, change.location, change.sentences, change.text))
+    elif loglevel == 2:
+        print("{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n\traw_text={}\n".format(result_text, change.change_type, change.location, change.sentences, change.text, change.raw_text))
+    else:
+        raise ValueError("Unknown loglevel in change logging.")
+
+
 def _adapt_change_location_for_source_law(location: str) -> str:
     """Adapt a chnage law location string to fit the naming of locations in the source law.
 
@@ -66,13 +78,14 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
     return current_node
 
 
-def apply_changes(law_tree: LawTextNode, changes: List[Change]) -> LawTextNode:
+def apply_changes(law_tree: LawTextNode, changes: List[Change], loglevel: int = 1) -> LawTextNode:
     """Apply the provided changes to the provided tree.
 
     Args:
         law_tree: A tree of LawTextNodes
         changes: A dict with changes, containing "location", "how" and "text"
                  to specify the changes.
+        loglevel: How detailed should the logs be? Integer between 0 and 2.
 
     Returns:
         Tree of LawTextNodes with the requested changes if we where able to apply them.
@@ -92,7 +105,7 @@ def apply_changes(law_tree: LawTextNode, changes: List[Change]) -> LawTextNode:
         tree_text_before = res_law_tree.to_text()
         # if we found no path, we skip
         if not node:
-            print("No path found in {}. SKIPPING".format(change))
+            _log_change("SKIPPING. No path found for", change, loglevel)
             continue
         change_type = change.change_type
         if change_type == "replace":
@@ -108,19 +121,19 @@ def apply_changes(law_tree: LawTextNode, changes: List[Change]) -> LawTextNode:
         elif change_type == "cancelled":
             status = _cancelled(node, change)
         elif change_type == "RENUMBERING":
-            print("SKIPPED {}: {}".format(change_type, change))
+            _log_change("SKIPPED", change, loglevel)
             # we skip it because the insertion code in Treelawnode should handle all of this
             status = 1
         else:
-            print("SKIPPED {}: {}".format(change_type, change))
+            _log_change("SKIPPED", change, loglevel)
         if res_law_tree.to_text() != tree_text_before:
             # if something changed, then we successfully applied something
-            print("APPLIED {}: {}".format(change_type, change))
+            _log_change("APPLIED", change, loglevel)
             n_succesfull_applied_changes += status
         else:
             # if nothign changed, we should be informed
             if change_type not in ["RENUMBERING", "MULTIPLE_CHANGES", "UNKNOWN"]:
-                print("WITHOUT CHANGE {}: {}".format(change_type, change))
+                _log_change("APPLIED WITHOUT CHANGE", change, loglevel)
     # print a status update
     print(
         "\nSuccessfully applied {} out of {} changes ({:.1%})\n".format(
