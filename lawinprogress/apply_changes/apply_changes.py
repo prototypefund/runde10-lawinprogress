@@ -28,25 +28,6 @@ def _log_change(result_text: str, change: Change, loglevel: int = 1):
         raise ValueError("Unknown loglevel in change logging.")
 
 
-def _adapt_change_location_for_source_law(location: str) -> str:
-    """Adapt a chnage law location string to fit the naming of locations in the source law.
-
-    Args:
-        location: String of a change law location identifier.
-
-    Returns:
-        A string representing a location identifier in a source law.
-    """
-    # replace some text bulletpoints to match the bulletpoints in the source laws
-    if location.startswith("Absatz "):
-        location = location.replace("Absatz ", "(") + ")"
-    elif location.startswith("Nummer "):
-        location = location.replace("Nummer ", "") + "."
-    elif location.startswith("Buchstabe "):
-        location = location.replace("Buchstabe ", "") + ")"
-    return location
-
-
 def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTextNode]:
     """The node by location in the provided tree.
 
@@ -94,13 +75,8 @@ def apply_changes(law_tree: LawTextNode, changes: List[Change], loglevel: int = 
     n_succesfull_applied_changes = 0
     for change in changes:
         status = 0
-        # change location identifiers from the change law format to the source law format
-        location_list = [
-            _adapt_change_location_for_source_law(location)
-            for location in change.location
-        ]
         # find the node that needs to be changed
-        node = _find_node(location_list=location_list, parse_tree=res_law_tree)
+        node = _find_node(location_list=change.location, parse_tree=res_law_tree)
         # store the representation of the tree to compare it with the tree after the change
         tree_text_before = res_law_tree.to_text()
         # if we found no path, we skip

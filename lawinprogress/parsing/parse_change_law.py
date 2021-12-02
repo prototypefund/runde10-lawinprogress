@@ -61,6 +61,25 @@ def parse_change_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
     return source_node
 
 
+def _adapt_change_location_for_source_law(location: str) -> str:
+    """Adapt a chnage law location string to fit the naming of locations in the source law.
+
+    Args:
+        location: String of a change law location identifier.
+
+    Returns:
+        A string representing a location identifier in a source law.
+    """
+    # replace some text bulletpoints to match the bulletpoints in the source laws
+    if location.startswith("Absatz "):
+        location = location.replace("Absatz ", "(") + ")"
+    elif location.startswith("Nummer "):
+        location = location.replace("Nummer ", "") + "."
+    elif location.startswith("Buchstabe "):
+        location = location.replace("Buchstabe ", "") + ")"
+    return location
+
+
 def parse_change_location(line: str) -> List[str]:
     """Parse the location identifiers from one line of change request.
 
@@ -97,7 +116,8 @@ def parse_change_location(line: str) -> List[str]:
             # if the identifier is not found, pass
             pass
     # return a list of locations, but replace any multiple whitespace as a single whitespace
-    return [re.sub(r"\s+", " ", loc) for loc in location]
+    # and adapt the location to match the bulletpoint patterns used in the source law
+    return [_adapt_change_location_for_source_law(re.sub(r"\s+", " ", loc)) for loc in location]
 
 
 def parse_change_sentences(line: str) -> List[str]:
@@ -145,7 +165,7 @@ def parse_change_text(line: str) -> List[str]:
         List of strings, every string is one change text.
     """
     return [
-        line[m.span()[0] : m.span()[1]].replace("Komma", ",").replace("Semikolon", ";")
+        line[m.span()[0] : m.span()[1]].replace("Komma", ",").replace("Semikolon", ";").strip()
         for m in re.finditer(
             r"((?<=„)(.|\n)*?(?=“)|Komma|Semikolon)", line, re.MULTILINE
         )
