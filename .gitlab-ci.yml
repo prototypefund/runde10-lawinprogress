@@ -1,0 +1,29 @@
+image: python:3.9
+
+cache:
+  paths:
+    - /.poetry/bin/
+
+before_script:
+  - test -e $HOME/.poetry/bin/ || curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+  - export PATH="$PATH:$HOME/.poetry/bin/" 
+  - source $HOME/.poetry/env 
+  - make install
+      
+stages:
+  - lint
+  - test
+
+lint-test-job:
+  stage: lint
+  script:
+    - echo "Linting code..."
+    - poetry run isort .
+    - poetry run black .
+    # remove linting for now - poetry run pylint lawinprogress/
+
+unit-test-job:
+  stage: test
+  script:
+    - echo "Running unit tests..."
+    - make test
