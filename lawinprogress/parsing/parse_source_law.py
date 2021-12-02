@@ -40,7 +40,9 @@ def parse_source_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
                 # get the next level associated with this node
                 _ = parse_source_law_tree(split_text[idx + 1], source_node=new_node)
                 # store the text already used to remove later. Store bulletpoint and text
-                used_texts.append(text[match.span()[0] : match.span()[1]] + split_text[idx + 1])
+                used_texts.append(
+                    text[match.span()[0] : match.span()[1]] + split_text[idx + 1]
+                )
         # if parsing has happened for a piece of text, we remove it.
         for used_text in used_texts:
             text = text.replace(used_text, "")

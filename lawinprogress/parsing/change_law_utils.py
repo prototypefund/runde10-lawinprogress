@@ -115,8 +115,10 @@ def preprocess_raw_law(text: str) -> str:
     )[1].split("Begründung", 1)[0]
 
     # remove header and footer artifacts
-    text = "\n".join([remove_header_footer_artifacts_from_line(line) for line in text.split("\n")])
-    
+    text = "\n".join(
+        [remove_header_footer_artifacts_from_line(line) for line in text.split("\n")]
+    )
+
     # remove footnotes
     text = remove_footnotes(text)
 

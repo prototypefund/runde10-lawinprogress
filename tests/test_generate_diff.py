@@ -5,7 +5,7 @@ from click.testing import CliRunner
 from lawinprogress.generate_diff import generate_diff
 
 
-#@pytest.mark.skip("End2end test skipped.")
+# @pytest.mark.skip("End2end test skipped.")
 def test_generate_diff():
     """Test of a diff is generated.
 

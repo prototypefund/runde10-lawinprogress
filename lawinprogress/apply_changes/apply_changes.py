@@ -21,9 +21,26 @@ def _log_change(result_text: str, change: Change, loglevel: int = 1):
     if loglevel == 0:
         print("{} {}".format(result_text, change.change_type))
     elif loglevel == 1:
-        print("{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n".format(result_text, change.change_type, change.location, change.sentences, change.text))
+        print(
+            "{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n".format(
+                result_text,
+                change.change_type,
+                change.location,
+                change.sentences,
+                change.text,
+            )
+        )
     elif loglevel == 2:
-        print("{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n\traw_text={}\n".format(result_text, change.change_type, change.location, change.sentences, change.text, change.raw_text))
+        print(
+            "{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n\traw_text={}\n".format(
+                result_text,
+                change.change_type,
+                change.location,
+                change.sentences,
+                change.text,
+                change.raw_text,
+            )
+        )
     else:
         raise ValueError("Unknown loglevel in change logging.")
 
@@ -59,7 +76,9 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
     return current_node
 
 
-def apply_changes(law_tree: LawTextNode, changes: List[Change], loglevel: int = 1) -> LawTextNode:
+def apply_changes(
+    law_tree: LawTextNode, changes: List[Change], loglevel: int = 1
+) -> LawTextNode:
     """Apply the provided changes to the provided tree.
 
     Args:

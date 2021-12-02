@@ -46,7 +46,7 @@ from lawinprogress.parsing.proposal_pdf_to_artikles import (
 )
 def generate_diff(change_law_path: str, output_path: str, loglevel: int):
     """Generate the diff from the change law and the source law."""
-    click.echo("Started parsing {}".format(change_law_path))
+    click.echo(f"Started parsing {change_law_path}")
     click.echo("\n" + "#" * 150 + "\n")
     # read the change law
     change_law_raw = read_pdf_law(change_law_path)
@@ -60,13 +60,13 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int):
     # parse and apply changes for every law that should be changed
     for law_title, change_law in zip(law_titles, proposals_list):
         # find and load the source law
-        source_law_path = "data/source_laws/{}.txt".format(law_title)
+        source_law_path = f"data/source_laws/{ilaw_title}.txt"
         try:
             with open(source_law_path, "r", encoding="utf8") as file:
                 source_law_text = file.read()
-            click.echo("Apply changes to {}".format(law_title))
+            click.echo(f"Apply changes to {law_title}")
         except Exception as err:
-            click.echo("Cannot find source law {}. SKIPPING".format(law_title))
+            click.echo(f"Cannot find source law {law_title}. SKIPPING")
             continue
 
         click.echo("\n" + "#" * 150 + "\n")
@@ -107,13 +107,13 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int):
         res_law_tree = apply_changes(parsed_law_tree, change_requests, loglevel)
 
         #  save final version to file
-        write_path = "{}{}_modified_{}.txt".format(
-            output_path, law_title, change_law_path.split("/")[-1]
+        write_path = (
+            f"{output_path}{law_title}_modified_{change_law_path.split('/')[-1]}.txt"
         )
-        source_write_path = "{}{}_source_{}.txt".format(
-            output_path, law_title, change_law_path.split("/")[-1]
+        source_write_path = (
+            f"{output_path}{law_title}_source_{change_law_path.split('/')[-1]}.txt"
         )
-        click.echo("Write results to {}".format(write_path))
+        click.echo(f"Write results to {write_path}")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 

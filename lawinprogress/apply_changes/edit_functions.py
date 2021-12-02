@@ -181,10 +181,14 @@ def _delete_after(node: LawTextNode, change: Change) -> int:
     if len(change.text) == 1:
         # If only one string in text, then delete that string from
         # the respective source law location.
-        node.text = node.text.replace(change.text[0].replace("  ", " "), "").replace("  ", " ")
+        node.text = node.text.replace(change.text[0].replace("  ", " "), "").replace(
+            "  ", " "
+        )
     elif len(change.text) > 1:
         # if more than one string in text, replace all following texts.
-        node.text = node.text.replace("".join(change.text[1:]), "")
+        node.text = node.text.replace(
+            " ".join(change.text[1:]).replace("  ", " "), ""
+        ).replace("  ", " ")
     else:
         print("Failed to delete! Not enought text.")
         status = 0

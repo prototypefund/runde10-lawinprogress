@@ -117,7 +117,10 @@ def parse_change_location(line: str) -> List[str]:
             pass
     # return a list of locations, but replace any multiple whitespace as a single whitespace
     # and adapt the location to match the bulletpoint patterns used in the source law
-    return [_adapt_change_location_for_source_law(re.sub(r"\s+", " ", loc)) for loc in location]
+    return [
+        _adapt_change_location_for_source_law(re.sub(r"\s+", " ", loc))
+        for loc in location
+    ]
 
 
 def parse_change_sentences(line: str) -> List[str]:
@@ -165,7 +168,10 @@ def parse_change_text(line: str) -> List[str]:
         List of strings, every string is one change text.
     """
     return [
-        line[m.span()[0] : m.span()[1]].replace("Komma", ",").replace("Semikolon", ";").strip()
+        line[m.span()[0] : m.span()[1]]
+        .replace("Komma", ",")
+        .replace("Semikolon", ";")
+        .strip()
         for m in re.finditer(
             r"((?<=„)(.|\n)*?(?=“)|Komma|Semikolon)", line, re.MULTILINE
         )

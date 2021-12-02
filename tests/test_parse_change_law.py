@@ -15,7 +15,11 @@ from lawinprogress.parsing.parse_change_law import (
 def test_create_change_object():
     """Test if a change object can be successfully created."""
     change = Change(
-        location=["§ 1"], sentences=[], text=["test", "text"], change_type="cancelled", raw_text="1. - this is a raw text"
+        location=["§ 1"],
+        sentences=[],
+        text=["test", "text"],
+        change_type="cancelled",
+        raw_text="1. - this is a raw text",
     )
 
 

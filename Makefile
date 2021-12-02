@@ -9,7 +9,7 @@ jupyter:
 	poetry run jupyter lab
 
 check:
-	poetry run isort .
+	poetry run isort --profile black .
 	poetry run black . 
 	poetry run pylint lawinprogress/
 
