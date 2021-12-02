@@ -57,6 +57,10 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
     """
     current_node = parse_tree
     for location in location_list:
+        # if we have a special location like Überschrift, just return the current_node
+        if location in ["Überschrift"]:
+            return current_node
+
         # find the node in question in the tree
         search_result = findall(
             current_node, filter_=lambda node: location == node.bulletpoint

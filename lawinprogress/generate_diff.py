@@ -60,7 +60,7 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int):
     # parse and apply changes for every law that should be changed
     for law_title, change_law in zip(law_titles, proposals_list):
         # find and load the source law
-        source_law_path = f"data/source_laws/{ilaw_title}.txt"
+        source_law_path = f"data/source_laws/{law_title}.txt"
         try:
             with open(source_law_path, "r", encoding="utf8") as file:
                 source_law_text = file.read()
