@@ -85,6 +85,8 @@ def test_remove_header_footer_artifacts_from_line_no_artifacts():
 
 def test_remove_header_footer_artifacts_from_line():
     """Test if header/footer artifacts in a line of change law text can be properly removed."""
-    test_line = """Deutscher  Bundestag – 19. Wahlperiode   – 9 –   Drucksache  19/28399"""
+    test_line = (
+        """Deutscher  Bundestag – 19. Wahlperiode   – 9 –   Drucksache  19/28399"""
+    )
 
     assert "\n" == remove_header_footer_artifacts_from_line(test_line)

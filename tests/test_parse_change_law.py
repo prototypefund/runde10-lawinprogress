@@ -15,7 +15,11 @@ from lawinprogress.parsing.parse_change_law import (
 def test_create_change_object():
     """Test if a change object can be successfully created."""
     change = Change(
-        location=["§ 1"], sentences=[], text=["test", "text"], change_type="cancelled"
+        location=["§ 1"],
+        sentences=[],
+        text=["test", "text"],
+        change_type="cancelled",
+        raw_text="1. - this is a raw text",
     )
 
 
@@ -26,7 +30,7 @@ def test_parse_change_location_success():
 
     assert len(location) == 2
     assert location[0] == "§ 9"
-    assert location[1] == "Absatz 1"
+    assert location[1] == "(1)"
 
 
 def test_parse_change_sentences_success():
@@ -53,13 +57,16 @@ def test_parse_change_request_line_renumbering():
     line = (
         "4. - § 7 wird wie folgt geändert: b) - Der bisherige Absatz 7 wird Absatz 8."
     )
+    print(line)
     parsed_change = parse_change_request_line(line)
+    print(line)
 
     assert len(parsed_change) == 1
     assert parsed_change[0].change_type == "RENUMBERING"
     assert parsed_change[0].text == []
     assert parsed_change[0].sentences == []
     assert parsed_change[0].location == ["§ 7"]
+    assert parsed_change[0].raw_text == line
 
 
 def test_parse_change_request_line_success():
@@ -71,7 +78,8 @@ def test_parse_change_request_line_success():
     assert parsed_change[0].change_type == "delete_after"
     assert parsed_change[0].text == ["auf Antrag und"]
     assert parsed_change[0].sentences == ["Satz 2"]
-    assert parsed_change[0].location == ["§ 5", "Absatz 1"]
+    assert parsed_change[0].location == ["§ 5", "(1)"]
+    assert parsed_change[0].raw_text == line
 
 
 def test_parse_change_request_line_muliple():
@@ -81,6 +89,7 @@ def test_parse_change_request_line_muliple():
 
     assert len(parsed_change) == 1
     assert parsed_change[0].change_type == "MULTIPLE_CHANGES"
+    assert parsed_change[0].raw_text == line
 
 
 def test_parse_change_law_tree():
@@ -98,8 +107,8 @@ def test_parse_change_law_tree():
 
 def test_parse_multispace_location():
     """Test if a change location with more than one space between the location and the numerator can be parsed successfully, i.e. converted to a single space"""
-    line = "8. - § 183 wird wie folgt geändert: b) - In Absatz  5 Satz 1  werden nach dem  Wort  „Rückschein“ die Wörter  „oder  ein gleichwertiger  Nachweis“ eingefügt."
+    line = "8. - § 183 wird wie folgt geändert: b) - In Nummer  5 Satz 1  werden nach dem  Wort  „Rückschein“ die Wörter  „oder  ein gleichwertiger  Nachweis“ eingefügt."
     location = parse_change_location(line)
 
     assert len(location) == 2
-    assert location[1] == "Absatz 5"
+    assert location[1] == "5."
