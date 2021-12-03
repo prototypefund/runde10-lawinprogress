@@ -1,13 +1,14 @@
 """Main script to generate diffs from change law pdf.
 
 Example usage:
-    poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf
+    poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf --html
 """
 import os
 
 import click
 
 from lawinprogress.apply_changes.apply_changes import apply_changes
+from lawinprogress.libdiff.html_diff import html_diffs
 from lawinprogress.parsing.change_law_utils import preprocess_raw_law
 from lawinprogress.parsing.lawtree import LawTextNode
 from lawinprogress.parsing.parse_change_law import (
@@ -30,6 +31,7 @@ from lawinprogress.parsing.proposal_pdf_to_artikles import (
     "-c",
     help="Path to the change law pdf.",
     type=click.Path(exists=True),
+    required=True,
 )
 @click.option(
     "output_path",
@@ -44,7 +46,12 @@ from lawinprogress.parsing.proposal_pdf_to_artikles import (
     type=int,
     default=1,
 )
-def generate_diff(change_law_path: str, output_path: str, loglevel: int):
+@click.option(
+    "--html",
+    is_flag=True,
+    help="If a html synopsis should be generated.",
+)
+def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: bool):
     """Generate the diff from the change law and the source law."""
     click.echo(f"Started parsing {change_law_path}")
     click.echo("\n" + "#" * 150 + "\n")
@@ -98,7 +105,7 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int):
                 change_requests.extend(res)
 
         # parse source law
-        parsed_law_tree = LawTextNode(text="law_title", bulletpoint="source")
+        parsed_law_tree = LawTextNode(text=law_title, bulletpoint="source")
         parsed_law_tree = parse_source_law_tree(
             text=source_law_text, source_node=parsed_law_tree
         )
@@ -121,6 +128,19 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int):
             file.write(res_law_tree.to_text())
         with open(source_write_path, "w", encoding="utf8") as file:
             file.write(parsed_law_tree.to_text())
+
+        if html:
+            # get the diff
+            html_side_by_side = html_diffs(
+                parsed_law_tree.to_text(), res_law_tree.to_text()
+            )
+            # save to fiel
+            diff_write_path = "{}{}_diff_{}.html".format(
+                output_path, law_title, change_law_path.split("/")[-1]
+            )
+            with open(diff_write_path, "w", encoding="utf8") as file:
+                file.write(html_side_by_side)
+
         click.echo("\n" + "#" * 150 + "\n")
     click.echo("DONE.")
 
