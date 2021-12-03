@@ -81,9 +81,9 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int):
         # parse the change requests in a structured line format
         all_change_lines = []
         # collect all paths to tree leaves and join them in the right order
-        for leave_node in parsed_change_law_tree.leaves:
-            path = [str(leave_node)]
-            node = leave_node
+        for leaf_node in parsed_change_law_tree.leaves:
+            path = [str(leaf_node)]
+            node = leaf_node
             while node.parent:
                 node = node.parent
                 path.append(str(node))
