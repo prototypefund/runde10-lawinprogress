@@ -60,10 +60,11 @@ def markup_diff(
 def html_sidebyside(a: List[str], b: List[str]) -> str:
     """Create a side-by-side div-table for the diff/synopsis."""
     # Set the panel display
-    out = '<div style="display: grid;grid-template-columns: 1fr 1fr;grid-column-gap: 70px;grid-row-gap: 1px;font-family:DejaVu Sans Mono;">'
+    out = f'<center><h2>{a[0].split("source ")[-1]}</h2></center>'
+    out += '<div style="padding: 50px;display: grid;grid-template-columns: 1fr 1fr;grid-column-gap: 70px;grid-row-gap: 1px;font-family:DejaVu Sans Mono;">'
     # There's some CSS in Jupyter notebooks that makes the first pair unalign. This is a workaround
     out += "<p></p><p></p>"
-    for left, right in zip_longest(a, b, fillvalue=""):
+    for left, right in zip_longest(a[1:], b[1:], fillvalue=""):
         left_leading_ws = len(left) - len(left.lstrip())
         right_leading_ws = len(right) - len(right.lstrip())
         left = left_leading_ws * "&nbsp;" + left

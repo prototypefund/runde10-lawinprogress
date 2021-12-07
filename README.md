@@ -1,6 +1,6 @@
 # Law in Progress
 
-Das Online-Tool "Law in Progress" soll Gesetzentwürfe und deren Konsequenzen für bestehende Gesetze durch automatische Erstellung einer Synopse sichtbar und nachvollziehbar zu machen.
+Das Online-Tool "Law in Progress" soll Gesetzentwürfe und deren Konsequenzen für bestehende Gesetze durch automatische Erstellung einer Synopse sichtbar und nachvollziehbar machen.
 Aktuell werden nur Entwürfe von Bundesgesetzen unterstützt. Später sollen auch Entwürfe von Landesgesetzen genutzt werden können.
 
 
