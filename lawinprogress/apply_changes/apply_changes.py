@@ -1,10 +1,11 @@
 """Main functiosn to apply changes to parsed source laws."""
 import copy
-from typing import List
+from typing import List, Tuple
 
 from anytree import findall
 
 from lawinprogress.apply_changes.edit_functions import (
+    ChangeResult,
     _append,
     _cancelled,
     _delete_after,
@@ -82,7 +83,7 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
 
 def apply_changes(
     law_tree: LawTextNode, changes: List[Change], loglevel: int = 1
-) -> LawTextNode:
+) -> Tuple[LawTextNode, List[ChangeResult]]:
     """Apply the provided changes to the provided tree.
 
     Args:
@@ -95,6 +96,7 @@ def apply_changes(
         Tree of LawTextNodes with the requested changes if we where able to apply them.
     """
     res_law_tree = copy.deepcopy(law_tree)
+    change_results = []
     n_succesfull_applied_changes = 0
     for change in changes:
         status = 0
@@ -108,17 +110,17 @@ def apply_changes(
             continue
         change_type = change.change_type
         if change_type == "replace":
-            status = _replace(node, change)
+            change_result = _replace(node, change)
         elif change_type == "insert_after":
-            status = _insert_after(node, change)
+            change_result = _insert_after(node, change)
         elif change_type == "rephrase":
-            status = _rephrase(node, change)
+            change_result = _rephrase(node, change)
         elif change_type == "append":
-            status = _append(node, change)
+            change_result = _append(node, change)
         elif change_type == "delete_after":
-            status = _delete_after(node, change)
+            change_result = _delete_after(node, change)
         elif change_type == "cancelled":
-            status = _cancelled(node, change)
+            change_result = _cancelled(node, change)
         elif change_type == "RENUMBERING":
             _log_change("SKIPPED", change, loglevel)
             # we skip it because the insertion code in Treelawnode should handle all of this
@@ -128,11 +130,12 @@ def apply_changes(
         if res_law_tree.to_text() != tree_text_before:
             # if something changed, then we successfully applied something
             _log_change("APPLIED", change, loglevel)
-            n_succesfull_applied_changes += status
+            n_succesfull_applied_changes += change_result.status
         else:
             # if nothign changed, we should be informed
             if change_type not in ["RENUMBERING", "MULTIPLE_CHANGES", "UNKNOWN"]:
                 _log_change("APPLIED WITHOUT CHANGE", change, loglevel)
+        change_results.append(change_result)
     # print a status update
     print(
         "\nSuccessfully applied {} out of {} changes ({:.1%})\n".format(
@@ -141,4 +144,4 @@ def apply_changes(
             n_succesfull_applied_changes / len(changes),
         )
     )
-    return res_law_tree
+    return res_law_tree, change_results

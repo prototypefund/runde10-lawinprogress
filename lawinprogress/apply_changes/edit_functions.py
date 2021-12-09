@@ -12,6 +12,30 @@ nlp = spacy.load("de_core_news_sm", exclude=["parser", "tagger", "ner"])
 nlp.enable_pipe("senter")
 
 
+class ChangeResult:
+    """Store the result of a change application."""
+
+    def __init__(
+        self,
+        change: Change,
+        affected_node: LawTextNode,
+        status: int,
+        message: str = "Applied edit",
+    ):
+        self.change = change
+        self.affected_node = affected_node
+        self.status = status
+        self.message = message
+
+    def __repr__(self) -> str:
+        return "{}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n".format(
+            change.change_type,
+            change.location,
+            change.sentences,
+            change.text,
+        )
+
+
 def __split_text_to_sentences(text: str) -> List[str]:
     """Split a text into sentences.
 
@@ -36,7 +60,7 @@ def __clean_text(text: str) -> str:
     return " ".join(token for token in text.split(" ") if token)
 
 
-def _replace(node: LawTextNode, change: Change) -> int:
+def _replace(node: LawTextNode, change: Change) -> ChangeResult:
     """Replace text in the node."""
     status = 1
     if len(change.text) == 2:
@@ -44,12 +68,12 @@ def _replace(node: LawTextNode, change: Change) -> int:
             __clean_text(change.text[0]), __clean_text(change.text[1])
         )
     else:
-        print("not enougth text to replace")
-        status = 0
-    return status
+        msg = "not enougth text to replace"
+        return ChangeResult(change, node, 0, msg)
+    return ChangeResult(change, node, status)
 
 
-def _insert_after(node: LawTextNode, change: Change) -> int:
+def _insert_after(node: LawTextNode, change: Change) -> ChangeResult:
     """Insert text after a given text or section.
 
     Assumes list of change.text to be of even length, uneven positions are the location
@@ -58,9 +82,9 @@ def _insert_after(node: LawTextNode, change: Change) -> int:
     status = 1  # return value to determain failure or success.
 
     if len(change.text) == 0:
-        print("Failed to insert after! Not enougth text found.")
+        msg = "Failed to insert after! Not enougth text found."
         # return status 0
-        return 0
+        return ChangeResult(change, node, 0, msg)
 
     bulletpoint_matches = [
         re.match(r"^Kapitel\s*\d{1,3}", change.text[0]),
@@ -114,12 +138,12 @@ def _insert_after(node: LawTextNode, change: Change) -> int:
             sentences.insert(int(number), __clean_text(change.text[0].strip()))
             node.text = " ".join(sentences)
     else:
-        print("Failed to insert after! Unknown reason!")
-        status = 0
-    return status
+        msg = "Failed to insert after! Unknown reason!"
+        return ChangeResult(change, node, 0, msg)
+    return ChangeResult(change, node, status)
 
 
-def _rephrase(node: LawTextNode, change: Change) -> int:
+def _rephrase(node: LawTextNode, change: Change) -> ChangeResult:
     """Rephrase the text in the specific location."""
     status = 1
     if len(change.text) == 1 and len(change.sentences) == 0:
@@ -159,23 +183,23 @@ def _rephrase(node: LawTextNode, change: Change) -> int:
             sentences[int(number) - 1] = __clean_text(change_text.strip())
             node.text = " ".join(sentences)
     else:
-        print("Failed to rephrase! Too much or too little texts.")
-        status = 0
-    return status
+        msg = "Failed to rephrase! Too much or too little texts."
+        return ChangeResult(change, node, 0, msg)
+    return ChangeResult(change, node, status)
 
 
-def _append(node: LawTextNode, change: Change) -> int:
+def _append(node: LawTextNode, change: Change) -> ChangeResult:
     """Add given text after the given location."""
     status = 1
     if len(change.text) == 1:
         node.text = node.text + " " + __clean_text(change.text[0])
     else:
-        print("Failed to append! To much texts.")
-        status = 0
-    return status
+        msg = "Failed to append! To much texts."
+        return ChangeResult(change, node, 0, msg)
+    return ChangeResult(change, node, status)
 
 
-def _delete_after(node: LawTextNode, change: Change) -> int:
+def _delete_after(node: LawTextNode, change: Change) -> ChangeResult:
     """Delete some text at the requested location."""
     status = 1
     if len(change.text) == 1:
@@ -190,12 +214,12 @@ def _delete_after(node: LawTextNode, change: Change) -> int:
             " ".join(change.text[1:]).replace("  ", " "), ""
         ).replace("  ", " ")
     else:
-        print("Failed to delete! Not enought text.")
-        status = 0
-    return status
+        msg = "Failed to delete! Not enought text."
+        return ChangeResult(change, node, 0, msg)
+    return ChangeResult(change, node, status)
 
 
-def _cancelled(node: LawTextNode, change: Change) -> int:
+def _cancelled(node: LawTextNode, change: Change) -> ChangeResult:
     """Remove the node in question from the tree."""
     status = 1
     if len(change.text) == 0 and len(change.sentences) == 0:
@@ -225,6 +249,6 @@ def _cancelled(node: LawTextNode, change: Change) -> int:
             node.text = " ".join(sentences)
         node.text = " ".join(sentences)
     else:
-        print("Failed to cancel! Text present.")
-        status = 0
-    return status
+        msg = "Failed to cancel! Text present."
+        return ChangeResult(change, node, 0, msg)
+    return ChangeResult(change, node, status)

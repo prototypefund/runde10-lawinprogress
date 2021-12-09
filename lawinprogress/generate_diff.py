@@ -111,7 +111,9 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: b
         )
 
         # apply changes to the source law
-        res_law_tree = apply_changes(parsed_law_tree, change_requests, loglevel)
+        res_law_tree, change_results = apply_changes(
+            parsed_law_tree, change_requests, loglevel
+        )
 
         #  save final version to file
         write_path = (
