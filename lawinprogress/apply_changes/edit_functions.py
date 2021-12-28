@@ -2,14 +2,12 @@
 from typing import List
 
 import regex as re
-import spacy
 
 from lawinprogress.parsing.lawtree import LawTextNode
 from lawinprogress.parsing.parse_change_law import Change
 from lawinprogress.parsing.parse_source_law import parse_source_law_tree
 
-nlp = spacy.load("de_core_news_sm", exclude=["parser", "tagger", "ner"])
-nlp.enable_pipe("senter")
+from lawinprogress import NLP
 
 
 class ChangeResult:
@@ -29,10 +27,10 @@ class ChangeResult:
 
     def __repr__(self) -> str:
         return "{}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n".format(
-            change.change_type,
-            change.location,
-            change.sentences,
-            change.text,
+            self.change.change_type,
+            self.change.location,
+            self.change.sentences,
+            self.change.text,
         )
 
 
@@ -43,7 +41,7 @@ def __split_text_to_sentences(text: str) -> List[str]:
     """
     sentences = []
     sent_text = ""
-    for sent in nlp(text).sents:
+    for sent in NLP(text).sents:
         # join sentences is split by BGBl.
         sent_text += sent.text
         if not sent.text.endswith("BGBl."):
