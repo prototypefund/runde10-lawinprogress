@@ -3,11 +3,10 @@ from typing import List
 
 import regex as re
 
+from lawinprogress import NLP
 from lawinprogress.parsing.lawtree import LawTextNode
 from lawinprogress.parsing.parse_change_law import Change
 from lawinprogress.parsing.parse_source_law import parse_source_law_tree
-
-from lawinprogress import NLP
 
 
 class ChangeResult:

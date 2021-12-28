@@ -2,8 +2,10 @@ from typing import List, Tuple
 
 import pdfplumber
 import regex as re
+import spacy
 
-from lawinprogress import NLP
+nlp = spacy.load("de_core_news_sm")
+
 
 ### Goal:
 # input: raw PDF of antwurf
@@ -75,7 +77,7 @@ def extract_seperate_change_proposals(text: str) -> List[str]:
 
 def extract_law_titles(proposals_list: List[str]) -> List[str]:
     raw_titles_list = [
-        list(NLP(proposal.replace("\n", " ")).sents)[0].text
+        list(nlp(proposal.replace("\n", " ")).sents)[0].text
         for proposal in proposals_list
     ]
     titles_clean_par_sign = [re.split(r"§", title)[0] for title in raw_titles_list]

@@ -59,9 +59,9 @@ def test_replace_success():
         raw_text="(1) - Replace something in this test.",
     )
 
-    status = _replace(node, change)
+    res = _replace(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert node.text == "Test replaced;"
 
 
@@ -76,9 +76,9 @@ def test_replace_failure():
         raw_text="(1) - Replace some text, this is a test.",
     )
 
-    status = _replace(node, change)
+    res = _replace(node, change)
 
-    assert status == 0
+    assert res.status == 0
     assert node.text == "Test text to replace;"
 
 
@@ -93,9 +93,9 @@ def test_insert_after_with_paired_texts():
         raw_text="(1) - Insert some text, this is a test.",
     )
 
-    status = _insert_after(node, change)
+    res = _insert_after(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert node.text == "Test text insert inserted here;"
 
 
@@ -113,9 +113,9 @@ def test_insert_after_bulletpointmatch_exists():
         raw_text="(1) - Insert some text, this is a test.",
     )
 
-    status = _insert_after(node, change)
+    res = _insert_after(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert len(parent_node.children) == 2
     assert node.text == "Test text insert here;"
     assert node.bulletpoint == "(2)"
@@ -137,9 +137,9 @@ def test_insert_after_bulletpointmatch_doesnt_exist():
         raw_text="(1) - Insert something in this test.",
     )
 
-    status = _insert_after(node, change)
+    res = _insert_after(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert len(parent_node.children) == 2
     assert node.text == "Test text insert here;"
     assert node.bulletpoint == "(1)"
@@ -161,9 +161,9 @@ def test_insert_after_with_paired_texts():
         raw_text="(1) - Insert some text, this is a test.",
     )
 
-    status = _insert_after(node, change)
+    res = _insert_after(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert (
         node.text
         == "Test text insert after this sentence. Inserted sentence. And before this sentence."
@@ -181,9 +181,9 @@ def test_insert_after_fails_with_no_text():
         raw_text="(1) - ",
     )
 
-    status = _insert_after(node, change)
+    res = _insert_after(node, change)
 
-    assert status == 0
+    assert res.status == 0
 
 
 def test_rephrase_with_one_text_no_sentence():
@@ -197,9 +197,9 @@ def test_rephrase_with_one_text_no_sentence():
         raw_text="(1) - Rephrase some text, this is a test.",
     )
 
-    status = _rephrase(node, change)
+    res = _rephrase(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert node.text == "Rephrased text."
 
 
@@ -217,9 +217,9 @@ def test_rephrase_with_one_text_one_sentence():
         raw_text="(1) - Rephrase some text, this is a test.",
     )
 
-    status = _rephrase(node, change)
+    res = _rephrase(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert node.text == "Here is nothing to do. Text to rephrase."
 
 
@@ -237,9 +237,9 @@ def test_rephrase_fails_without_text():
         raw_text="(1) - Rephrase some text, this is a test.",
     )
 
-    status = _rephrase(node, change)
+    res = _rephrase(node, change)
 
-    assert status == 0
+    assert res.status == 0
     assert node.text == "Here is nothing to do. Text to rephrase in this sentence."
 
 
@@ -254,9 +254,9 @@ def test_append_success_one_text():
         raw_text="(1) - Append some text, this is a test.",
     )
 
-    status = _append(node, change)
+    res = _append(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert node.text == "Current text to append to. Appended text."
 
 
@@ -271,9 +271,9 @@ def test_append_fails_too_much_texts():
         raw_text="(1) - Append some text, this is a test.",
     )
 
-    status = _append(node, change)
+    res = _append(node, change)
 
-    assert status == 0
+    assert res.status == 0
     assert node.text == "Current text to append to."
 
 
@@ -288,9 +288,9 @@ def test_append_fails_too_little_texts():
         raw_text="(1) - Append some text, this is a test.",
     )
 
-    status = _append(node, change)
+    res = _append(node, change)
 
-    assert status == 0
+    assert res.status == 0
     assert node.text == "Current text to append to."
 
 
@@ -305,9 +305,9 @@ def test_delete_after_one_text():
         raw_text="(1) - Delete some text, this is a test.",
     )
 
-    status = _delete_after(node, change)
+    res = _delete_after(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert node.text == "Current text."
 
 
@@ -322,9 +322,9 @@ def test_delete_after_two_texts():
         raw_text="(1) - Delete some text, this is a test.",
     )
 
-    status = _delete_after(node, change)
+    res = _delete_after(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert node.text == "Current to delete ."
 
 
@@ -339,9 +339,9 @@ def test_delete_after_fails_without_text():
         raw_text="(1) - Delete some text, this is a test.",
     )
 
-    status = _delete_after(node, change)
+    res = _delete_after(node, change)
 
-    assert status == 0
+    assert res.status == 0
     assert node.text == "Current to delete text."
 
 
@@ -360,9 +360,9 @@ def test_cancelled_remove_node():
         raw_text="(1) - Cancel some text, this is a test.",
     )
 
-    status = _cancelled(node, change)
+    res = _cancelled(node, change)
 
-    assert status == 1
+    assert res.status == 1
     assert len(parent_node.children) == 1
     assert other_node.bulletpoint == "(1)"
     assert other_node.text == "Node to remain."
