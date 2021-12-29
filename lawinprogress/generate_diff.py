@@ -6,6 +6,7 @@ Example usage:
 import os
 
 import click
+from anytree import PreOrderIter
 
 from lawinprogress.apply_changes.apply_changes import apply_changes
 from lawinprogress.libdiff.html_diff import html_diffs
@@ -132,9 +133,15 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: b
             file.write(parsed_law_tree.to_text())
 
         if html:
+            # generate a list of all applied changes in the order of the affected lines/nodes
+            applied_change_results = [
+                node.changes for node in PreOrderIter(res_law_tree) if node.changes
+            ]
             # get the diff
             html_side_by_side = html_diffs(
-                parsed_law_tree.to_text(), res_law_tree.to_text()
+                parsed_law_tree.to_text(),
+                res_law_tree.to_text(),
+                applied_change_results,
             )
             # save to fiel
             diff_write_path = "{}{}_diff_{}.html".format(

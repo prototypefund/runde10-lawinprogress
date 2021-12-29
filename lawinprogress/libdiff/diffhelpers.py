@@ -23,19 +23,14 @@ def sentencize(string: str) -> List[str]:
     return string.split("\n")
 
 
-def unsentencise(strings: List[str]) -> str:
-    """Join a list of texts into a string."""
-    return "".join(strings)
-
-
 def align_seqs(
-    a: List[str], b: List[str], fill: str = ""
+    seq_a: List[str], seq_b: List[str], fill: str = ""
 ) -> Tuple[List[str], List[str]]:
     out_a, out_b = [], []
-    seqmatcher = difflib.SequenceMatcher(a=a, b=b, autojunk=False)
-    for tag, a0, a1, b0, b1 in seqmatcher.get_opcodes():
-        delta = (a1 - a0) - (b1 - b0)
-        out_a += a[a0:a1] + [fill] * max(-delta, 0)
-        out_b += b[b0:b1] + [fill] * max(delta, 0)
+    seqmatcher = difflib.SequenceMatcher(a=seq_a, b=seq_b, autojunk=False)
+    for _, idx_a0, idx_a1, idx_b0, idx_b1 in seqmatcher.get_opcodes():
+        delta = (idx_a1 - idx_a0) - (idx_b1 - idx_b0)
+        out_a += seq_a[idx_a0:idx_a1] + [fill] * max(-delta, 0)
+        out_b += seq_b[idx_b0:idx_b1] + [fill] * max(delta, 0)
     assert len(out_a) == len(out_b)
     return out_a, out_b

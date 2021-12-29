@@ -99,7 +99,6 @@ def apply_changes(
     change_results = []
     n_succesfull_applied_changes = 0
     for change in changes:
-        status = 0
         # find the node that needs to be changed
         node = _find_node(location_list=change.location, parse_tree=res_law_tree)
         # store the representation of the tree to compare it with the tree after the change
@@ -127,6 +126,7 @@ def apply_changes(
             n_succesfull_applied_changes += 1
         else:
             _log_change("SKIPPED", change, loglevel)
+            continue
         if res_law_tree.to_text() != tree_text_before:
             # if something changed, then we successfully applied something
             _log_change("APPLIED", change, loglevel)
@@ -135,6 +135,8 @@ def apply_changes(
             # if nothign changed, we should be informed
             if change_type not in ["RENUMBERING", "MULTIPLE_CHANGES", "UNKNOWN"]:
                 _log_change("APPLIED WITHOUT CHANGE", change, loglevel)
+                continue
+        node.changes.append(change_result)
         change_results.append(change_result)
     # print a status update
     print(
