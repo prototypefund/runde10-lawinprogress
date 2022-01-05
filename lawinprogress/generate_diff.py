@@ -6,6 +6,7 @@ Example usage:
 import os
 
 import click
+import outputformat as ouf
 from anytree import PreOrderIter
 
 from lawinprogress.apply_changes.apply_changes import apply_changes
@@ -54,6 +55,10 @@ from lawinprogress.parsing.proposal_pdf_to_artikles import (
 )
 def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: bool):
     """Generate the diff from the change law and the source law."""
+    ouf.bigtitle("Welcome")
+    ouf.bigtitle("to")
+    ouf.bigtitle("Law in Progress")
+    click.echo("\n" + "#" * 150 + "\n")
     click.echo(f"Started parsing {change_law_path}")
     click.echo("\n" + "#" * 150 + "\n")
     # read the change law
@@ -112,9 +117,20 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: b
         )
 
         # apply changes to the source law
-        res_law_tree, change_results = apply_changes(
+        res_law_tree, change_results, n_succesfull_applied_changes = apply_changes(
             parsed_law_tree, change_requests, loglevel
         )
+        # print a status updatei
+        result_status = ouf.bar(
+            n_succesfull_applied_changes,
+            len(change_requests),
+            style="block",
+            length=15,
+            title="Successfully applied changes",
+            title_pad=15,
+            return_str=True,
+        )
+        click.echo(result_status)
 
         #  save final version to file
         write_path = (

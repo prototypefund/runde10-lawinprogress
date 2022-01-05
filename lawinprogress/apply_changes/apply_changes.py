@@ -83,7 +83,7 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
 
 def apply_changes(
     law_tree: LawTextNode, changes: List[Change], loglevel: int = 1
-) -> Tuple[LawTextNode, List[ChangeResult]]:
+) -> Tuple[LawTextNode, List[ChangeResult], int]:
     """Apply the provided changes to the provided tree.
 
     Args:
@@ -94,6 +94,7 @@ def apply_changes(
 
     Returns:
         Tree of LawTextNodes with the requested changes if we where able to apply them.
+        List of change results and the number of successfully applied changes.
     """
     res_law_tree = copy.deepcopy(law_tree)
     change_results = []
@@ -138,12 +139,4 @@ def apply_changes(
                 continue
         node.changes.append(change_result)
         change_results.append(change_result)
-    # print a status update
-    print(
-        "\nSuccessfully applied {} out of {} changes ({:.1%})\n".format(
-            n_succesfull_applied_changes,
-            len(changes),
-            n_succesfull_applied_changes / len(changes),
-        )
-    )
-    return res_law_tree, change_results
+    return res_law_tree, change_results, n_succesfull_applied_changes

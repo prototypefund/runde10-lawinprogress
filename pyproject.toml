@@ -15,6 +15,7 @@ spacy = "^3.1.2"
 colorama = "^0.4.4"
 natsort = "^7.1.1"
 regex = "^2021.11.10"
+outputformat = "^0.1.1"
 
 [tool.poetry.dev-dependencies]
 pytest-cov = "2.12.1"

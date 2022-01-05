@@ -745,6 +745,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "outputformat"
+version = "0.1.1"
+description = "Decorate and beautify output"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
@@ -1484,7 +1492,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "cc4760b2d6615c5b71dcedbcbfa812d6159fe10f52d74bc5d6dffb55985454c4"
+content-hash = "7e00fcc55a7ef7fd1fd3989271de90917d10ffa766ca6c02bf0730df6d79f750"
 
 [metadata.files]
 anyio = [
@@ -1975,6 +1983,9 @@ numpy = [
     {file = "numpy-1.21.1-cp39-cp39-win_amd64.whl", hash = "sha256:01721eefe70544d548425a07c80be8377096a54118070b8a62476866d5208e33"},
     {file = "numpy-1.21.1-pp37-pypy37_pp73-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:2d4d1de6e6fb3d28781c73fbde702ac97f03d79e4ffd6598b880b2d95d62ead4"},
     {file = "numpy-1.21.1.zip", hash = "sha256:dff4af63638afcc57a3dfb9e4b26d434a7a602d225b42d746ea7fe2edf1342fd"},
+]
+outputformat = [
+    {file = "outputformat-0.1.1.tar.gz", hash = "sha256:1ea6aae6dea69c4090cc2664d846ac5411818aac81f937cd78e24cce5d95f13e"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},

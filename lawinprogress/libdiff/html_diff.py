@@ -88,7 +88,7 @@ def html_sidebyside(
     out += '<div style="padding: 50px;display: grid;grid-template-columns: auto auto auto;grid-column-gap: 40px;grid-row-gap: 0px;font-family:DejaVu Sans Mono;">'
     # make it align nicely
     out += "<p></p><p></p><p></p>"
-    out += "<h3><center>Änderungsbefehl</center></h3><h3><center>Vorher</center></h3><h3><center>Nachher</center></h3>"
+    out += "<h3><center>Änderungsbefehl</center></h3><h3><center>alte Fassung</center></h3><h3><center>neue Fassung</center></h3>"
     change_idx = 0
     for left, right in zip_longest(left_text[1:], right_text[1:], fillvalue=""):
         left_leading_ws = len(left) - len(left.lstrip()) - 5

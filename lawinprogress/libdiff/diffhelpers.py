@@ -5,10 +5,6 @@ from typing import List, Tuple
 
 def tokenize(string: str) -> List[str]:
     """Split a string into tokens by whitespace."""
-    # outlist = []
-    # for token in nlp(string):
-    #    outlist.extend([token.text, token.whitespace_])
-    # return outlist
     leading_ws = len(string) - len(string.lstrip())
     return [leading_ws * " "] + string.split()
 
