@@ -2,6 +2,7 @@
 import copy
 from typing import List, Tuple
 
+import click
 from anytree import findall
 
 from lawinprogress.apply_changes.edit_functions import (
@@ -20,9 +21,9 @@ from lawinprogress.parsing.parse_source_law import LawTextNode
 def _log_change(result_text: str, change: Change, loglevel: int = 1):
     """Convinience function to log a change application."""
     if loglevel == 0:
-        print("{} {}".format(result_text, change.change_type))
+        click.echo(f"{result_text} {change.change_type}")
     elif loglevel == 1:
-        print(
+        click.echo(
             "{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n".format(
                 result_text,
                 change.change_type,
@@ -32,7 +33,7 @@ def _log_change(result_text: str, change: Change, loglevel: int = 1):
             )
         )
     elif loglevel == 2:
-        print(
+        click.echo(
             "{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n\traw_text={}\n".format(
                 result_text,
                 change.change_type,
@@ -68,14 +69,14 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
         )
         if len(search_result) == 0:
             # no path found
-            print("Location {} not found.".format(location))
+            # print(f"Location {location} not found.")
             return None
-        elif len(search_result) == 1:
+        if len(search_result) == 1:
             # exactly one path found; as it should be
             current_node = search_result[0]
         else:
             # more than one path found; should not happen - Stop here
-            print("Multiple paths to location {} found. Stopping.".format(location))
+            # print(f"Multiple paths to location {location} found. Stopping.")
             return None
 
     return current_node
@@ -106,7 +107,7 @@ def apply_changes(
         tree_text_before = res_law_tree.to_text()
         # if we found no path, we skip
         if not node:
-            _log_change("SKIPPING. No path found for", change, loglevel)
+            _log_change("SKIPPING. No unique path found for", change, loglevel)
             continue
         change_type = change.change_type
         if change_type == "replace":

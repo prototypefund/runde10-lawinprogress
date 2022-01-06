@@ -99,7 +99,7 @@ def html_sidebyside(
             try:
                 out += '<div style="background: {};padding: 2px;">{}</div>'.format(
                     MarkupConfig.change_section_background,
-                    "\n\n".join(
+                    "<br><hr>".join(
                         [res.change.raw_text for res in success_changes[change_idx]]
                     ),
                 )

@@ -84,12 +84,15 @@ def _insert_after(node: LawTextNode, change: Change) -> ChangeResult:
         return ChangeResult(change, node, 0, msg)
 
     bulletpoint_matches = [
-        re.match(r"^Kapitel\s*\d{1,3}", change.text[0]),
-        re.match(r"^\d\.", change.text[0]),
-        re.match(r"^§\s\d{1,3}[a-z]?", change.text[0]),
-        re.match(r"^[a-z]\)", change.text[0]),
-        re.match(r"^[a-z][a-z]\)", change.text[0]),
-        re.match(r"^\([a-z1-9]\)", change.text[0]),
+        re.match(pattern, change.text[0])
+        for pattern in [
+            r"^Kapitel\s*\d{1,3}",
+            r"^\d\.",
+            r"^§\s\d{1,3}[a-z]?",
+            r"^[a-z]\)",
+            r"^[a-z][a-z]\)",
+            r"^\([a-z1-9]\)",
+        ]
     ]
 
     if len(change.text) % 2 == 0:
@@ -103,10 +106,20 @@ def _insert_after(node: LawTextNode, change: Change) -> ChangeResult:
         # find the first match (there should only be one)
         match = [m for m in bulletpoint_matches if m][0]
         bulletpoint_match = change.text[0][match.span()[0] : match.span()[1]]
+
+        # find the root node
+        root = node
+        while root.parent:
+            root = root.parent
         # if there is only one text to insert and
         # it starts with a bulletidentifier add a new node to the tree
         if bulletpoint_match in [child.bulletpoint for child in node.parent.children]:
             node.parent.insert_child(
+                text=change.text[0][match.span()[1] + 1 :],
+                bulletpoint=bulletpoint_match,
+            )
+        elif bulletpoint_match in [child.bulletpoint for child in root.children]:
+            root.insert_child(
                 text=change.text[0][match.span()[1] + 1 :],
                 bulletpoint=bulletpoint_match,
             )

@@ -58,8 +58,7 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: b
     ouf.bigtitle("Welcome")
     ouf.bigtitle("to")
     ouf.bigtitle("Law in Progress")
-    click.echo("\n" + "#" * 150 + "\n")
-    click.echo(f"Started parsing {change_law_path}")
+    click.echo(ouf.boxtitle(f"Started parsing {change_law_path}", return_str=True))
     click.echo("\n" + "#" * 150 + "\n")
     # read the change law
     change_law_raw = read_pdf_law(change_law_path)
@@ -78,7 +77,7 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: b
             with open(source_law_path, "r", encoding="utf8") as file:
                 source_law_text = file.read()
             click.echo(f"Apply changes to {law_title}")
-        except Exception as err:
+        except FileNotFoundError as err:
             click.echo(f"Cannot find source law {law_title}. SKIPPING")
             continue
 
@@ -139,7 +138,7 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: b
         source_write_path = (
             f"{output_path}{law_title}_source_{change_law_path.split('/')[-1]}.txt"
         )
-        click.echo(f"Write results to {write_path}")
+        click.echo(f"\n>> Write results to {write_path}")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
