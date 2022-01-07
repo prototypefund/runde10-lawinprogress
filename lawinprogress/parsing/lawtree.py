@@ -14,6 +14,7 @@ class LawTextNode(NodeMixin):
         self.text = text
         self.bulletpoint = bulletpoint
         self.parent = parent
+        self.changes = []  # store changes applied to this node here
         if children:  # set children only if given
             self.children = children
 

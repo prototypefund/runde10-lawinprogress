@@ -14,9 +14,12 @@ anytree = "^2.8.0"
 spacy = "^3.1.2"
 colorama = "^0.4.4"
 natsort = "^7.1.1"
-pytest-cov = "2.12.1"
+regex = "^2021.11.10"
+outputformat = "^0.1.1"
 
 [tool.poetry.dev-dependencies]
+pytest-cov = "2.12.1"
+pyinstrument = "^4.1.1"
 pytest = "^6.2.5"
 black = {extras = ["jupyter"], version = "^21.9b0"}
 isort = "^5.9.3"

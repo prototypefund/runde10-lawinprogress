@@ -1,22 +1,27 @@
 # Law in Progress
 
-Das Online-Tool "Law in Progress" soll Gesetzentwürfe und deren Konsequenzen für bestehende Gesetze durch automatische Erstellung einer Synopse sichtbar und nachvollziehbar zu machen.
+Das Online-Tool "Law in Progress" soll Gesetzentwürfe und deren Konsequenzen für bestehende Gesetze durch automatische Erstellung einer Synopse sichtbar und nachvollziehbar machen.
+Aktuell werden nur Entwürfe von Bundesgesetzen unterstützt. Später sollen auch Entwürfe von Landesgesetzen genutzt werden können.
 
 
 # Overview
 
 ```
-├── pyproject.toml      --> Config for the project
-├── README.md           --> 
-├── LICENSE             --> MIT license 
-├── Makefile            --> Make target for setup, testing and cleaning
-├── data/               --> Folder with some data
-├── doc/                --> Documentation and notes
-├── notebooks/          --> Experimental notebooks
-├── lawinprogress/      --> Main package
+├── pyproject.toml       --> Config for the project
+├── README.md            --> This file
+├── LICENSE              --> MIT license 
+├── Makefile             --> Make target for setup, testing and cleaning
+├── data/                --> Folder with some raw files of laws in text and pdf
+├── doc/                 --> Documentation and notes
+├── notebooks/           --> Experimental notebooks
+├── lawinprogress/       --> Main package
 │   ├── __init__.py
-│   └── generate_diff.py --> main script to generate a diff from a change law
-└── tests/              --> Test for the main package
+│   ├── generate_diff.py --> main script to generate a diff from a change law
+│   ├── parsing/         --> modules to parse source and change laws
+│   ├── apply_changes/   --> modules to apply the proposed changes to source laws
+│   └── libdiff/         --> modules to generate a html diff of the changed law
+└── tests/               --> Test for the main package
+    ├── ...
     └── __init__.py
 ```
 
@@ -36,7 +41,7 @@ This will generate a before and after version of the changed laws in `./output`.
 
 # Example usage:
 
-```poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf```
+```poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf --html```
 
 
 # Code checks & tests
