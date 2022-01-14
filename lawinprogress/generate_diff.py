@@ -203,6 +203,12 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: b
             file.write(parsed_law_tree.to_text())
 
         if html:
+            html_str = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Law in Progress</title>
+</head>"""
             # generate a list of all applied changes in the order of the affected lines/nodes
             applied_change_results = [
                 node.changes for node in PreOrderIter(res_law_tree) if node.changes
@@ -213,12 +219,13 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: b
                 res_law_tree.to_text(),
                 applied_change_results,
             )
+            html_str += html_side_by_side
             # save to fiel
             diff_write_path = (
                 f"{output_path}{law_title}_diff_{change_law_path.split('/')[-1]}.html"
             )
             with open(diff_write_path, "w", encoding="utf8") as file:
-                file.write(html_side_by_side)
+                file.write(html_str)
 
         click.echo("\n" + "#" * 150 + "\n")
     click.echo("DONE.")

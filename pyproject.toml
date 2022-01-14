@@ -16,6 +16,10 @@ colorama = "^0.4.4"
 natsort = "^7.1.1"
 regex = "^2021.11.10"
 outputformat = "^0.1.1"
+fastapi = "^0.71.0"
+uvicorn = "^0.16.0"
+Jinja2 = "^3.0.3"
+python-multipart = "^0.0.5"
 
 [tool.poetry.dev-dependencies]
 pytest-cov = "2.12.1"
