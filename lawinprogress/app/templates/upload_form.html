@@ -5,6 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+#hidden {
+    display: none;
+}
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+<script language="JavaScript">
+    function toggle(id) {
+        var state = document.getElementById(id).style.display;
+            if (state == 'block') {
+                document.getElementById(id).style.display = 'none';
+            } else {
+                document.getElementById(id).style.display = 'block';
+            }
+        } 
+</script> 
   </head>
   <body>
     <center>
@@ -12,8 +47,9 @@
     <h2 class="subtitle">{{ result }}</h2>
     <form method="post" enctype="multipart/form-data">
     	<input class="button" type="file" name="change_law_pdf" value=""/>
-        <input class="button" type="submit" value="Upload">
+        <input class="button" type="submit" value="Upload" onclick="toggle('hidden');">
     </form>
+    <div class="loader" id="hidden"></div>
     </center>
   </body>
 </html>
