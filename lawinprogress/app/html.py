@@ -1,33 +1,26 @@
 """MVP of the LiP Webapp."""
-from lawinprogress.generate_diff import process_pdf, parse_and_apply_changes
-from lawinprogress.libdiff.html_diff import html_diffs
-
-from fastapi import FastAPI, Request, Form, UploadFile
-from fastapi.templating import Jinja2Templates
 from anytree import PreOrderIter
+from fastapi import FastAPI, Form, Request, UploadFile
+from fastapi.templating import Jinja2Templates
+
+from lawinprogress.generate_diff import parse_and_apply_changes, process_pdf
+from lawinprogress.libdiff.html_diff import html_diffs
 
 app = FastAPI()
 templates = Jinja2Templates(directory="lawinprogress/app/templates/")
 
 
-@app.get('/')
-def index():
-    """Display the index page."""
-    return "Law In Progress"
-
-
-@app.get("/form")
-def form_post(request: Request):
+@app.get("/")
+def upload_pdf(request: Request):
     """Get the upload form page."""
     result = "Upload a change law pdf."
     return templates.TemplateResponse(
-        'upload_form.html',
-        context={'request': request, 'result': result}
+        "upload_form.html", context={"request": request, "result": result}
     )
 
 
-@app.post("/form")
-def form_post(request: Request, change_law_pdf: UploadFile = Form(...)):
+@app.post("/")
+def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
     """
     Submit the upload form with the pdf path and process it.
 
@@ -72,6 +65,6 @@ def form_post(request: Request, change_law_pdf: UploadFile = Form(...)):
     # prepare the html output and return it
     result = list(zip(law_titles, results))
     return templates.TemplateResponse(
-        'results_index.html',
-        context={"request": request, "result": result}
+        "results_index.html",
+        context={"request": request, "result": result, "name": change_law_pdf.filename},
     )

@@ -55,24 +55,23 @@ body {font-family: "Lato", sans-serif;}
 </style>
 </head>
 <body>
-
   <center><h1 class="title">Law in Progress</h1></center>
-  <p>Select a law:</p>
-
-<div class="tab">
+  <p>Select a law from {{ name }}:</p>
+  <div class="tab">
   {% for law_title, proposal_text in result %}
-    <button class="tablinks" onclick="openCity(event, '{{ law_title }}')" id="defaultOpen">{{ law_title }}</button>
+    <button class="tablinks" onclick="openLaw(event, '{{ law_title }}')" id="defaultOpen">{{ law_title }}</button>
   {% endfor %}
-</div>
+  </div>
 
-{% for law_title, proposal_text in result %}
-<div id="{{ law_title }}" class="tabcontent">
-  {{ proposal_text|safe }}
-</div></div>
-{% endfor %}
+  {% for law_title, proposal_text in result %}
+    <div id="{{ law_title }}" class="tabcontent">
+    {{ proposal_text|safe }}
+    </div>
+  </div>
+  {% endfor %}
 
 <script>
-function openCity(evt, cityName) {
+function openLaw(evt, lawTitle) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -82,7 +81,7 @@ function openCity(evt, cityName) {
   for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
-  document.getElementById(cityName).style.display = "block";
+  document.getElementById(lawTitle).style.display = "block";
   evt.currentTarget.className += " active";
 }
 
