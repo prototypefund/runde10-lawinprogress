@@ -1,6 +1,7 @@
 """MVP of the LiP Webapp."""
 from anytree import PreOrderIter
 from fastapi import FastAPI, Form, Request, UploadFile
+from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
 from lawinprogress.generate_diff import parse_and_apply_changes, process_pdf
@@ -68,3 +69,9 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
         "results_index.html",
         context={"request": request, "result": result, "name": change_law_pdf.filename},
     )
+
+
+@app.get("/imgs/{image_name}")
+def get_image_resource(image_name: str):
+    """Fetch image resource from server."""
+    return FileResponse(f"lawinprogress/app/templates/imgs/{image_name}")

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Law In Progress</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="/imgs/favicon-32x32.png">
 <style>
 * {box-sizing: border-box}
 body {font-family: "Lato", sans-serif;}
@@ -13,8 +14,8 @@ body {font-family: "Lato", sans-serif;}
   float: left;
   border: 1px solid #ccc;
   background-color: #f1f1f1;
-  width: 20%;
-  height: 800px;
+  width: 15%;
+  height: 80vh;
 }
 
 /* Style the buttons inside the tab */
@@ -47,15 +48,15 @@ body {font-family: "Lato", sans-serif;}
   float: left;
   padding: 0px 12px;
   border: 1px solid #ccc;
-  width: 80%;
+  width: 85%;
   border-left: none;
-  height: 800px;
+  height: 80vh;
   overflow: auto;
 }
 </style>
 </head>
 <body>
-  <center><h1 class="title">Law in Progress</h1></center>
+  <img src="imgs/lip_logo.png" alt="Law in Progress" width="300">
   <p>Select a law from {{ name }}:</p>
   <div class="tab">
   {% for law_title, proposal_text in result %}

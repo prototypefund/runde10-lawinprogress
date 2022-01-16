@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="icon" type="image/x-icon" href="/imgs/favicon-32x32.png">
     <style>
 #hidden {
     display: none;
@@ -42,14 +43,22 @@
 </script> 
   </head>
   <body>
-    <center>
-    <h1 class="title">Law in Progress</h1>
-    <h2 class="subtitle">{{ result }}</h2>
-    <form method="post" enctype="multipart/form-data">
-    	<input class="button" type="file" name="change_law_pdf" value=""/>
-        <input class="button" type="submit" value="Upload" onclick="toggle('hidden');">
-    </form>
-    <div class="loader" id="hidden"></div>
-    </center>
+    <section class="section">
+    <div class="container">
+      <div class="is-primary notification is-light">
+	    <center>
+	    <img src="imgs/lip_logo.png" alt="Law in Progress" width="500">
+	    <!--<h1 class="title">Law in Progress</h1>-->
+	    <h2 class="subtitle">{{ result }}</h2>
+	    <form method="post" enctype="multipart/form-data">
+	    	<input class="button" type="file" name="change_law_pdf" value=""/>
+		<input class="button" type="submit" value="Upload" onclick="toggle('hidden');">
+	    </form>
+	    <hr>
+	    <div class="loader" id="hidden"></div>
+	    </center>
+      </div>
+    </div>
+    </section>
   </body>
 </html>
