@@ -18,13 +18,7 @@ from lawinprogress.generate_diff import (
         (
             "./tests/data/0145-21.pdf",
             (
-                [
-                    "Zivilprozessordnung",
-                    "Strafprozessordnung",
-                    "Elektronischer-Rechtsverkehr-Verordnung",
-                    "Arbeitsgerichtsgesetzes zum 1. Januar",
-                    "Finanzgerichtsordnung zum 1. Januar 2022",
-                ],
+                ['Zivilprozessordnung', 'Strafprozessordnung', 'Gesetzes über das Verfahren in Familiensachen', 'Elektronischer-Rechtsverkehr-Verordnung', 'Arbeitsgerichtsgesetzes', 'Arbeitsgerichtsgesetzes', 'Arbeitsgerichtsgesetzes zum 1. Januar  2022', 'Arbeitsgerichtsgesetzes zum 1. Januar', 'Sozialgerichtsgesetzes', 'Sozialgerichtsgesetzes zum 1. Januar 2022', 'Sozialgerichtsgesetzes zum 1. Januar 2026', 'Verwaltungsgerichtsordnung', 'Verwaltungsgerichtsordnung zum 1. Ja- nuar 2022', 'Verwaltungsgerichtsordnung zum 1. Ja- nuar 2026', 'Finanzgerichtsordnung', 'Finanzgerichtsordnung zum 1. Januar 2022', 'Finanzgerichtsordnung zum 1. Januar 2026', 'Bundesrechtsanwaltsordnung', 'Beurkundungsgesetzes', 'Gesetzes über die Tätigkeit europäischer Rechts- anwälte in Deutschland', 'Verordnung zur Einführung von Vordrucken für  das Mahnverfahren', 'Zustellungsvordruckverordnung', 'Strafvollzugsgesetzes', 'Grundbuchordnung', 'Gesetzes über die internationale Rechtshilfe in  Strafsachen', 'Patentanwaltsordnung', 'Gesetzes über Ordnungswidrigkeiten', 'Achten'],
                 [""],
             ),
         ),
@@ -35,6 +29,7 @@ def test_process_pdf(pdf_path, expected):
     """Test if pdfs are processed as expected."""
     expected_law_titles, expected_proposals_list = expected
     law_titles, proposals_list = process_pdf(pdf_path)
+    print(law_titles)
 
     assert len(law_titles) == len(expected_law_titles)
     assert law_titles[0] == expected_law_titles[0]

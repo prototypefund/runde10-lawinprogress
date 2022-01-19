@@ -110,9 +110,13 @@ def preprocess_raw_law(text: str) -> str:
     # extract the parts with change requests (here we assume only one law is affected for now)
     # > get the text between "wird wie folgt geändert" und "Begründung"
     # (allow for newlines and/or whitespace between the words)
-    text = re.split(
-        r"wird[\s,\n]{0,3}wie[\s,\n]{0,3}folgt[\s,\n]{0,3}geändert:", text, maxsplit=1
-    )[1].split("Begründung", 1)[0]
+    try:
+        text = re.split(
+            r"wird[\s,\n]{0,3}wie[\s,\n]{0,3}folgt[\s,\n]{0,3}geändert:", text, maxsplit=1
+        )[1].split("Begründung", 1)[0]
+    except IndexError:
+        # if that fails, just take the full text.
+        pass
 
     # remove header and footer artifacts
     text = "\n".join(

@@ -101,43 +101,48 @@ def apply_changes(
     change_results = []
     n_succesfull_applied_changes = 0
     for change in changes:
-        # find the node that needs to be changed
-        node = _find_node(location_list=change.location, parse_tree=res_law_tree)
-        # store the representation of the tree to compare it with the tree after the change
-        tree_text_before = res_law_tree.to_text()
-        # if we found no path, we skip
-        if not node:
-            _log_change("SKIPPING. No unique path found for", change, loglevel)
-            continue
-        change_type = change.change_type
-        if change_type == "replace":
-            change_result = _replace(node, change)
-        elif change_type == "insert_after":
-            change_result = _insert_after(node, change)
-        elif change_type == "rephrase":
-            change_result = _rephrase(node, change)
-        elif change_type == "append":
-            change_result = _append(node, change)
-        elif change_type == "delete_after":
-            change_result = _delete_after(node, change)
-        elif change_type == "cancelled":
-            change_result = _cancelled(node, change)
-        elif change_type == "RENUMBERING":
-            _log_change("SKIPPED", change, loglevel)
-            # we skip it because the insertion code in Treelawnode should handle all of this
-            n_succesfull_applied_changes += 1
-        else:
-            _log_change("SKIPPED", change, loglevel)
-            continue
-        if res_law_tree.to_text() != tree_text_before:
-            # if something changed, then we successfully applied something
-            _log_change("APPLIED", change, loglevel)
-            n_succesfull_applied_changes += change_result.status
-        else:
-            # if nothign changed, we should be informed
-            if change_type not in ["RENUMBERING", "MULTIPLE_CHANGES", "UNKNOWN"]:
-                _log_change("APPLIED WITHOUT CHANGE", change, loglevel)
+        try:
+            # find the node that needs to be changed
+            node = _find_node(location_list=change.location, parse_tree=res_law_tree)
+            # store the representation of the tree to compare it with the tree after the change
+            tree_text_before = res_law_tree.to_text()
+            # if we found no path, we skip
+            if not node:
+                _log_change("SKIPPING. No unique path found for", change, loglevel)
                 continue
-        node.changes.append(change_result)
-        change_results.append(change_result)
+            change_type = change.change_type
+            if change_type == "replace":
+                change_result = _replace(node, change)
+            elif change_type == "insert_after":
+                change_result = _insert_after(node, change)
+            elif change_type == "rephrase":
+                change_result = _rephrase(node, change)
+            elif change_type == "append":
+                change_result = _append(node, change)
+            elif change_type == "delete_after":
+                change_result = _delete_after(node, change)
+            elif change_type == "cancelled":
+                change_result = _cancelled(node, change)
+            elif change_type == "RENUMBERING":
+                _log_change("SKIPPED", change, loglevel)
+                # we skip it because the insertion code in Treelawnode should handle all of this
+                n_succesfull_applied_changes += 1
+            else:
+                _log_change("SKIPPED", change, loglevel)
+                continue
+            if res_law_tree.to_text() != tree_text_before:
+                # if something changed, then we successfully applied something
+                _log_change("APPLIED", change, loglevel)
+                n_succesfull_applied_changes += change_result.status
+            else:
+                # if nothign changed, we should be informed
+                if change_type not in ["RENUMBERING", "MULTIPLE_CHANGES", "UNKNOWN"]:
+                    _log_change("APPLIED WITHOUT CHANGE", change, loglevel)
+                    continue
+            node.changes.append(change_result)
+            change_results.append(change_result)
+        except Exception as err:
+            print(f"\nERROR: {err}")
+            print(change)
+            print("\n")
     return res_law_tree, change_results, n_succesfull_applied_changes
