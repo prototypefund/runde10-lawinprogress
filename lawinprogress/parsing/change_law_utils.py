@@ -110,13 +110,14 @@ def preprocess_raw_law(text: str) -> str:
     # extract the parts with change requests (here we assume only one law is affected for now)
     # > get the text between "wird wie folgt geändert" und "Begründung"
     # (allow for newlines and/or whitespace between the words)
-    try:
-        text = re.split(
-            r"wird[\s,\n]{0,3}wie[\s,\n]{0,3}folgt[\s,\n]{0,3}geändert:", text, maxsplit=1
-        )[1].split("Begründung", 1)[0]
-    except IndexError:
-        # if that fails, just take the full text.
-        pass
+    # TODO: Remove that if not needed
+    # try:
+    #    text = re.split(
+    #        r"wird[\s,\n]{0,3}wie[\s,\n]{0,3}folgt[\s,\n]{0,3}geändert:", text, maxsplit=1
+    #    )[1].split("Begründung", 1)[0]
+    # except IndexError:
+    #    # if that fails, just take the full text.
+    #    pass
 
     # remove header and footer artifacts
     text = "\n".join(
@@ -142,10 +143,12 @@ def preprocess_raw_law(text: str) -> str:
                 re.match(r"^\d{1,2}\.", line),
                 re.match(r"^[a-z]\)", line),
                 re.match(r"^[a-z][a-z]\)", line),
-                re.match(r"^\([a-z0-9]\)", line),
+                re.match(r"^\([a-z0-9]{1,3}\)", line),
             ]
         ):
             outtext += "\n" + line
+        elif line.startswith("§"):
+            outtext += "\n## " + line
         else:
             outtext += line
 

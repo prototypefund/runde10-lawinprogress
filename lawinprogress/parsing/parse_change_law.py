@@ -30,10 +30,11 @@ def parse_change_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
         Structured output. A tree of LawTextNodes.
     """
     patterns = [
+        r"^##",
         r"^\d{1,2}\.",
         r"^[a-z]\)",
         r"^[a-z][a-z]\)",
-        r"^\([a-z0-9]\)",
+        r"^\([a-z0-9]{1,3}\)",
     ]
     # build the tree
     for pattern in patterns:
