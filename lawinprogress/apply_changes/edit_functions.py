@@ -64,6 +64,18 @@ def _replace(node: LawTextNode, change: Change) -> ChangeResult:
         node.text = node.text.replace(
             __clean_text(change.text[0]), __clean_text(change.text[1])
         )
+    elif len(change.text) == 1 and len(change.sentences) > 0:
+        # replace the sentences in question by the change text.
+        sentences = __split_text_to_sentences(node.text)
+        if "bis" in change.sentences[0]:
+            pass
+        elif "und" in change.sentences[0]:
+            pass
+        else:
+            # single sentence
+            number = re.findall(r"\d{1,3}", change.sentences[0])[0]
+            sentences[int(number) - 1] = __clean_text(change.text[0].strip())
+            node.text = " ".join(sentences)
     else:
         msg = "not enougth text to replace"
         return ChangeResult(change, node, 0, msg)

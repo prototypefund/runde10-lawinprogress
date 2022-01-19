@@ -48,7 +48,7 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
             change_results,
             n_succesfull_applied_changes,
         ) = parse_and_apply_changes(
-            change_law_text, source_law_text, law_title, loglevel=0
+            change_law_text, source_law_text, law_title, loglevel=2
         )
 
         # generate the html diff
