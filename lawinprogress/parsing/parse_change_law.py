@@ -178,9 +178,10 @@ def parse_change_text(line: str) -> List[str]:
         line[m.span()[0] : m.span()[1]]
         .replace("Komma", ",")
         .replace("Semikolon", ";")
+        .replace("Punkt", ".")
         .strip()
         for m in re.finditer(
-            r"((?<=„)(.|\n)*?(?=“)|Komma|Semikolon)", line, re.MULTILINE
+            r"((?<=„)(.|\n)*?(?=“)|Komma|Semikolon|Punkt)", line, re.MULTILINE
         )
     ]
 

@@ -76,6 +76,20 @@ def _replace(node: LawTextNode, change: Change) -> ChangeResult:
             number = re.findall(r"\d{1,3}", change.sentences[0])[0]
             sentences[int(number) - 1] = __clean_text(change.text[0].strip())
             node.text = " ".join(sentences)
+    elif len(change.text) == 2 and len(change.sentences) > 0:
+        # replace the text in the sentence in question.
+        sentences = __split_text_to_sentences(node.text)
+        if "bis" in change.sentences[0]:
+            pass
+        elif "und" in change.sentences[0]:
+            pass
+        else:
+            # single sentence
+            number = re.findall(r"\d{1,3}", change.sentences[0])[0]
+            sentences[int(number) - 1] = sentences[int(number) - 1].replace(
+                change.text[0], change.text[1]
+            )
+            node.text = " ".join(sentences)
     else:
         msg = "not enougth text to replace"
         return ChangeResult(change, node, 0, msg)
@@ -103,7 +117,7 @@ def _insert_after(node: LawTextNode, change: Change) -> ChangeResult:
             r"^§\s\d{1,3}[a-z]?",
             r"^[a-z]\)",
             r"^[a-z][a-z]\)",
-            r"^\([a-z1-9]\)",
+            r"^\([a-z0-9]{1,3}\)",
         ]
     ]
 
@@ -176,7 +190,7 @@ def _rephrase(node: LawTextNode, change: Change) -> ChangeResult:
             r"^\d{1,2}\,",
             r"^[a-z]\)",
             r"^[a-z][a-z]\)",
-            r"^\([a-z0-9]\)",
+            r"^\([a-z0-9]{1,3}\)",
         ]:
             change_text = re.sub(pattern, "", change_text, count=1)
         # apply the change
@@ -190,7 +204,7 @@ def _rephrase(node: LawTextNode, change: Change) -> ChangeResult:
             r"^\d{1,2}\,",
             r"^[a-z]\)",
             r"^[a-z][a-z]\)",
-            r"^\([a-z0-9]\)",
+            r"^\([a-z0-9]{1,3}\)",
         ]:
             change_text = re.sub(pattern, "", change_text, count=1)
         # apply the change
@@ -214,7 +228,28 @@ def _append(node: LawTextNode, change: Change) -> ChangeResult:
     """Add given text after the given location."""
     status = 1
     if len(change.text) == 1:
-        node.text = node.text + " " + __clean_text(change.text[0])
+        change_text = change.text[0]
+        bulletpoint_matches = [
+            re.match(pattern, change_text)
+            for pattern in [
+                r"^\d{1,2}\.",
+                r"^\(\d{1,2}\)",
+                r"^\d{1,2}\,",
+                r"^[a-z]\)",
+                r"^[a-z][a-z]\)",
+                r"^\([a-z0-9]{1,3}\)",
+            ]
+        ]
+        if any(bulletpoint_matches):
+            # if starts with bulletpoint insert directly into the tree
+            match = [m for m in bulletpoint_matches if m][0]
+            bulletpoint_match = change_text[match.span()[0] : match.span()[1]]
+            node.insert_child(
+                text=change_text[match.span()[1] + 1 :],
+                bulletpoint=bulletpoint_match,
+            )
+        else:
+            node.text = node.text + " " + __clean_text(change_text)
     else:
         msg = "Failed to append! To much texts."
         return ChangeResult(change, node, 0, msg)

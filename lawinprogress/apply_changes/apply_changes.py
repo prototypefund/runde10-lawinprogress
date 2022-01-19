@@ -103,7 +103,22 @@ def apply_changes(
     for change in changes:
         try:
             # find the node that needs to be changed
-            node = _find_node(location_list=change.location, parse_tree=res_law_tree)
+            if (
+                change.text
+                and change.text[0].startswith(change.location[-1])
+                and change.change_type == "append"
+            ):
+                # if the node is appended but doesnt exist jet
+                # dont use the last part of the location
+                node = _find_node(
+                    location_list=change.location[:-1], parse_tree=res_law_tree
+                )
+            else:
+                # just find the node
+                node = _find_node(
+                    location_list=change.location, parse_tree=res_law_tree
+                )
+
             # store the representation of the tree to compare it with the tree after the change
             tree_text_before = res_law_tree.to_text()
             # if we found no path, we skip
