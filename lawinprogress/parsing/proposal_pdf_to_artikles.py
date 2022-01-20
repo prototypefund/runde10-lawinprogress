@@ -39,9 +39,9 @@ def extract_raw_proposal(text: str) -> str:
 
 def extract_seperate_change_proposals(text: str) -> List[str]:
     proposals = []
-    proposals.extend(re.split(r"Artikel\s{1,2}([1-9]|[1-9][0-9]|100)\s{0,2}\n", text))
+    proposals.extend(re.split(r"\nArtikel\s{1,2}([0-9]{1,3})\s{0,2}\n", text))
 
-    artikels = re.findall(r"Artikel\s{1,2}([1-9]|[1-9][0-9]|100)\s{0,2}\n", text)
+    artikels = re.findall(r"\nArtikel\s{1,2}([1-9]|[1-9][0-9]|100)\s{0,2}\n", text)
     artikels_int = [int(artikel) for artikel in artikels]
     # compute the sum of the artikel numbers using the formula for an arithmetic series
     # using only the first and last artikel numbers, and the length of the list

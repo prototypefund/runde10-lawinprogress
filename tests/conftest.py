@@ -5,7 +5,7 @@ from lawinprogress.parsing.lawtree import LawTextNode
 
 
 @pytest.fixture(scope="function")
-def simple_lawtext_tree():
+def simple_lawtext_tree() -> LawTextNode:
     """Return a simple law text tree."""
     tree = LawTextNode(
         text="Test1",

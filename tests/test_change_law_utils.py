@@ -2,6 +2,7 @@
 import pytest
 
 from lawinprogress.parsing.change_law_utils import (
+    QuotationMismatchError,
     preprocess_raw_law,
     remove_footnotes,
     remove_header_footer_artifacts_from_line,
@@ -33,12 +34,10 @@ def test_remove_newline_in_quoted_text_too_many_opening_quotes():
         "The following\n text „is \nin quotes“. „This is missing closing quotes."
     )
 
-    with pytest.raises(Exception) as err:
+    with pytest.raises(QuotationMismatchError) as err:
         result_text = remove_newline_in_quoted_text(test_text)
 
-    assert (
-        str(err.value) == "Quote error: Found more opening quotes than closing quotes."
-    )
+    assert str(err.value) == "Number of opening quotes > number of closing quotes."
 
 
 def test_remove_newline_in_quoted_text_too_many_closing_quotes():
@@ -47,12 +46,10 @@ def test_remove_newline_in_quoted_text_too_many_closing_quotes():
         "The following\n text „is \nin quotes“. This is missing closing quotes“."
     )
 
-    with pytest.raises(Exception) as err:
+    with pytest.raises(QuotationMismatchError) as err:
         result_text = remove_newline_in_quoted_text(test_text)
 
-    assert (
-        str(err.value) == "Quote error: Found more closing quotes than opening quotes."
-    )
+    assert str(err.value) == "Number of opening quotes < number of closing quotes."
 
 
 def test_remove_footnotes():

@@ -11,6 +11,7 @@ Aktuell werden nur Entwürfe von Bundesgesetzen unterstützt. Später sollen auc
 ├── README.md            --> This file
 ├── LICENSE              --> MIT license 
 ├── Makefile             --> Make target for setup, testing and cleaning
+├── logging.conf         --> Configuration for the loggers used in this project
 ├── data/                --> Folder with some raw files of laws in text and pdf
 ├── doc/                 --> Documentation and notes
 ├── notebooks/           --> Experimental notebooks
@@ -19,6 +20,7 @@ Aktuell werden nur Entwürfe von Bundesgesetzen unterstützt. Später sollen auc
 │   ├── generate_diff.py --> main script to generate a diff from a change law
 │   ├── parsing/         --> modules to parse source and change laws
 │   ├── apply_changes/   --> modules to apply the proposed changes to source laws
+│   ├── app/             --> contains the FastAPI webapp.
 │   └── libdiff/         --> modules to generate a html diff of the changed law
 └── tests/               --> Test for the main package
     ├── ...
@@ -30,18 +32,20 @@ Aktuell werden nur Entwürfe von Bundesgesetzen unterstützt. Später sollen auc
 Clone the repo and run `make poetry` and `make install` to setup poetry and the relevant requriements.
 
 
-# Example usage
+# Example usage as a script
 To generate a diff for an exisiting change law, run
 
 ```bash
-poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf
+poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf --html
 ```
 
-This will generate a before and after version of the changed laws in `./output`. Currently only laws present in `./data/source_laws/` are supported. Other changes will be skipped.
+This will generate a before and after version of the changed laws, as well as a html file highlighting the diffs in `./output`.
+Currently only changes in laws present in `./data/source_laws/` are supported. Other changes will be skipped.
 
-# Example usage:
 
-```poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf --html```
+# Example usage as a webapp
+
+Start the webapp with `make app`. You can access the webapp now in `http://localhost:8000/`.
 
 
 # Code checks & tests

@@ -1,5 +1,6 @@
 """Main functiosn to apply changes to parsed source laws."""
 import copy
+import logging
 from typing import List, Tuple
 
 import click
@@ -17,34 +18,7 @@ from lawinprogress.apply_changes.edit_functions import (
 from lawinprogress.parsing.parse_change_law import Change
 from lawinprogress.parsing.parse_source_law import LawTextNode
 
-
-def _log_change(result_text: str, change: Change, loglevel: int = 1):
-    """Convinience function to log a change application."""
-    if loglevel == 0:
-        click.echo(f"{result_text} {change.change_type}")
-    elif loglevel == 1:
-        click.echo(
-            "{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n".format(
-                result_text,
-                change.change_type,
-                change.location,
-                change.sentences,
-                change.text,
-            )
-        )
-    elif loglevel == 2:
-        click.echo(
-            "{} {}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n\traw_text={}\n".format(
-                result_text,
-                change.change_type,
-                change.location,
-                change.sentences,
-                change.text,
-                change.raw_text,
-            )
-        )
-    else:
-        raise ValueError("Unknown loglevel in change logging.")
+logger = logging.getLogger(__name__)
 
 
 def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTextNode]:
@@ -83,7 +57,8 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
 
 
 def apply_changes(
-    law_tree: LawTextNode, changes: List[Change], loglevel: int = 1
+    law_tree: LawTextNode,
+    changes: List[Change],
 ) -> Tuple[LawTextNode, List[ChangeResult], int]:
     """Apply the provided changes to the provided tree.
 
@@ -91,7 +66,6 @@ def apply_changes(
         law_tree: A tree of LawTextNodes
         changes: A dict with changes, containing "location", "how" and "text"
                  to specify the changes.
-        loglevel: How detailed should the logs be? Integer between 0 and 2.
 
     Returns:
         Tree of LawTextNodes with the requested changes if we where able to apply them.
@@ -101,43 +75,69 @@ def apply_changes(
     change_results = []
     n_succesfull_applied_changes = 0
     for change in changes:
-        # find the node that needs to be changed
-        node = _find_node(location_list=change.location, parse_tree=res_law_tree)
-        # store the representation of the tree to compare it with the tree after the change
-        tree_text_before = res_law_tree.to_text()
-        # if we found no path, we skip
-        if not node:
-            _log_change("SKIPPING. No unique path found for", change, loglevel)
-            continue
-        change_type = change.change_type
-        if change_type == "replace":
-            change_result = _replace(node, change)
-        elif change_type == "insert_after":
-            change_result = _insert_after(node, change)
-        elif change_type == "rephrase":
-            change_result = _rephrase(node, change)
-        elif change_type == "append":
-            change_result = _append(node, change)
-        elif change_type == "delete_after":
-            change_result = _delete_after(node, change)
-        elif change_type == "cancelled":
-            change_result = _cancelled(node, change)
-        elif change_type == "RENUMBERING":
-            _log_change("SKIPPED", change, loglevel)
-            # we skip it because the insertion code in Treelawnode should handle all of this
-            n_succesfull_applied_changes += 1
-        else:
-            _log_change("SKIPPED", change, loglevel)
-            continue
-        if res_law_tree.to_text() != tree_text_before:
-            # if something changed, then we successfully applied something
-            _log_change("APPLIED", change, loglevel)
-            n_succesfull_applied_changes += change_result.status
-        else:
-            # if nothign changed, we should be informed
-            if change_type not in ["RENUMBERING", "MULTIPLE_CHANGES", "UNKNOWN"]:
-                _log_change("APPLIED WITHOUT CHANGE", change, loglevel)
+        logger.info(change)
+        try:
+            # find the node that needs to be changed
+            if (
+                change.text
+                and change.text[0].startswith(change.location[-1])
+                and change.change_type == "append"
+            ):
+                # if the node is appended but doesnt exist jet
+                # dont use the last part of the location
+                node = _find_node(
+                    location_list=change.location[:-1], parse_tree=res_law_tree
+                )
+            else:
+                # just find the node
+                node = _find_node(
+                    location_list=change.location, parse_tree=res_law_tree
+                )
+
+            # store the representation of the tree to compare it with the tree after the change
+            tree_text_before = res_law_tree.to_text()
+            # if we found no path, we skip
+            if not node:
+                change_result = ChangeResult(
+                    change, None, status=0, message="SKIPPING. No unique path found for"
+                )
+                logger.info(change_result)
+                change_results.append(change_result)
                 continue
-        node.changes.append(change_result)
-        change_results.append(change_result)
+            change_type = change.change_type
+            if change_type == "replace":
+                change_result = _replace(node, change)
+            elif change_type == "insert_after":
+                change_result = _insert_after(node, change)
+            elif change_type == "rephrase":
+                change_result = _rephrase(node, change)
+            elif change_type == "append":
+                change_result = _append(node, change)
+            elif change_type == "delete_after":
+                change_result = _delete_after(node, change)
+            elif change_type == "cancelled":
+                change_result = _cancelled(node, change)
+            elif change_type == "RENUMBERING":
+                # we skip it because the insertion code in Treelawnode should handle all of this
+                change_result = ChangeResult(
+                    change, node, status=1, message="RENUMBERING"
+                )
+                n_succesfull_applied_changes += 1
+            else:
+                change_result = ChangeResult(change, node, status=1, message="SKIPPED")
+            if res_law_tree.to_text() != tree_text_before:
+                # if something changed, then we successfully applied something
+                n_succesfull_applied_changes += change_result.status
+            else:
+                # if nothign changed, we should be informed
+                if change_type not in ["RENUMBERING", "MULTIPLE_CHANGES", "UNKNOWN"]:
+                    change_result = ChangeResult(
+                        change, node, status=1, message="APPLIED WITHOUT CHANGE"
+                    )
+            node.changes.append(change_result)
+            change_results.append(change_result)
+            logger.info(change_result)
+        except IndexError as err:
+            logger.warning(f"\nERROR: {err}")
+            logger.warning(change)
     return res_law_tree, change_results, n_succesfull_applied_changes

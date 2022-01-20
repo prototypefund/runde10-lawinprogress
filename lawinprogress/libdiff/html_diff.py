@@ -68,15 +68,8 @@ def html_sidebyside(
     change_results: List[List[ChangeResult]],
 ) -> str:
     """Create a side-by-side div-table for the diff/synopsis."""
-    # html headers
-    out = """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Law in Progress</title>
-</head>"""
     # page title
-    out += f'<center><h2>{left_text[0].split("source ")[-1]}</h2></center>'
+    out = f'<center><h2>{left_text[0].split("source ")[-1]}</h2></center>'
     # TODO: show not applied changes
     # prepare successfull changes
     success_changes = [

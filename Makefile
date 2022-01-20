@@ -18,3 +18,6 @@ check:
 test:
 	poetry run pytest --cov="lawinprogress/" tests/
 
+app:
+	poetry run uvicorn lawinprogress.app.html:app --reload
+

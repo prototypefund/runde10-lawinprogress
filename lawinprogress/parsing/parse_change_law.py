@@ -30,10 +30,11 @@ def parse_change_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
         Structured output. A tree of LawTextNodes.
     """
     patterns = [
+        r"^##",
         r"^\d{1,2}\.",
         r"^[a-z]\)",
         r"^[a-z][a-z]\)",
-        r"^\([a-z0-9]\)",
+        r"^\([a-z0-9]{1,3}\)",
     ]
     # build the tree
     for pattern in patterns:
@@ -73,8 +74,12 @@ def _adapt_change_location_for_source_law(location: str) -> str:
     # replace some text bulletpoints to match the bulletpoints in the source laws
     if location.startswith("Absatz "):
         location = location.replace("Absatz ", "(") + ")"
+    elif location.startswith("Abs. "):
+        location = location.replace("Abs. ", "(") + ")"
     elif location.startswith("Nummer "):
         location = location.replace("Nummer ", "") + "."
+    elif location.startswith("Nr. "):
+        location = location.replace("Nr. ", "") + "."
     elif location.startswith("Buchstabe "):
         location = location.replace("Buchstabe ", "") + ")"
     return location
@@ -96,7 +101,9 @@ def parse_change_location(line: str) -> List[str]:
         r"§\s+\d{1,3}[a-z]?",
         r"Überschrift",
         r"Absatz\s+\d{1,3}",
+        r"Abs.\s+\d{1,3}",
         r"Nummer\s+\d{1,3}",
+        r"Nr.\s+\d{1,3}",
         r"Buchstabe\s+[a-z]",
     ]
 
@@ -135,7 +142,7 @@ def parse_change_sentences(line: str) -> List[str]:
         List of strings, every string is a sentence to change.
     """
     sentence_identifiers = [
-        r"(Satz|Sätze)\s\d{1,3}(\s(bis|und)\s?(Satz|Sätze)?\s?\d{1,3})?",
+        r"(Satz|Sätze)\s+\d{1,3}(\s+(bis|und)(\s+)?(Satz|Sätze)?(\s+)?\d{1,3})?",
     ]
 
     sentences = []
@@ -171,9 +178,10 @@ def parse_change_text(line: str) -> List[str]:
         line[m.span()[0] : m.span()[1]]
         .replace("Komma", ",")
         .replace("Semikolon", ";")
+        .replace("Punkt", ".")
         .strip()
         for m in re.finditer(
-            r"((?<=„)(.|\n)*?(?=“)|Komma|Semikolon)", line, re.MULTILINE
+            r"((?<=„)(.|\n)*?(?=“)|Komma|Semikolon|Punkt)", line, re.MULTILINE
         )
     ]
 
@@ -194,7 +202,7 @@ def parse_change_request_line(line: str) -> List[Change]:
     raw_line = line
     # if the change is of type "Absatz 7 wird Absatz 8" skip here.
     renumbering = False
-    regex_str_singular = r"(Absatz|Paragraph|Nummer)\s(\d{1,2}|[a-z]{1,2}\)?)\swird\s(Absatz|Paragraph|Nummer)\s(\d{1,2}|[a-z]{1,2}\)?)"
+    regex_str_singular = r"(Absatz|Abs.|Paragraph|Nummer|Nr.)\s(\d{1,2}|[a-z]{1,2}\)?)\swird\s(Absatz|Abs.|Paragraph|Nummer|Nr.)\s(\d{1,2}|[a-z]{1,2}\)?)"
     regex_str_multiple = r"(Absatz|Absätze|Abätze|Paragraph|Nummern)\s(\d{1,2}|[a-z]{1,2}\)?)\s(bis|und)\s(\d{1,2}|[a-z]{1,2}\)?)\swerden\s(der|die|das)?\s?(Absatz|Absätze|Abätze|Paragraph|Nummern)\s(\d{1,2}|[a-z]{1,2}\)?)\s(bis|und)\s(\d{1,2}|[a-z]{1,2}\)?)"
     if re.search(regex_str_singular, line) or re.search(regex_str_multiple, line):
         renumbering = True
@@ -203,7 +211,7 @@ def parse_change_request_line(line: str) -> List[Change]:
 
     changes = []  # could be multiple changes in one line; right now we only allow one
 
-    # TODO Tobias: Move these to enumeration type and improt from there.
+    # TODO Move these to enumeration type and improt from there.
     keyword_type_pairs = [
         ("eingefügt", "insert_after"),
         ("ersetzt", "replace"),
