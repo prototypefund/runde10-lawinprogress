@@ -76,9 +76,9 @@ def test_parse_and_apply_changes():
 @pytest.mark.parametrize(
     "pdf_path,expected",
     [
-        ("./tests/data/0483-21.pdf", "11/12 ( 91.67%)"),
-        ("./tests/data/0145-21.pdf", "7/7 (100.00%)"),
-        ("./tests/data/1930399.pdf", "0/2 (  0.00%)"),
+        ("./tests/data/0483-21.pdf", "11.00/12.00 ( 91.67%)"),
+        ("./tests/data/0145-21.pdf", "7.00/7.00 (100.00%)"),
+        ("./tests/data/1930399.pdf", "0.00/2.00 (  0.00%)"),
     ],
 )
 def test_generate_diff(pdf_path, expected):
