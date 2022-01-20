@@ -156,7 +156,7 @@ def apply_changes(
                     continue
             node.changes.append(change_result)
             change_results.append(change_result)
-        except Exception as err:
+        except IndexError as err:
             print(f"\nERROR: {err}")
             print(change)
             print("\n")

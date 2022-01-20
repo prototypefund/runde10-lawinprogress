@@ -8,6 +8,14 @@ from lawinprogress.parsing.lawtree import LawTextNode
 from lawinprogress.parsing.parse_change_law import Change
 from lawinprogress.parsing.parse_source_law import parse_source_law_tree
 
+BULLETPOINT_PATTERNS = [
+    r"^Kapitel\s*\d{1,3}",
+    r"^§\s*\d{1,3}[a-z]?",
+    r"^\d{1,3}\.",
+    r"^\([a-z0-9]{1,3}\)",
+    r"^[a-z]{1,2}\)",
+]
+
 
 class ChangeResult:
     """Store the result of a change application."""
@@ -59,8 +67,7 @@ def __clean_text(text: str) -> str:
 
 def _replace(node: LawTextNode, change: Change) -> ChangeResult:
     """Replace text in the node."""
-    status = 1
-    if len(change.text) == 2:
+    if len(change.text) == 2 and len(change.sentences) == 0:
         node.text = node.text.replace(
             __clean_text(change.text[0]), __clean_text(change.text[1])
         )
@@ -68,32 +75,34 @@ def _replace(node: LawTextNode, change: Change) -> ChangeResult:
         # replace the sentences in question by the change text.
         sentences = __split_text_to_sentences(node.text)
         if "bis" in change.sentences[0]:
-            pass
-        elif "und" in change.sentences[0]:
-            pass
-        else:
-            # single sentence
-            number = re.findall(r"\d{1,3}", change.sentences[0])[0]
-            sentences[int(number) - 1] = __clean_text(change.text[0].strip())
-            node.text = " ".join(sentences)
+            msg = "Replace with sentence range 'bis' is currently not supported."
+            return ChangeResult(change, node, 0, msg)
+        if "und" in change.sentences[0]:
+            msg = "Replace with multiple sentences 'und' is currently not supported."
+            return ChangeResult(change, node, 0, msg)
+        # single sentence
+        number = re.findall(r"\d{1,3}", change.sentences[0])[0]
+        sentences[int(number) - 1] = __clean_text(change.text[0].strip())
+        node.text = " ".join(sentences)
     elif len(change.text) == 2 and len(change.sentences) > 0:
         # replace the text in the sentence in question.
         sentences = __split_text_to_sentences(node.text)
         if "bis" in change.sentences[0]:
-            pass
-        elif "und" in change.sentences[0]:
-            pass
-        else:
-            # single sentence
-            number = re.findall(r"\d{1,3}", change.sentences[0])[0]
-            sentences[int(number) - 1] = sentences[int(number) - 1].replace(
-                change.text[0], change.text[1]
-            )
-            node.text = " ".join(sentences)
+            msg = "Replace with sentence range 'bis' is currently not supported."
+            return ChangeResult(change, node, 0, msg)
+        if "und" in change.sentences[0]:
+            msg = "Replace with multiple sentences 'und' is currently not supported."
+            return ChangeResult(change, node, 0, msg)
+        # single sentence
+        number = re.findall(r"\d{1,3}", change.sentences[0])[0]
+        sentences[int(number) - 1] = sentences[int(number) - 1].replace(
+            change.text[0], change.text[1]
+        )
+        node.text = " ".join(sentences)
     else:
-        msg = "not enougth text to replace"
+        msg = "Not enougth text to replace."
         return ChangeResult(change, node, 0, msg)
-    return ChangeResult(change, node, status)
+    return ChangeResult(change, node, status=1)
 
 
 def _insert_after(node: LawTextNode, change: Change) -> ChangeResult:
@@ -102,23 +111,13 @@ def _insert_after(node: LawTextNode, change: Change) -> ChangeResult:
     Assumes list of change.text to be of even length, uneven positions are the location
     # after which to insert, even positions are the text to insert.
     """
-    status = 1  # return value to determain failure or success.
-
     if len(change.text) == 0:
         msg = "Failed to insert after! Not enougth text found."
         # return status 0
         return ChangeResult(change, node, 0, msg)
 
     bulletpoint_matches = [
-        re.match(pattern, change.text[0])
-        for pattern in [
-            r"^Kapitel\s*\d{1,3}",
-            r"^\d\.",
-            r"^§\s\d{1,3}[a-z]?",
-            r"^[a-z]\)",
-            r"^[a-z][a-z]\)",
-            r"^\([a-z0-9]{1,3}\)",
-        ]
+        re.match(pattern, change.text[0]) for pattern in BULLETPOINT_PATTERNS
     ]
 
     if len(change.text) % 2 == 0:
@@ -165,33 +164,27 @@ def _insert_after(node: LawTextNode, change: Change) -> ChangeResult:
         # insert after a specific sentence
         sentences = __split_text_to_sentences(node.text)
         if "bis" in change.sentences[0]:
-            pass
-        elif "und" in change.sentences[0]:
-            pass
-        else:
-            # single sentence
-            number = re.findall(r"\d{1,3}", change.sentences[0])[0]
-            sentences.insert(int(number), __clean_text(change.text[0].strip()))
-            node.text = " ".join(sentences)
+            msg = "Insert with sentence range 'bis' is currently not supported."
+            return ChangeResult(change, node, 0, msg)
+        if "und" in change.sentences[0]:
+            msg = "Insert with multiple sentences 'und' is currently not supported."
+            return ChangeResult(change, node, 0, msg)
+        # single sentence
+        number = re.findall(r"\d{1,3}", change.sentences[0])[0]
+        sentences.insert(int(number), __clean_text(change.text[0].strip()))
+        node.text = " ".join(sentences)
     else:
         msg = "Failed to insert after! Unknown reason!"
         return ChangeResult(change, node, 0, msg)
-    return ChangeResult(change, node, status)
+    return ChangeResult(change, node, status=1)
 
 
 def _rephrase(node: LawTextNode, change: Change) -> ChangeResult:
     """Rephrase the text in the specific location."""
-    status = 1
     if len(change.text) == 1 and len(change.sentences) == 0:
         # remove leading bulletpoints if there are any
         change_text = change.text[0]
-        for pattern in [
-            r"^\(\d{1,2}\)",
-            r"^\d{1,2}\,",
-            r"^[a-z]\)",
-            r"^[a-z][a-z]\)",
-            r"^\([a-z0-9]{1,3}\)",
-        ]:
+        for pattern in BULLETPOINT_PATTERNS:
             change_text = re.sub(pattern, "", change_text, count=1)
         # apply the change
         node.text = __clean_text(change_text.strip())
@@ -199,46 +192,32 @@ def _rephrase(node: LawTextNode, change: Change) -> ChangeResult:
         # if there is a sentence description, only rephrase that location
         # remove leading bulletpoints if there are any
         change_text = change.text[0]
-        for pattern in [
-            r"^\(\d{1,2}\)",
-            r"^\d{1,2}\,",
-            r"^[a-z]\)",
-            r"^[a-z][a-z]\)",
-            r"^\([a-z0-9]{1,3}\)",
-        ]:
+        for pattern in BULLETPOINT_PATTERNS:
             change_text = re.sub(pattern, "", change_text, count=1)
         # apply the change
         sentences = __split_text_to_sentences(node.text)
         if "bis" in change.sentences[0]:
-            pass
-        elif "und" in change.sentences[0]:
-            pass
-        else:
-            # single sentence
-            number = re.findall(r"\d{1,3}", change.sentences[0])[0]
-            sentences[int(number) - 1] = __clean_text(change_text.strip())
-            node.text = " ".join(sentences)
+            msg = "Rephrase with sentence range 'bis' is currently not supported."
+            return ChangeResult(change, node, 0, msg)
+        if "und" in change.sentences[0]:
+            msg = "Rephrase with multiple sentences 'und' is currently not supported."
+            return ChangeResult(change, node, 0, msg)
+        # single sentence
+        number = re.findall(r"\d{1,3}", change.sentences[0])[0]
+        sentences[int(number) - 1] = __clean_text(change_text.strip())
+        node.text = " ".join(sentences)
     else:
         msg = "Failed to rephrase! Too much or too little texts."
         return ChangeResult(change, node, 0, msg)
-    return ChangeResult(change, node, status)
+    return ChangeResult(change, node, status=1)
 
 
 def _append(node: LawTextNode, change: Change) -> ChangeResult:
     """Add given text after the given location."""
-    status = 1
     if len(change.text) == 1:
         change_text = change.text[0]
         bulletpoint_matches = [
-            re.match(pattern, change_text)
-            for pattern in [
-                r"^\d{1,2}\.",
-                r"^\(\d{1,2}\)",
-                r"^\d{1,2}\,",
-                r"^[a-z]\)",
-                r"^[a-z][a-z]\)",
-                r"^\([a-z0-9]{1,3}\)",
-            ]
+            re.match(pattern, change_text) for pattern in BULLETPOINT_PATTERNS
         ]
         if any(bulletpoint_matches):
             # if starts with bulletpoint insert directly into the tree
@@ -253,7 +232,7 @@ def _append(node: LawTextNode, change: Change) -> ChangeResult:
     else:
         msg = "Failed to append! To much texts."
         return ChangeResult(change, node, 0, msg)
-    return ChangeResult(change, node, status)
+    return ChangeResult(change, node, status=1)
 
 
 def _delete_after(node: LawTextNode, change: Change) -> ChangeResult:
@@ -278,34 +257,31 @@ def _delete_after(node: LawTextNode, change: Change) -> ChangeResult:
 
 def _cancelled(node: LawTextNode, change: Change) -> ChangeResult:
     """Remove the node in question from the tree."""
-    status = 1
     if len(change.text) == 0 and len(change.sentences) == 0:
         try:
             node.parent.remove_child(bulletpoint=node.bulletpoint)
         except AttributeError as err:
-            print("Failed to cancel! Node has no parent")
-            status = 0
+            msg = f"Failed to cancel! Node has no parent. {err}"
+            return ChangeResult(change, node, 0, msg)
     elif len(change.text) == 0 and len(change.sentences) == 1:
         # remove the sentences in question
         sentences = __split_text_to_sentences(node.text)
+        sentence_numbers = re.findall(r"\d{1,3}", change.sentences[0])
         if "bis" in change.sentences[0]:
             # sentence range
-            numbers = re.findall(r"\d{1,3}", change.sentences[0])
-            del sentences[int(numbers[0]) - 1 : int(numbers[1]) - 1]
+            del sentences[int(sentence_numbers[0]) - 1 : int(sentence_numbers[1]) - 1]
             node.text = " ".join(sentences)
         elif "und" in change.sentences[0]:
             # multiple sentences
-            numbers = re.findall(r"\d{1,3}", change.sentences[0])
-            for num in numbers[::-1]:
+            for num in sentence_numbers[::-1]:
                 sentences.pop(int(num) - 1)
             node.text = " ".join(sentences)
         else:
             # single sentence
-            number = re.findall(r"\d{1,3}", change.sentences[0])[0]
-            sentences.pop(int(number) - 1)
+            sentences.pop(int(sentence_numbers[0]) - 1)
             node.text = " ".join(sentences)
         node.text = " ".join(sentences)
     else:
         msg = "Failed to cancel! Text present."
         return ChangeResult(change, node, 0, msg)
-    return ChangeResult(change, node, status)
+    return ChangeResult(change, node, status=1)
