@@ -18,7 +18,6 @@ from lawinprogress.apply_changes.edit_functions import (
 from lawinprogress.parsing.parse_change_law import Change
 from lawinprogress.parsing.parse_source_law import LawTextNode
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -58,7 +57,8 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
 
 
 def apply_changes(
-    law_tree: LawTextNode, changes: List[Change],
+    law_tree: LawTextNode,
+    changes: List[Change],
 ) -> Tuple[LawTextNode, List[ChangeResult], int]:
     """Apply the provided changes to the provided tree.
 
@@ -98,7 +98,9 @@ def apply_changes(
             tree_text_before = res_law_tree.to_text()
             # if we found no path, we skip
             if not node:
-                change_result = ChangeResult(change, None, status=0, message="SKIPPING. No unique path found for")
+                change_result = ChangeResult(
+                    change, None, status=0, message="SKIPPING. No unique path found for"
+                )
                 logger.info(change_result)
                 change_results.append(change_result)
                 continue
@@ -117,7 +119,9 @@ def apply_changes(
                 change_result = _cancelled(node, change)
             elif change_type == "RENUMBERING":
                 # we skip it because the insertion code in Treelawnode should handle all of this
-                change_result = ChangeResult(change, node, status=1, message="RENUMBERING")
+                change_result = ChangeResult(
+                    change, node, status=1, message="RENUMBERING"
+                )
                 n_succesfull_applied_changes += 1
             else:
                 change_result = ChangeResult(change, node, status=1, message="SKIPPED")
@@ -127,7 +131,9 @@ def apply_changes(
             else:
                 # if nothign changed, we should be informed
                 if change_type not in ["RENUMBERING", "MULTIPLE_CHANGES", "UNKNOWN"]:
-                    change_result = ChangeResult(change, node, status=1, message="APPLIED WITHOUT CHANGE")
+                    change_result = ChangeResult(
+                        change, node, status=1, message="APPLIED WITHOUT CHANGE"
+                    )
             node.changes.append(change_result)
             change_results.append(change_result)
             logger.info(change_result)

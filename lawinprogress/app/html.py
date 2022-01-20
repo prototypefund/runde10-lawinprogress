@@ -3,6 +3,7 @@ import logging
 import random
 import string
 import time
+
 from anytree import PreOrderIter
 from fastapi import FastAPI, Form, Request, UploadFile
 from fastapi.responses import FileResponse
@@ -12,7 +13,7 @@ from lawinprogress.generate_diff import parse_and_apply_changes, process_pdf
 from lawinprogress.libdiff.html_diff import html_diffs
 
 # setup loggers
-logging.config.fileConfig('logging.conf', disable_existing_loggers=True)
+logging.config.fileConfig("logging.conf", disable_existing_loggers=True)
 logger = logging.getLogger(__name__)
 
 
@@ -23,15 +24,17 @@ templates = Jinja2Templates(directory="lawinprogress/app/templates/")
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     """Log runtime of requests with a unique id."""
-    idem = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    idem = "".join(random.choices(string.ascii_uppercase + string.digits, k=6))
     logger.info(f"rid={idem} start request path={request.url.path}")
     start_time = time.time()
 
     response = await call_next(request)
 
     process_time = (time.time() - start_time) * 1000
-    formatted_process_time = '{0:.2f}'.format(process_time)
-    logger.info(f"rid={idem} completed_in={formatted_process_time}ms status_code={response.status_code}")
+    formatted_process_time = "{0:.2f}".format(process_time)
+    logger.info(
+        f"rid={idem} completed_in={formatted_process_time}ms status_code={response.status_code}"
+    )
 
     return response
 
@@ -75,7 +78,9 @@ async def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)
             change_results,
             n_succesfull_applied_changes,
         ) = parse_and_apply_changes(
-            change_law_text, source_law_text, law_title,
+            change_law_text,
+            source_law_text,
+            law_title,
         )
 
         # generate the html diff

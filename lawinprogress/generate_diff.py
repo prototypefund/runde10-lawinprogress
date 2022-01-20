@@ -51,7 +51,9 @@ def process_pdf(change_law_path: str) -> Tuple[List[str], List[str]]:
 
 
 def parse_and_apply_changes(
-    change_law_text: str, source_law_text: str, law_title: str,
+    change_law_text: str,
+    source_law_text: str,
+    law_title: str,
 ) -> Tuple[LawTextNode, LawTextNode, List[Change], List[ChangeResult], int]:
     """Wrapper function to parse and apply changes from the change law text to a source law.
 
@@ -101,7 +103,8 @@ def parse_and_apply_changes(
 
     # apply changes to the source law
     res_law_tree, change_results, n_succesfull_applied_changes = apply_changes(
-        parsed_law_tree, change_requests,
+        parsed_law_tree,
+        change_requests,
     )
     return (
         parsed_law_tree,
@@ -163,7 +166,9 @@ def generate_diff(change_law_path: str, output_path: str, html: bool):
             change_results,
             n_succesfull_applied_changes,
         ) = parse_and_apply_changes(
-            change_law_text, source_law_text, law_title,
+            change_law_text,
+            source_law_text,
+            law_title,
         )
 
         # print a status updatei

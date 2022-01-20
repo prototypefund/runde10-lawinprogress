@@ -38,7 +38,7 @@ class ChangeResult:
             self.change.location,
             self.change.sentences,
             self.change.text,
-            self.status
+            self.status,
         )
 
 
