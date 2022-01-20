@@ -1,8 +1,24 @@
 """Utitlity functions to load and parse change laws."""
 import regex as re
+import logging
 
 
-def remove_newline_in_quoted_text(text: str) -> str:
+class QuotationMismatchError(Exception):
+    """Exception raised for mismatch in opening and closing quotes.append
+
+    Attributes:
+        message: String with an error message.
+    """
+
+    def __init__(self, message: str):
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        return f'{self.message}'
+
+
+def remove_newline_in_quoted_text(text: str, fix: bool=False) -> str:
     """Remove newlines between quotation marks.
 
     Text in quotation marks is text that should be replaced or modified in the affected law.
@@ -11,12 +27,13 @@ def remove_newline_in_quoted_text(text: str) -> str:
 
     Args:
         text: String of text to process
+        fix: If a crude way of fixing should be applied. No exceptions will be raised then.
 
     Returns:
         Processed text as a string.
 
     Raises:
-        Exception, if there is an unequal number of opening and closing quotes.
+        QuotationMismatchError, if there is an unequal number of opening and closing quotes.
     """
     # find all open and closing pairs
     open_quotes = []
@@ -29,8 +46,8 @@ def remove_newline_in_quoted_text(text: str) -> str:
                 open_quote_idx = open_quotes.pop()
             except IndexError as err:
                 # more closing quotes than opening quotes.
-                raise Exception(
-                    "Quote error: Found more closing quotes than opening quotes."
+                raise QuotationMismatchError(
+                    "Number of opening quotes < number of closing quotes."
                 )
 
             quote_pairs.append((open_quote_idx, char_idx))
@@ -41,8 +58,11 @@ def remove_newline_in_quoted_text(text: str) -> str:
                 + text[char_idx:]
             )
     if len(open_quotes) != 0:
-        # more open quotes than closing quotes.
-        raise Exception("Quote error: Found more opening quotes than closing quotes.")
+        if fix:
+            text = remove_newline_in_quoted_text(text + "“"*len(open_quotes))
+        else:
+            # more open quotes than closing quotes.
+            raise QuotationMismatchError("Number of opening quotes > number of closing quotes.")
     return text
 
 
@@ -107,18 +127,6 @@ def preprocess_raw_law(text: str) -> str:
     # remove linebreak wordsplits
     text = re.sub(r"\b-\n\b", "", text)
 
-    # extract the parts with change requests (here we assume only one law is affected for now)
-    # > get the text between "wird wie folgt geändert" und "Begründung"
-    # (allow for newlines and/or whitespace between the words)
-    # TODO: Remove that if not needed
-    # try:
-    #    text = re.split(
-    #        r"wird[\s,\n]{0,3}wie[\s,\n]{0,3}folgt[\s,\n]{0,3}geändert:", text, maxsplit=1
-    #    )[1].split("Begründung", 1)[0]
-    # except IndexError:
-    #    # if that fails, just take the full text.
-    #    pass
-
     # remove header and footer artifacts
     text = "\n".join(
         [remove_header_footer_artifacts_from_line(line) for line in text.split("\n")]
@@ -128,8 +136,11 @@ def preprocess_raw_law(text: str) -> str:
     text = remove_footnotes(text)
 
     # Remove newlines between quotation marks
-    # TODO: think about how we should fail here if the quotes don't match
-    text = remove_newline_in_quoted_text(text)
+    try:
+        text = remove_newline_in_quoted_text(text)
+    except QuotationMismatchError as err:
+        logging.warning(err)
+        text = remove_newline_in_quoted_text(text, fix=True)
 
     text = text.strip()  # remove trailing whitespace or newlines
 
