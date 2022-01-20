@@ -51,7 +51,7 @@ def process_pdf(change_law_path: str) -> Tuple[List[str], List[str]]:
 
 
 def parse_and_apply_changes(
-    change_law_text: str, source_law_text: str, law_title: str, loglevel: int
+    change_law_text: str, source_law_text: str, law_title: str,
 ) -> Tuple[LawTextNode, LawTextNode, List[Change], List[ChangeResult], int]:
     """Wrapper function to parse and apply changes from the change law text to a source law.
 
@@ -59,7 +59,6 @@ def parse_and_apply_changes(
       change_law_text: Text of the change law.
       source_law_text: Text of the affected source law.
       law_title: Title of the affected law.
-      loglevel: Integer indicating the loglevel.
 
     Returns:
       Tree of LawTextNodes of the law before the changes applied.
@@ -102,7 +101,7 @@ def parse_and_apply_changes(
 
     # apply changes to the source law
     res_law_tree, change_results, n_succesfull_applied_changes = apply_changes(
-        parsed_law_tree, change_requests, loglevel
+        parsed_law_tree, change_requests,
     )
     return (
         parsed_law_tree,
@@ -128,18 +127,11 @@ def parse_and_apply_changes(
     default="./output/",
 )
 @click.option(
-    "loglevel",
-    "-l",
-    help="How details should logs be. Integer from 0 to 2.",
-    type=int,
-    default=1,
-)
-@click.option(
     "--html",
     is_flag=True,
     help="If a html synopsis should be generated.",
 )
-def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: bool):
+def generate_diff(change_law_path: str, output_path: str, html: bool):
     """Generate the diff from the change law and the source law."""
     ouf.bigtitle("Welcome")
     ouf.bigtitle("to")
@@ -171,7 +163,7 @@ def generate_diff(change_law_path: str, output_path: str, loglevel: int, html: b
             change_results,
             n_succesfull_applied_changes,
         ) = parse_and_apply_changes(
-            change_law_text, source_law_text, law_title, loglevel
+            change_law_text, source_law_text, law_title,
         )
 
         # print a status updatei

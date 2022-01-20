@@ -33,11 +33,12 @@ class ChangeResult:
         self.message = message
 
     def __repr__(self) -> str:
-        return "{}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n".format(
-            self.change.change_type,
+        return "{}:\n\tlocation={}\n\tsentences={}\n\ttext={}\n\tstatus={}\n".format(
+            self.message,
             self.change.location,
             self.change.sentences,
             self.change.text,
+            self.status
         )
 
 

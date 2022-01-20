@@ -1,4 +1,8 @@
-"""MVP of the LiP Webapp."""
+"""LiP Webapp."""
+import logging
+import random
+import string
+import time
 from anytree import PreOrderIter
 from fastapi import FastAPI, Form, Request, UploadFile
 from fastapi.responses import FileResponse
@@ -7,8 +11,29 @@ from fastapi.templating import Jinja2Templates
 from lawinprogress.generate_diff import parse_and_apply_changes, process_pdf
 from lawinprogress.libdiff.html_diff import html_diffs
 
+# setup loggers
+logging.config.fileConfig('logging.conf', disable_existing_loggers=True)
+logger = logging.getLogger(__name__)
+
+
 app = FastAPI()
 templates = Jinja2Templates(directory="lawinprogress/app/templates/")
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    """Log runtime of requests with a unique id."""
+    idem = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    logger.info(f"rid={idem} start request path={request.url.path}")
+    start_time = time.time()
+
+    response = await call_next(request)
+
+    process_time = (time.time() - start_time) * 1000
+    formatted_process_time = '{0:.2f}'.format(process_time)
+    logger.info(f"rid={idem} completed_in={formatted_process_time}ms status_code={response.status_code}")
+
+    return response
 
 
 @app.get("/")
@@ -21,16 +46,18 @@ def upload_pdf(request: Request):
 
 
 @app.post("/")
-def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
+async def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
     """
     Submit the upload form with the pdf path and process it.
 
     Return the result.
     """
     law_titles, proposals_list = process_pdf(change_law_pdf.file)
+    logger.info(f"Processing {change_law_pdf.filename}...")
 
     results = []
     for law_title, change_law_text in zip(law_titles, proposals_list):
+        logger.info(f"Started processing change for {law_title}...")
         # find and load the source law
         source_law_path = f"data/source_laws/{law_title}.txt"
         try:
@@ -48,7 +75,7 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
             change_results,
             n_succesfull_applied_changes,
         ) = parse_and_apply_changes(
-            change_law_text, source_law_text, law_title, loglevel=2
+            change_law_text, source_law_text, law_title,
         )
 
         # generate the html diff
