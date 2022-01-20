@@ -142,7 +142,7 @@ def parse_change_sentences(line: str) -> List[str]:
         List of strings, every string is a sentence to change.
     """
     sentence_identifiers = [
-        r"(Satz|Sätze)\s\d{1,3}(\s(bis|und)\s?(Satz|Sätze)?\s?\d{1,3})?",
+        r"(Satz|Sätze)\s+\d{1,3}(\s+(bis|und)(\s+)?(Satz|Sätze)?(\s+)?\d{1,3})?",
     ]
 
     sentences = []
@@ -211,7 +211,7 @@ def parse_change_request_line(line: str) -> List[Change]:
 
     changes = []  # could be multiple changes in one line; right now we only allow one
 
-    # TODO Tobias: Move these to enumeration type and improt from there.
+    # TODO Move these to enumeration type and improt from there.
     keyword_type_pairs = [
         ("eingefügt", "insert_after"),
         ("ersetzt", "replace"),

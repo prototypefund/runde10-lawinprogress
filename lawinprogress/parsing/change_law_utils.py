@@ -1,6 +1,7 @@
 """Utitlity functions to load and parse change laws."""
-import regex as re
 import logging
+
+import regex as re
 
 
 class QuotationMismatchError(Exception):
@@ -15,10 +16,10 @@ class QuotationMismatchError(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f'{self.message}'
+        return f"{self.message}"
 
 
-def remove_newline_in_quoted_text(text: str, fix: bool=False) -> str:
+def remove_newline_in_quoted_text(text: str, fix: bool = False) -> str:
     """Remove newlines between quotation marks.
 
     Text in quotation marks is text that should be replaced or modified in the affected law.
@@ -59,10 +60,12 @@ def remove_newline_in_quoted_text(text: str, fix: bool=False) -> str:
             )
     if len(open_quotes) != 0:
         if fix:
-            text = remove_newline_in_quoted_text(text + "“"*len(open_quotes))
+            text = remove_newline_in_quoted_text(text + "“" * len(open_quotes))
         else:
             # more open quotes than closing quotes.
-            raise QuotationMismatchError("Number of opening quotes > number of closing quotes.")
+            raise QuotationMismatchError(
+                "Number of opening quotes > number of closing quotes."
+            )
     return text
 
 

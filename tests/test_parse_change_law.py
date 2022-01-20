@@ -33,13 +33,25 @@ def test_parse_change_location_success():
     assert location[1] == "(1)"
 
 
-def test_parse_change_sentences_success():
+@pytest.mark.parametrize(
+    "text, result",
+    [
+        (
+            "5. - § 9 wird wie folgt geändert: b) - In Absatz 4 werden die Sätze 5 bis 7 aufgehoben.",
+            "Sätze 5 bis 7",
+        ),
+        (
+            "5. - § 4 wird wie folgt geändert: c) - Absatz 6 Satz 1  bis 3 wird durch die folgenden Sätze  ersetzt:„Durch  Rechtsverordnung“",
+            "Satz 1  bis 3",
+        ),
+    ],
+)
+def test_parse_change_sentences_success(text, result):
     """Test if sentences identifiers can be successfully parsed."""
-    line = "5. - § 9 wird wie folgt geändert: b) - In Absatz 4 werden die Sätze 5 bis 7 aufgehoben."
-    sentences = parse_change_sentences(line)
+    sentences = parse_change_sentences(text)
 
     assert len(sentences) == 1
-    assert sentences[0] == "Sätze 5 bis 7"
+    assert sentences[0] == result
 
 
 def test_parse_change_text_success():

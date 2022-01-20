@@ -74,30 +74,44 @@ def _replace(node: LawTextNode, change: Change) -> ChangeResult:
     elif len(change.text) == 1 and len(change.sentences) > 0:
         # replace the sentences in question by the change text.
         sentences = __split_text_to_sentences(node.text)
+        sentence_numbers = re.findall(r"\d{1,3}", change.sentences[0])
         if "bis" in change.sentences[0]:
-            msg = "Replace with sentence range 'bis' is currently not supported."
+            # sentence range
+            sentences[
+                int(sentence_numbers[0]) - 1 : int(sentence_numbers[1]) - 1
+            ] = __clean_text(change.text[0].strip())
+        elif "und" in change.sentences[0]:
+            # multiple sentences
+            msg = "Replace with multiple sentences 'und' and one text is currently not supported."
             return ChangeResult(change, node, 0, msg)
-        if "und" in change.sentences[0]:
-            msg = "Replace with multiple sentences 'und' is currently not supported."
-            return ChangeResult(change, node, 0, msg)
-        # single sentence
-        number = re.findall(r"\d{1,3}", change.sentences[0])[0]
-        sentences[int(number) - 1] = __clean_text(change.text[0].strip())
+        else:
+            # single sentence
+            sentences[int(sentence_numbers[0]) - 1] = __clean_text(
+                change.text[0].strip()
+            )
         node.text = " ".join(sentences)
     elif len(change.text) == 2 and len(change.sentences) > 0:
         # replace the text in the sentence in question.
         sentences = __split_text_to_sentences(node.text)
+        sentence_numbers = re.findall(r"\d{1,3}", change.sentences[0])
         if "bis" in change.sentences[0]:
-            msg = "Replace with sentence range 'bis' is currently not supported."
-            return ChangeResult(change, node, 0, msg)
-        if "und" in change.sentences[0]:
-            msg = "Replace with multiple sentences 'und' is currently not supported."
-            return ChangeResult(change, node, 0, msg)
-        # single sentence
-        number = re.findall(r"\d{1,3}", change.sentences[0])[0]
-        sentences[int(number) - 1] = sentences[int(number) - 1].replace(
-            change.text[0], change.text[1]
-        )
+            # sentence range
+            sentences[
+                int(sentence_numbers[0]) - 1 : int(sentence_numbers[1]) - 1
+            ] = __clean_text(change.text[0].strip())
+        elif "und" in change.sentences[0]:
+            # multiple sentences
+            sentences[int(sentence_numbers[0]) - 1] = __clean_text(
+                change.text[0].strip()
+            )
+            sentences[int(sentence_numbers[1]) - 1] = __clean_text(
+                change.text[1].strip()
+            )
+        else:
+            # single sentence
+            sentences[int(sentence_numbers[0]) - 1] = sentences[
+                int(sentence_numbers[0]) - 1
+            ].replace(change.text[0], change.text[1])
         node.text = " ".join(sentences)
     else:
         msg = "Not enougth text to replace."
