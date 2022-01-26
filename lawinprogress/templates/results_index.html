@@ -17,13 +17,15 @@
   </div>
 
   {% for law_title, proposal_text in result %}
-    <!--<center>
-        <button onclick="scrolldiv('back')">&laquo;</button>
-        <button onclick="scrolldiv('top')">Nach oben</button>
-        <button onclick="scrolldiv('forward')">&raquo;</button>
-    </center>-->
     <div id="{{ law_title }}" class="tabcontent">
-    {{ proposal_text|safe }}
+      <center>
+          <button onclick="scrolldiv('back', '{{ law_title }}')">&laquo;</button>
+          <button onclick="scrolldiv('top', '{{ law_title }}')">Nach oben</button>
+          <button onclick="scrolldiv('forward', '{{ law_title }}')">&raquo;</button>
+      </center>
+      <div class="scrollable">
+      {{ proposal_text|safe }}
+      </div>
     </div>
   </div>
   {% endfor %}
@@ -49,9 +51,9 @@ document.getElementById("defaultOpen").click();
 <script>
     let num = 0;
     
-    function scrolldiv(direction) {
+    function scrolldiv(direction, lawTitle) {
     	if (direction === "top"){
-    		var elem = document.getElementById("law-title");
+    		var elem = document.getElementById(lawTitle + "law-title");
 		elem.scrollIntoView();
 		num = 0;
     	}
@@ -60,12 +62,12 @@ document.getElementById("defaultOpen").click();
         }
         try {
 	    	if (direction === "forward"){
-		   var elem = document.getElementById("change-" + num);
+		   var elem = document.getElementById(lawTitle + "change-" + num);
 		   elem.scrollIntoView();
 		   num += 1;
 		}
 		if (direction === "back" && num > 0){
-		   var elem = document.getElementById("change-" + num);
+		   var elem = document.getElementById(lawTitle + "change-" + num);
 		   elem.scrollIntoView();
 		   num -= 1;
 		}

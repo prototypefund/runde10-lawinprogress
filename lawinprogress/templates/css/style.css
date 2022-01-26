@@ -9,7 +9,7 @@ body {font-family: "Lato", sans-serif;}
   border: 1px solid #ccc;
   background-color: #f1f1f1;
   width: 15%;
-  height: 75vh;
+  height: 80vh;
   overflow-x: auto;
 }
 
@@ -41,14 +41,19 @@ body {font-family: "Lato", sans-serif;}
 /* Style the tab content */
 .tabcontent {
   float: left;
-  padding: 0px 12px;
   border: 1px solid #ccc;
   width: 85%;
   border-left: none;
-  height: 75vh;
-  overflow: auto;
+  height: 80vh;
 }
 
+.scrollable {
+  overflow: auto;
+  float: left;
+  border-left: none;
+  padding: 0px 12px;
+  height: 75vh;
+}
 
 /* classes to style the presentation of the diff */
 
