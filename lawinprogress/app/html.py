@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 app = FastAPI()
-templates = Jinja2Templates(directory="lawinprogress/app/templates/")
+templates = Jinja2Templates(directory="lawinprogress/templates/")
 
 
 @app.middleware("http")
@@ -100,17 +100,26 @@ async def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)
         result = list(zip(law_titles, results))
         return templates.TemplateResponse(
             "results_index.html",
-            context={"request": request, "result": result, "name": change_law_pdf.filename},
+            context={
+                "request": request,
+                "result": result,
+                "name": change_law_pdf.filename,
+            },
         )
     except Exception as err:
         logger.info(err)
         return templates.TemplateResponse(
-            "errorpage.html",
-            context={"request": request}
+            "errorpage.html", context={"request": request}
         )
 
 
 @app.get("/imgs/{image_name}")
 def get_image_resource(image_name: str):
     """Fetch image resource from server."""
-    return FileResponse(f"lawinprogress/app/templates/imgs/{image_name}")
+    return FileResponse(f"lawinprogress/templates/imgs/{image_name}")
+
+
+@app.get("/css/{sheet}")
+def get_css_resource(sheet: str):
+    """Fetch css stylesheet resource from server."""
+    return FileResponse(f"lawinprogress/templates/css/{sheet}")
