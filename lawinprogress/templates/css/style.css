@@ -9,7 +9,7 @@ body {font-family: "Lato", sans-serif;}
   border: 1px solid #ccc;
   background-color: #f1f1f1;
   width: 15%;
-  height: 80vh;
+  height: 75vh;
   overflow-x: auto;
 }
 
@@ -45,7 +45,7 @@ body {font-family: "Lato", sans-serif;}
   border: 1px solid #ccc;
   width: 85%;
   border-left: none;
-  height: 80vh;
+  height: 75vh;
   overflow: auto;
 }
 
@@ -86,3 +86,15 @@ body {font-family: "Lato", sans-serif;}
   padding: 2px;
 }
 
+/* Style the prev/next buttons */
+
+button {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 128px;
+}
+
+button:hover {
+  background-color: #ddd;
+  color: black;
+}

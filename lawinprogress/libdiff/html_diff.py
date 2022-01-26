@@ -56,14 +56,25 @@ def html_sidebyside(
 ) -> str:
     """Create a side-by-side div-table for the diff/synopsis."""
     # page title
-    out = f'<center><h2>{left_text[0].split("source ")[-1]}</h2></center>'
-    # TODO: show not applied changes
+    out = (
+        f'<center><h2 id="law-title">{left_text[0].split("source ")[-1]}</h2></center>'
+    )
+
+    # show changes of the change law
+    # out += "<center><h3>Änderungen</h3></center>"
+    # for change_res in list(chres for res in change_results for chres in res):
+    #    if change_res.status != 0:
+    #        out += f'<div>&#9989; {change_res.change.raw_text}</div>'
+    #    else:
+    #        out += f'<div>&#274C; {change_res.change.raw_text}</div>'
+
     # prepare successfull changes
     success_changes = [
         [change_result for change_result in results if change_result.status != 0]
         for results in change_results
         if results
     ]
+
     # create the three column layout
     out += '<div class="diff-layout">'
     # make it align nicely
@@ -79,15 +90,16 @@ def html_sidebyside(
         if "<span" in left or "<span" in right:
             # add the changes to the change column
             try:
-                out += '<div class="change-bg">{}</div>'.format(
+                out += '<div class="change-bg" id="change-{}">{}</div>'.format(
+                    change_idx,
                     "<br><hr>".join(
                         [res.change.raw_text for res in success_changes[change_idx]]
                     ),
                 )
-                change_idx += 1
             except IndexError as err:
                 # if we are out of changes expose the error
-                out += f'<div class="change-bg">Something went wrong: {str(err)}</div>'
+                out += f'<div class="change-bg" id="change-{change_idx}">Something went wrong: {str(err)}</div>'
+            change_idx += 1
 
             # here we add background color
             out += f'<div class="remove-bg">{left}</div>'
