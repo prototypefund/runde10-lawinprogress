@@ -17,11 +17,11 @@
   </div>
 
   {% for law_title, proposal_text in result %}
-    <center>
+    <!--<center>
         <button onclick="scrolldiv('back')">&laquo;</button>
         <button onclick="scrolldiv('top')">Nach oben</button>
         <button onclick="scrolldiv('forward')">&raquo;</button>
-    </center>
+    </center>-->
     <div id="{{ law_title }}" class="tabcontent">
     {{ proposal_text|safe }}
     </div>
