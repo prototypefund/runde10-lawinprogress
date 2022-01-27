@@ -1,24 +1,8 @@
+"""Functions to process a raw pdf and extract clean titles and proposals."""
 from typing import List, Tuple
 
 import pdfplumber
 import regex as re
-import spacy
-
-nlp = spacy.load("de_core_news_sm")
-
-
-### Goal:
-# input: raw PDF of antwurf
-# output: list of (law title, change request text) pairs
-
-## TODO:
-# Spacy is messing up some of the scentences (cutting them too short)
-# consider going back to manually taking first two lines unles second line start with "In" or "§"
-
-# next wishful steps:
-# Analyse entwurf patterns, common, less common etc.
-# API to grab law text using that damn title
-# API to grab entwurfs
 
 
 def read_pdf_law(filename: str) -> str:
@@ -33,8 +17,17 @@ def read_pdf_law(filename: str) -> str:
 
 
 def extract_raw_proposal(text: str) -> str:
-    text = re.split(r"\nArtikel 1.*?\n", text, maxsplit=1)[1].split("Begründung")[0]
-    return text
+    """Extract the part of the pdf where the proposals are.
+
+    Between Artikel 1 and Begründung.
+
+    Args:
+        text: Text of the full pdf.
+
+    Returns:
+        Proposal text.
+    """
+    return re.split(r"\nArtikel 1.*?\n", text, maxsplit=1)[1].split("Begründung")[0]
 
 
 def extract_seperate_change_proposals(text: str) -> List[str]:
@@ -76,10 +69,31 @@ def extract_seperate_change_proposals(text: str) -> List[str]:
 
 
 def extract_law_titles(proposals_list: List[str]) -> List[str]:
-    raw_titles_list = [
-        list(nlp(proposal.replace("\n", " ")).sents)[0].text
-        for proposal in proposals_list
-    ]
+    """Extract the title of the law affected by the proposal.replace
+
+    Args:
+        proposals_list: List of proposal texts.
+    """
+    raw_titles_list = []
+    for proposal in proposals_list:
+        raw_title = ""
+        proposal_lines = ("#" + proposal).split("\n")
+        last_line_is_title = False
+        for line in proposal_lines:
+            # add lines starting with Änderung or similar
+            if line.startswith("#Änderung") or line.startswith("#Weitere Änderung"):
+                raw_title += line
+                last_line_is_title = True
+                continue
+            # if the following line starts with lowercase letter or number also add it
+            if last_line_is_title and (line[0].islower() or line[0].isnumeric()):
+                raw_title += " " + line
+                continue
+            # if nothing more to add, append and move on
+            if last_line_is_title:
+                last_line_is_title = False
+                raw_titles_list.append(raw_title.replace("- ", ""))
+
     titles_clean_par_sign = [re.split(r"§", title)[0] for title in raw_titles_list]
     titles_clean_aenderung = []
     for title in titles_clean_par_sign:
@@ -93,8 +107,7 @@ def extract_law_titles(proposals_list: List[str]) -> List[str]:
 
 
 def remove_inkrafttreten(titles: List[str], props: List[str]) -> Tuple[List, List]:
-    if re.search(r"^Inkrafttreten", titles[-1]) is not None:
-        titles = titles[:-1]
+    if re.search(r"^Inkrafttreten", props[-1]) is not None:
         props = props[:-1]
 
     return titles, props

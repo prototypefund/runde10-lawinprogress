@@ -205,6 +205,7 @@ def generate_diff(change_law_path: str, output_path: str, html: bool):
 <head>
   <meta charset="UTF-8">
   <title>Law in Progress</title>
+  <link rel="stylesheet" href="../lawinprogress/templates/css/style.css">
 </head>"""
             # generate a list of all applied changes in the order of the affected lines/nodes
             applied_change_results = [

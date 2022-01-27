@@ -9,22 +9,11 @@ from lawinprogress.apply_changes.edit_functions import ChangeResult
 from .diffhelpers import align_seqs, sentencize, tokenize, untokenize
 
 
-class MarkupConfig:
-    """Store the config for the html markup."""
-
-    left_text_background = "#ff5631"
-    left_section_background = "#ffcbbd"
-    right_text_background = "#2ea769"
-    right_section_background = "#c8f0da"
-    change_section_background = "#F0EDE6"
-
-
-def mark_text(tokens: List[str], colorcode: str) -> List[str]:
+def mark_text(tokens: List[str], kind: str) -> List[str]:
     """Put html background color on a span of text."""
+    assert kind in ["add", "remove"]
     if len(tokens) > 0:
-        tokens[0] = (
-            f'<span style="background: {colorcode};border-radius: 3px;">' + tokens[0]
-        )
+        tokens[0] = f'<span class="span-{kind}">{tokens[0]}'
         tokens[-1] += "</span>"
     return tokens
 
@@ -48,14 +37,12 @@ def markup_diff(
         out_a += (
             default_mark(seq_a[idx_a0:idx_a1])
             if tag == "equal"
-            else mark(seq_a[idx_a0:idx_a1], colorcode=MarkupConfig.left_text_background)
+            else mark(seq_a[idx_a0:idx_a1], kind="remove")
         )
         out_b += (
             default_mark(seq_b[idx_b0:idx_b1])
             if tag == "equal"
-            else mark(
-                seq_b[idx_b0:idx_b1], colorcode=MarkupConfig.right_text_background
-            )
+            else mark(seq_b[idx_b0:idx_b1], kind="add")
         )
     assert len(out_a) == len(seq_a)
     assert len(out_b) == len(seq_b)
@@ -69,16 +56,28 @@ def html_sidebyside(
 ) -> str:
     """Create a side-by-side div-table for the diff/synopsis."""
     # page title
-    out = f'<center><h2>{left_text[0].split("source ")[-1]}</h2></center>'
-    # TODO: show not applied changes
+    title = left_text[0].split("source ")[-1]
+    out = (
+        f'<center><h2 id="{title}law-title">{title}</h2></center>'
+    )
+
+    # show changes of the change law
+    # out += "<center><h3>Änderungen</h3></center>"
+    # for change_res in list(chres for res in change_results for chres in res):
+    #    if change_res.status != 0:
+    #        out += f'<div>&#9989; {change_res.change.raw_text}</div>'
+    #    else:
+    #        out += f'<div>&#274C; {change_res.change.raw_text}</div>'
+
     # prepare successfull changes
     success_changes = [
         [change_result for change_result in results if change_result.status != 0]
         for results in change_results
         if results
     ]
+
     # create the three column layout
-    out += '<div style="padding: 50px;display: grid;grid-template-columns: auto auto auto;grid-column-gap: 40px;grid-row-gap: 0px;font-family:DejaVu Sans Mono;">'
+    out += '<div class="diff-layout">'
     # make it align nicely
     out += "<p></p><p></p><p></p>"
     out += "<h3><center>Änderungsbefehl</center></h3><h3><center>alte Fassung</center></h3><h3><center>neue Fassung</center></h3>"
@@ -88,22 +87,27 @@ def html_sidebyside(
         right_leading_ws = len(right) - len(right.lstrip()) - 5
         left = left_leading_ws * "&nbsp;" + left.strip()
         right = right_leading_ws * "&nbsp;" + right.strip()
+        # if it contains marked spans, add background color
         if "<span" in left or "<span" in right:
+            # add the changes to the change column
             try:
-                out += '<div style="background: {};padding: 2px;">{}</div>'.format(
-                    MarkupConfig.change_section_background,
+                out += '<div class="change-bg" id="{}change-{}">{}</div>'.format(title,
+                    change_idx,
                     "<br><hr>".join(
                         [res.change.raw_text for res in success_changes[change_idx]]
                     ),
                 )
-                change_idx += 1
             except IndexError as err:
-                out += f'<div style="background: {MarkupConfig.change_section_background};padding: 2px;">Something went wrong: {str(err)}</div>'
+                # if we are out of changes expose the error
+                out += f'<div class="change-bg" id="change-{change_idx}">Something went wrong: {str(err)}</div>'
+            change_idx += 1
 
-            out += f'<div style="background: {MarkupConfig.left_section_background};padding: 2px;">{left}</div>'
-            out += f'<div style="background: {MarkupConfig.right_section_background};padding: 2px;">{right}</div>'
+            # here we add background color
+            out += f'<div class="remove-bg">{left}</div>'
+            out += f'<div class="add-bg">{right}</div>'
         else:
-            out += f'<div style="background: {MarkupConfig.change_section_background};padding: 2px;"></div>'
+            # if nothing to color, just put it in a plain diff
+            out += '<div class="change-bg"></div>'
             out += f'<div style="padding: 2px;">{left}</div>'
             out += f'<div style="padding: 2px;">{right}</div>'
     return out
