@@ -88,8 +88,8 @@ async def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)
             applied_change_results = [
                 node.changes
                 for node in PreOrderIter(
-                    res_law_tree,
-                    filter_=lambda node: node.bulletpoint != "source")
+                    res_law_tree, filter_=lambda node: node.bulletpoint != "source"
+                )
                 if node.changes
             ]
             # get the diff
