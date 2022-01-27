@@ -124,7 +124,7 @@ def apply_changes(
                 )
                 n_succesfull_applied_changes += 1
             else:
-                change_result = ChangeResult(change, node, status=1, message="SKIPPED")
+                change_result = ChangeResult(change, node, status=0, message="SKIPPED")
             if res_law_tree.to_text() != tree_text_before:
                 # if something changed, then we successfully applied something
                 n_succesfull_applied_changes += change_result.status
