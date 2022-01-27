@@ -104,6 +104,8 @@ Nichtamtliches Inhaltsverzeichnis
     die Einzelheiten der Anbringung der qualifizierten elektronischen Signatur am elektronischen Dokument.
 
 (2) Die technischen Anforderungen müssen den aktuellen Stand der Technik und die Barrierefreiheit im Sinne der Barrierefreie-Informationstechnik-Verordnung vom 12. September 2011 (BGBl. I S. 1843), die zuletzt durch Artikel 4 der Verordnung vom 25. November 2016 (BGBl. I S. 2659) geändert worden ist, in der jeweils geltenden Fassung, berücksichtigen und mit einer Mindestgültigkeitsdauer bekanntgemacht werden. Die technischen Anforderungen können mit einem Ablaufdatum nach der Mindestgültigkeitsdauer versehen werden, ab dem sie voraussichtlich durch neue bekanntgegebene Anforderungen abgelöst sein müssen.
+Nichtamtliches Inhaltsverzeichnis
+
 Kapitel 3
 Besonderes elektronisches Behördenpostfach
 Nichtamtliches Inhaltsverzeichnis
