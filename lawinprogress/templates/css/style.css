@@ -35,13 +35,13 @@ body {font-family: "Lato", sans-serif;}
 
 /* Create an active/current "tab button" class */
 .tab button.active {
-  background-color: #ccc;
+  background-color: #6D696A;
 }
 
 /* Style the tab content */
 .tabcontent {
   float: left;
-  border: 1px solid #ccc;
+  border: 1px solid #6D696A;
   width: 85%;
   border-left: none;
   height: 80vh;
@@ -67,22 +67,24 @@ body {font-family: "Lato", sans-serif;}
 }
 
 .span-remove {
-  background: #ff5631;
+  background: #EF7B87;
   border-radius: 3px;
+  padding: 1px;
 }
 
 .remove-bg {
-  background: #ffcbbd;
+  background: #FFC2C8;
   padding: 2px;
 }
 
 .span-add {
-  background: #2ea769;
+  background: #27C43E;
   border-radius: 3px;
+  padding: 1px;
 }
 
 .add-bg {
-  background: #c8f0da;
+  background: #90F39F;
   padding: 2px;
 }
 
