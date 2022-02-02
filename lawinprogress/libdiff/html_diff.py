@@ -57,9 +57,7 @@ def html_sidebyside(
     """Create a side-by-side div-table for the diff/synopsis."""
     # page title
     title = left_text[0].split("source ")[-1]
-    out = (
-        f'<center><h2 id="{title}law-title">{title}</h2></center>'
-    )
+    out = f'<center><h2 id="{title}law-title">{title}</h2></center>'
 
     # show changes of the change law
     # out += "<center><h3>Änderungen</h3></center>"
@@ -91,7 +89,8 @@ def html_sidebyside(
         if "<span" in left or "<span" in right:
             # add the changes to the change column
             try:
-                out += '<div class="change-bg" id="{}change-{}">{}</div>'.format(title,
+                out += '<div class="change-bg" id="{}change-{}">{}</div>'.format(
+                    title,
                     change_idx,
                     "<br><hr>".join(
                         [res.change.raw_text for res in success_changes[change_idx]]

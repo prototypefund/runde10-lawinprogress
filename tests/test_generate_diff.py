@@ -11,6 +11,7 @@ from lawinprogress.generate_diff import (
 )
 
 
+# @pytest.mark.skip("PDF processing test skipped.")
 @pytest.mark.parametrize(
     "pdf_path,expected",
     [
