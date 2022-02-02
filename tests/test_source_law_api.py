@@ -10,6 +10,11 @@ from lawinprogress.source_law_api import (
 
 class MockResponse:
 
+    # mock status_code property always returns 200
+    @property
+    def status_code(self):
+        return 200
+
     # mock json() method always returns a specific testing dictionary
     @staticmethod
     def json():
