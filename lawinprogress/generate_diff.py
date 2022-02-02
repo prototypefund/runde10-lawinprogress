@@ -171,7 +171,7 @@ def generate_diff(change_law_path: str, output_path: str, html: bool):
             law_title,
         )
 
-        # print a status updatei
+        # print a status update
         result_status = ouf.bar(
             n_succesfull_applied_changes,
             len(change_requests),

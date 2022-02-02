@@ -832,7 +832,7 @@ python-versions = ">=3.8"
 
 [[package]]
 name = "outputformat"
-version = "0.1.3"
+version = "0.1.2"
 description = "Decorate and beautify output"
 category = "main"
 optional = false
@@ -1669,7 +1669,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "87806a0a68096c3d1c736f696117e76ee4d617a4202649d41af66ecd0e9c4073"
+content-hash = "f826cd65d0bda51ee9195f94785a21f8374df5c92c708bac617eb5a9d9d38b94"
 
 [metadata.files]
 aiofiles = [
@@ -2203,7 +2203,7 @@ numpy = [
     {file = "numpy-1.22.1.zip", hash = "sha256:e348ccf5bc5235fc405ab19d53bec215bb373300e5523c7b476cc0da8a5e9973"},
 ]
 outputformat = [
-    {file = "outputformat-0.1.3.tar.gz", hash = "sha256:160e2b38419c7914ccc675b3ea71135375755b8cdcad32f0da11e428d1b7638d"},
+    {file = "outputformat-0.1.2.tar.gz", hash = "sha256:2e9422a361805c76422840fa185ae7244d35c1e5f955e22902dbe12df2aa82b4"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
