@@ -60,8 +60,7 @@ def retrieve_source_law(search_title: str) -> List[dict]:
 
     if slug:
         return get_source_law_rechtsinformationsportal(slug)
-    else:
-        return None
+    return None
 
 
 def parse_and_apply_changes(

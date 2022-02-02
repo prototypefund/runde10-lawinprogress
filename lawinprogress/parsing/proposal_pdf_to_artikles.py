@@ -31,6 +31,14 @@ def extract_raw_proposal(text: str) -> str:
 
 
 def extract_separate_change_proposals(text: str) -> List[str]:
+    """Function to extract the texts of the different propsals for different affected laws.
+
+    Args:
+        text: Full text of the change law.
+
+    Returns:
+        List of parts of the change law affecting differnt laws.
+    """
     proposals = []
     proposals.extend(re.split(r"\nArtikel\s{1,2}([0-9]{1,3})\s{0,2}\n", text))
 
@@ -106,6 +114,7 @@ def extract_law_titles(proposals_list: List[str]) -> List[str]:
 
 
 def remove_inkrafttreten(titles: List[str], props: List[str]) -> Tuple[List, List]:
+    """Remove the last artikel of a change law, namely 'Inkrafttreten'."""
     if re.search(r"^Inkrafttreten", props[-1]) is not None:
         props = props[:-1]
 

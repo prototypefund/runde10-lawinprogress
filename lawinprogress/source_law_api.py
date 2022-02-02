@@ -43,14 +43,16 @@ def get_source_law_rechtsinformationsportal(slug: str) -> List[dict]:
     return [{key: item[key] for key in return_keys if key in item} for item in contents]
 
 
-class FuzzyLawSlugRetriever(object):
+class FuzzyLawSlugRetriever:
+    """Class to act as a singleton to fuzzy retrieve slugs by law titles."""
+
     lookup = None
 
     @classmethod
     def get_lookup(cls) -> dict:
         """Get the lookup dict for this instance, loading it if it's not already loaded."""
-        if cls.lookup == None:
-            with open(SOURCE_LAW_LOOUP_PATH, "r") as lookup_json:
+        if cls.lookup is None:
+            with open(SOURCE_LAW_LOOUP_PATH, "r", encoding="utf8") as lookup_json:
                 source_laws_raw = json.load(lookup_json)
                 source_laws = list(chain(*source_laws_raw))
                 cls.lookup = {
