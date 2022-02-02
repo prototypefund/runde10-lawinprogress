@@ -30,7 +30,7 @@ def extract_raw_proposal(text: str) -> str:
     return re.split(r"\nArtikel 1.*?\n", text, maxsplit=1)[1].split("Begründung")[0]
 
 
-def extract_seperate_change_proposals(text: str) -> List[str]:
+def extract_separate_change_proposals(text: str) -> List[str]:
     proposals = []
     proposals.extend(re.split(r"\nArtikel\s{1,2}([0-9]{1,3})\s{0,2}\n", text))
 
@@ -42,17 +42,16 @@ def extract_seperate_change_proposals(text: str) -> List[str]:
     # compute the sum of the artikel numbers directly
     raw_sum_artikels = sum(artikels_int)
 
-    # uncomment next line to see if see if the next condition is met or not
-    ## print(int(raw_sum_artikels), int(math_sum_artikels))
+    # uncomment next line to see if the next condition is met or not
+    # print(int(raw_sum_artikels), int(math_sum_artikels))
 
     # if the direct sum is larger than the arithmetic series,
-    # then we had an artikel from some paragraph
+    # then we had an artikel from some paragraphs
     # sneak into the titel list, by mentioned as "Artikel [1-100]" just before a line break :(((
     # in this case we need to go through the list and check that
     # the artikel numbers are regularly increasing by 1
     if int(raw_sum_artikels) != int(math_sum_artikels):
-        proposal_list = []
-        proposal_list.append(proposals[0])
+        proposal_list = [proposals[0]]
         artikel_number = 2
         for prop_index, proposal in enumerate(proposals):
             try:
@@ -62,7 +61,7 @@ def extract_seperate_change_proposals(text: str) -> List[str]:
             except:
                 pass
     else:
-        # remove odd indexed items since they contain the artikel number only and we don't need it
+        # remove odd indexed items since they contain the artikel number only, and we don't need it
         proposal_list = proposals[0::2]
 
     return proposal_list
