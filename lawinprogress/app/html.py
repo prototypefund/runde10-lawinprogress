@@ -44,7 +44,7 @@ async def log_requests(request: Request, call_next):
 
 
 @app.get("/")
-def upload_pdf(request: Request):
+async def upload_pdf(request: Request):
     """Get the upload form page."""
     result = "Upload a change law pdf."
     return templates.TemplateResponse(
@@ -53,7 +53,7 @@ def upload_pdf(request: Request):
 
 
 @app.post("/")
-async def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
+def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
     """
     Submit the upload form with the pdf path and process it.
 

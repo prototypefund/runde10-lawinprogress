@@ -1,5 +1,6 @@
 """Classes and functions to get and handle source laws from rechtsinformationsportal."""
 import json
+from functools import lru_cache
 from itertools import chain
 from typing import List
 
@@ -9,6 +10,7 @@ from thefuzz import process
 SOURCE_LAW_LOOUP_PATH = "./data/source_laws/rechtsinformationsportalAPI.json"
 
 
+@lru_cache(maxsize=16)
 def get_source_law_rechtsinformationsportal(slug: str) -> List[dict]:
     """Call the rechtsinformationsportal API.
 
@@ -26,6 +28,8 @@ def get_source_law_rechtsinformationsportal(slug: str) -> List[dict]:
         api_response = requests.get(
             f"https://api.rechtsinformationsportal.de/v1/laws/{slug}?include=contents"
         )
+        if api_response.status_code != 200:
+            return []
     except requests.exceptions.RequestException as ex:
         raise SystemExit(ex)
 
@@ -67,6 +71,7 @@ class FuzzyLawSlugRetriever:
         return cls.lookup
 
     @classmethod
+    @lru_cache(maxsize=128)
     def fuzzyfind(cls, search_title: str) -> str:
         """Run fuzzy matching on the title string and return the top result."""
         lookup_dict = cls.get_lookup()

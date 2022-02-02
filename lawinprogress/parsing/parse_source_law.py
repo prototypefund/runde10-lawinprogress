@@ -14,9 +14,7 @@ def clean_up_structured_string(string: str) -> str:
     strings = [
         substr.replace("</LA></DD>", "") for substr in re.split(r"</DT>|<DT>", string)
     ]
-    strings = [re.sub(r"<DD.*?>|<LA.*?>", "", substr) for substr in strings]
-
-    return "\n".join(strings)
+    return "\n".join([re.sub(r"<DD.*?>|<LA.*?>", "", substr) for substr in strings])
 
 
 def parse_source_law(source_law: List[dict], law_title: str) -> LawTextNode:
@@ -39,12 +37,16 @@ def parse_source_law(source_law: List[dict], law_title: str) -> LawTextNode:
             parent_node = parent_node[0]
         # prepare the text for the new node content
         try:
-            law_text = law_item.get("title", "") + " " + law_item.get("body", "")
+            # TODO: enable 'Inhaltsübersicht'
+            if law_item.get("name") == "Inhaltsübersicht":
+                law_text = "None"
+            else:
+                law_text = law_item.get("title") + " " + law_item.get("body")
         except TypeError:
-            if law_item.get("title", ""):
-                law_text = law_item.get("body", "")
-            elif law_item.get("body", ""):
-                law_text = law_item.get("title", "")
+            if law_item.get("title"):
+                law_text = law_item.get("title")
+            elif law_item.get("body"):
+                law_text = law_item.get("body")
             else:
                 law_text = "EMPTY"
 
