@@ -23,7 +23,7 @@ from lawinprogress.parsing.parse_source_law import parse_source_law_tree
 from lawinprogress.parsing.proposal_pdf_to_artikles import (
     extract_law_titles,
     extract_raw_proposal,
-    extract_seperate_change_proposals,
+    extract_separate_change_proposals,
     read_pdf_law,
     remove_inkrafttreten,
 )
@@ -44,7 +44,7 @@ def process_pdf(change_law_path: str) -> Tuple[List[str], List[str]]:
 
     # idenfify the different laws affected
     change_law_extract = extract_raw_proposal(change_law_raw)
-    proposals_list = extract_seperate_change_proposals(change_law_extract)
+    proposals_list = extract_separate_change_proposals(change_law_extract)
     law_titles = extract_law_titles(proposals_list)
     law_titles, proposals_list = remove_inkrafttreten(law_titles, proposals_list)
     return law_titles, proposals_list
