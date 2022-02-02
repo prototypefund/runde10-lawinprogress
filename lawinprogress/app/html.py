@@ -9,7 +9,11 @@ from fastapi import FastAPI, Form, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
-from lawinprogress.generate_diff import parse_and_apply_changes, process_pdf
+from lawinprogress.generate_diff import (
+    parse_and_apply_changes,
+    process_pdf,
+    retrieve_source_law,
+)
 from lawinprogress.libdiff.html_diff import html_diffs
 
 # setup loggers
@@ -63,13 +67,9 @@ async def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)
         for law_title, change_law_text in zip(law_titles, proposals_list):
             logger.info(f"Started processing change for {law_title}...")
             # find and load the source law
-            source_law_path = f"data/source_laws/{law_title}.txt"
-            try:
-                with open(source_law_path, "r", encoding="utf8") as file:
-                    source_law_text = file.read()
-            except FileNotFoundError as err:
+            source_law = retrieve_source_law(law_title)
+            if not source_law:
                 results.append("<p>Source law not found.</p>")
-                continue
 
             # Parse the source and change law and apply the requested changes.
             (
@@ -80,7 +80,7 @@ async def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)
                 n_succesfull_applied_changes,
             ) = parse_and_apply_changes(
                 change_law_text,
-                source_law_text,
+                source_law,
                 law_title,
             )
 
