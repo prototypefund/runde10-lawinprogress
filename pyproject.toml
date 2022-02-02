@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lawinprogress"
-version = "0.1.0"
+version = "0.2.0"
 description = "Making changes in laws more transparent."
 authors = ["Tobias Sterbak <hello@tobiassterbak.com>, Noa Tamir <hello@noatamir.com>"]
 license = "MIT"
