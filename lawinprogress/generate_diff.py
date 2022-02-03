@@ -109,10 +109,6 @@ def parse_and_apply_changes(
             change_requests.extend(res)
 
     # parse source law
-    # parsed_law_tree = LawTextNode(text=law_title, bulletpoint="source")
-    # parsed_law_tree = parse_source_law_tree(
-    #    text=source_law_text, source_node=parsed_law_tree
-    # )
     parsed_law_tree = parse_source_law(source_law, law_title=law_title)
 
     # apply changes to the source law
@@ -169,16 +165,6 @@ def generate_diff(change_law_path: str, output_path: str, html: bool):
             click.echo(f"Cannot find source law {law_title}. SKIPPING")
             continue
         click.echo("\n" + "#" * 150 + "\n")
-
-        # source_law_path = f"data/source_laws/{law_title}.txt"
-        # try:
-        #    with open(source_law_path, "r", encoding="utf8") as file:
-        #        source_law_text = file.read()
-        #    click.echo(f"Apply changes to {law_title}")
-        # except FileNotFoundError as err:
-        #    click.echo(f"Cannot find source law {law_title}. SKIPPING")
-        #    continue
-        # click.echo("\n" + "#" * 150 + "\n")
 
         # Parse the source and change law and apply the requested changes.
         (

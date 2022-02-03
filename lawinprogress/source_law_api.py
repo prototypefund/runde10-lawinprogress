@@ -1,4 +1,5 @@
 """Classes and functions to get and handle source laws from rechtsinformationsportal."""
+import os
 import json
 from functools import lru_cache
 from itertools import chain
@@ -26,15 +27,21 @@ def get_source_law_rechtsinformationsportal(slug: str) -> List[dict]:
         List of dicts containing different parts of the requested law.
     """
     try:
-        api_response = requests.get(
-            f"https://api.rechtsinformationsportal.de/v1/laws/{slug}?include=contents"
-        )
-        if api_response.status_code != 200:
-            return []
+        local_path = f"./data/source_laws/laws/{slug}.json"
+        if os.path.isfile(local_path):
+            with open(local_path, "r", encoding="utf8") as local_law:
+                law_json = json.load(local_law)
+        else:
+            api_response = requests.get(
+                f"https://api.rechtsinformationsportal.de/v1/laws/{slug}?include=contents"
+            )
+            if api_response.status_code != 200:
+                return []
+            law_json = api_response.json()
     except requests.exceptions.RequestException as ex:
         raise SystemExit(ex)
 
-    contents = api_response.json()["data"]["contents"]
+    contents = law_json["data"]["contents"]
 
     return_keys = {
         "type",

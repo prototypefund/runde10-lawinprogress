@@ -80,12 +80,12 @@ pygments==2.11.2; python_version >= "3.8"
 pyparsing==3.0.7; python_version >= "3.6"
 pyrsistent==0.18.1; python_version >= "3.7"
 python-dateutil==2.8.2; python_full_version >= "3.6.1" and python_version >= "3.7"
-python-levenshtein==0.12.2
 python-multipart==0.0.5
 pytz==2021.3; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
 pywin32==303; sys_platform == "win32" and platform_python_implementation != "PyPy" and python_version >= "3.6"
 pywinpty==2.0.1; os_name == "nt" and python_version >= "3.7"
 pyzmq==22.3.0; python_full_version >= "3.6.1" and python_version >= "3.7"
+rapidfuzz==1.9.1; python_version >= "2.7"
 regex==2021.11.10
 requests==2.27.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6"
 send2trash==1.8.0; python_version >= "3.7"
@@ -101,7 +101,6 @@ stack-data==0.1.4; python_version >= "3.8"
 starlette==0.17.1; python_version >= "3.6" and python_full_version >= "3.6.1"
 terminado==0.13.1; python_version >= "3.7"
 testpath==0.5.0; python_version >= "3.7"
-thefuzz==0.19.0
 thinc==8.0.13; python_version >= "3.6"
 tomli==1.2.3; python_version >= "3.8" and python_full_version >= "3.6.2"
 tornado==6.1; python_full_version >= "3.6.1" and python_version >= "3.7"
