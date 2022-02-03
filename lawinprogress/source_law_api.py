@@ -5,9 +5,10 @@ from itertools import chain
 from typing import List
 
 import requests
-from thefuzz import process
+#from thefuzz import process
+from rapidfuzz import process
 
-SOURCE_LAW_LOOUP_PATH = "./data/source_laws/rechtsinformationsportalAPI.json"
+SOURCE_LAW_LOOKUP_PATH = "./data/source_laws/rechtsinformationsportalAPI.json"
 
 
 @lru_cache(maxsize=16)
@@ -56,7 +57,7 @@ class FuzzyLawSlugRetriever:
     def get_lookup(cls) -> dict:
         """Get the lookup dict for this instance, loading it if it's not already loaded."""
         if cls.lookup is None:
-            with open(SOURCE_LAW_LOOUP_PATH, "r", encoding="utf8") as lookup_json:
+            with open(SOURCE_LAW_LOOKUP_PATH, "r", encoding="utf8") as lookup_json:
                 source_laws_raw = json.load(lookup_json)
                 source_laws = list(chain(*source_laws_raw))
                 cls.lookup = {
