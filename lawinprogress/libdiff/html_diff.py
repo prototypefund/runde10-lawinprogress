@@ -61,7 +61,7 @@ def html_sidebyside(
     """Create a side-by-side div-table for the diff/synopsis."""
     # page title
     title = left_text[0].split("source ")[-1]
-    out = f'<center><h2 id="{title}law-title">{title}</h2></center>'
+    lines = []
 
     # show changes of the change law
     # out += "<center><h3>Änderungen</h3></center>"
@@ -79,12 +79,9 @@ def html_sidebyside(
     ]
 
     # create the three column layout
-    out += '<div class="diff-layout">'
-    # make it align nicely
-    out += "<p></p><p></p><p></p>"
-    out += "<h3><center>Änderungsbefehl</center></h3><h3><center>alte Fassung</center></h3><h3><center>neue Fassung</center></h3>"
     change_idx = 0
     for left, right in zip_longest(left_text[1:], right_text[1:], fillvalue=""):
+        line = []
         left_leading_ws = len(left) - len(left.lstrip()) - 5
         right_leading_ws = len(right) - len(right.lstrip()) - 5
         left = left_leading_ws * "&nbsp;" + left.strip()
@@ -93,27 +90,28 @@ def html_sidebyside(
         if "<span" in left or "<span" in right:
             # add the changes to the change column
             try:
-                out += '<div class="change-bg" id="{}change-{}">{}</div>'.format(
+                line.append('<div class="change-bg" id="{}change-{}">{}</div>'.format(
                     title,
                     change_idx,
                     "<br><hr>".join(
                         [res.change.raw_text for res in success_changes[change_idx]]
                     ),
-                )
+                ))
             except IndexError as err:
                 # if we are out of changes expose the error
-                out += f'<div class="change-bg" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>'
+                line.append(f'<div class="change-bg" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>')
             change_idx += 1
 
             # here we add background color
-            out += f'<div class="remove-bg">{left}</div>'
-            out += f'<div class="add-bg">{right}</div>'
+            line.append(f'<div class="remove-bg">{left}</div>')
+            line.append(f'<div class="add-bg">{right}</div>')
         else:
             # if nothing to color, just put it in a plain diff
-            out += '<div class="change-bg"></div>'
-            out += f'<div style="padding: 2px;">{left}</div>'
-            out += f'<div style="padding: 2px;">{right}</div>'
-    return out
+            line.append('<div class="change-bg"></div>')
+            line.append(f'<div style="padding: 2px;">{left}</div>')
+            line.append(f'<div style="padding: 2px;">{right}</div>')
+        lines.append(line)
+    return lines
 
 
 def html_diffs(

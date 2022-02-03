@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
     <link rel="manifest" href="/imgs/site.webmanifest">
 </head>
 <body>
+  <div class="section">
   <img src="imgs/lip_logo.png" alt="Law in Progress" width="300">
   <p>Select a law from {{ name }}:</p>
   <div class="tab">
@@ -19,19 +21,28 @@
   {% endfor %}
   </div>
 
-  {% for law_title, proposal_text in result %}
+  {% for law_title, proposal_texts in result %}
     <div id="{{ law_title }}" class="tabcontent">
-      <center>
-          <button onclick="scrolldiv('back', '{{ law_title }}')">&laquo;</button>
-          <button onclick="scrolldiv('top', '{{ law_title }}')">Nach oben</button>
-          <button onclick="scrolldiv('forward', '{{ law_title }}')">&raquo;</button>
-      </center>
-      <div class="scrollable">
-      {{ proposal_text|safe }}
+      <div class="field is-grouped">
+        <button class="button is-fullwidth" onclick="scrolldiv('back', '{{ law_title }}')">&laquo;</button>
+        <button class="button is-fullwidth" onclick="scrolldiv('top', '{{ law_title }}')">Nach oben</button>
+        <button class="button is-fullwidth" onclick="scrolldiv('forward', '{{ law_title }}')">&raquo;</button>
       </div>
+      <div class="scrollable">
+          <center><h2 class="title" id="{{ law_title }}law-title">{{ law_title}}</h2></center>
+          <div class="diff-layout">
+            <p></p><p></p><p></p>
+            <h3 class="title is-4"><center>Änderungsbefehl</center></h3><h3 class="title is-4"><center>alte Fassung</center></h3><h3 class="title is-4"><center>neue Fassung</center></h3>
+            {% for line in proposal_texts %}
+              {{ line[0]|safe }}
+              {{ line[1]|safe }}
+              {{ line[2]|safe }}
+            {% endfor %}
+          </div>
+        </div>
     </div>
-  </div>
   {% endfor %}
+  </div>
 
 <script>
 function openLaw(evt, lawTitle) {
@@ -52,33 +63,33 @@ function openLaw(evt, lawTitle) {
 document.getElementById("defaultOpen").click();
 </script>
 <script>
-    let num = 0;
-    
-    function scrolldiv(direction, lawTitle) {
-    	if (direction === "top"){
-    		var elem = document.getElementById(lawTitle + "law-title");
-		elem.scrollIntoView();
-		num = 0;
-    	}
-        if (num < 0) {
-           num = 0;
-        }
-        try {
-	    	if (direction === "forward"){
-		   var elem = document.getElementById(lawTitle + "change-" + num);
-		   elem.scrollIntoView();
-		   num += 1;
-		}
-		if (direction === "back" && num > 0){
-		   var elem = document.getElementById(lawTitle + "change-" + num);
-		   elem.scrollIntoView();
-		   num -= 1;
-		}
-	}
-	catch {
-		num -= 1;
-	}
+let num = 0;
+
+function scrolldiv(direction, lawTitle) {
+  if (direction === "top"){
+    var elem = document.getElementById(lawTitle + "law-title");
+    elem.scrollIntoView();
+    num = 0;
+  }
+  if (num < 0) {
+    num = 0;
+  }
+  try {
+    if (direction === "forward"){
+      var elem = document.getElementById(lawTitle + "change-" + num);
+      elem.scrollIntoView();
+      num += 1;
     }
+    if (direction === "back" && num > 0){
+      var elem = document.getElementById(lawTitle + "change-" + num);
+      elem.scrollIntoView();
+      num -= 1;
+    }
+  }
+  catch {
+    num -= 1;
+  }
+}
 </script>
 </body>
 </html> 
