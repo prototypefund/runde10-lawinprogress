@@ -1,7 +1,82 @@
 """Functions and classes to parse the source law into a tree."""
+from typing import List
+
+import anytree
 import regex as re
 
 from lawinprogress.parsing.lawtree import LawTextNode
+
+
+def clean_up_structured_string(string: str) -> str:
+    """Remove table structure and replace by appropriate newlines for parsing."""
+    string = re.sub(r"<DL.*?>", "", string)
+    string = re.sub(r"</DL>", "", string)
+    strings = [
+        substr.replace("</LA></DD>", "") for substr in re.split(r"</DT>|<DT>", string)
+    ]
+    return "\n".join([re.sub(r"<DD.*?>|<LA.*?>", "", substr) for substr in strings])
+
+
+def parse_source_law(source_law: List[dict], law_title: str) -> LawTextNode:
+    """Parse the API response to LawTextNodes."""
+    # TODO: Parse Inhaltsübersicht
+
+    # create the source node
+    source_law_tree = LawTextNode(text=law_title, bulletpoint="source")
+    source_law_tree._id = None
+
+    for law_item in source_law:
+        # find the parent node
+        parent_node = anytree.search.findall(
+            source_law_tree,
+            filter_=lambda node: node._id == law_item["parent"]["id"]
+            if (hasattr(node, "_id") and law_item["parent"])
+            else False,
+        )
+        if parent_node:
+            parent_node = parent_node[0]
+        # prepare the text for the new node content
+        try:
+            # TODO: enable 'Inhaltsübersicht'
+            if law_item.get("name") == "Inhaltsübersicht":
+                law_text = "None"
+            else:
+                law_text = law_item.get("title") + " " + law_item.get("body")
+        except TypeError:
+            if law_item.get("title"):
+                law_text = law_item.get("title")
+            elif law_item.get("body"):
+                law_text = law_item.get("body")
+            else:
+                law_text = "EMPTY"
+
+        # if the text body contains more structure, parse it here
+        if law_text and (law_text.count("<P>") > 1 or "<DL" in law_text):
+            law_text = law_text.replace("<P>", "\n").replace("</P>", "")
+            new_node = LawTextNode(
+                text=law_item.get("title", ""),
+                bulletpoint=law_item["name"],
+                parent=parent_node if parent_node else source_law_tree,
+            )
+
+            _ = parse_source_law_tree(
+                text=clean_up_structured_string(law_text), source_node=new_node
+            )
+        else:
+            # else just clean and add a new node
+            law_text = (
+                law_text.replace("<P>", "").replace("</P>", "")
+                if law_text
+                else "(weggefallen)"
+            )
+
+            new_node = LawTextNode(
+                text=law_text,
+                bulletpoint=law_item["name"],
+                parent=parent_node if parent_node else source_law_tree,
+            )
+        new_node._id = law_item["id"]
+    return source_law_tree
 
 
 def parse_source_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:

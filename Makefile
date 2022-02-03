@@ -21,3 +21,5 @@ test:
 app:
 	poetry run uvicorn lawinprogress.app.html:app --reload
 
+requirements:
+	poetry export -f requirements.txt --output requirements.txt --without-hashes

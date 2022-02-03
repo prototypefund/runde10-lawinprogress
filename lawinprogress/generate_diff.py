@@ -19,13 +19,17 @@ from lawinprogress.parsing.parse_change_law import (
     parse_change_law_tree,
     parse_change_request_line,
 )
-from lawinprogress.parsing.parse_source_law import parse_source_law_tree
+from lawinprogress.parsing.parse_source_law import parse_source_law
 from lawinprogress.parsing.proposal_pdf_to_artikles import (
     extract_law_titles,
     extract_raw_proposal,
     extract_separate_change_proposals,
     read_pdf_law,
     remove_inkrafttreten,
+)
+from lawinprogress.source_law_api import (
+    FuzzyLawSlugRetriever,
+    get_source_law_rechtsinformationsportal,
 )
 
 
@@ -50,16 +54,25 @@ def process_pdf(change_law_path: str) -> Tuple[List[str], List[str]]:
     return law_titles, proposals_list
 
 
+def retrieve_source_law(search_title: str) -> List[dict]:
+    """Retrieve the soruce law from the API."""
+    slug = FuzzyLawSlugRetriever.fuzzyfind(search_title)
+
+    if slug:
+        return get_source_law_rechtsinformationsportal(slug)
+    return None
+
+
 def parse_and_apply_changes(
     change_law_text: str,
-    source_law_text: str,
+    source_law: List[dict],
     law_title: str,
 ) -> Tuple[LawTextNode, LawTextNode, List[Change], List[ChangeResult], int]:
     """Wrapper function to parse and apply changes from the change law text to a source law.
 
     Args:
       change_law_text: Text of the change law.
-      source_law_text: Text of the affected source law.
+      source_law: Structured output of the rechtsinformationsportal API of the affected source law.
       law_title: Title of the affected law.
 
     Returns:
@@ -96,10 +109,7 @@ def parse_and_apply_changes(
             change_requests.extend(res)
 
     # parse source law
-    parsed_law_tree = LawTextNode(text=law_title, bulletpoint="source")
-    parsed_law_tree = parse_source_law_tree(
-        text=source_law_text, source_node=parsed_law_tree
-    )
+    parsed_law_tree = parse_source_law(source_law, law_title=law_title)
 
     # apply changes to the source law
     res_law_tree, change_results, n_succesfull_applied_changes = apply_changes(
@@ -148,12 +158,10 @@ def generate_diff(change_law_path: str, output_path: str, html: bool):
     # parse and apply changes for every law that should be changed
     for law_title, change_law_text in zip(law_titles, proposals_list):
         # find and load the source law
-        source_law_path = f"data/source_laws/{law_title}.txt"
-        try:
-            with open(source_law_path, "r", encoding="utf8") as file:
-                source_law_text = file.read()
+        source_law = retrieve_source_law(law_title)
+        if source_law:
             click.echo(f"Apply changes to {law_title}")
-        except FileNotFoundError as err:
+        else:
             click.echo(f"Cannot find source law {law_title}. SKIPPING")
             continue
         click.echo("\n" + "#" * 150 + "\n")
@@ -167,11 +175,11 @@ def generate_diff(change_law_path: str, output_path: str, html: bool):
             n_succesfull_applied_changes,
         ) = parse_and_apply_changes(
             change_law_text,
-            source_law_text,
+            source_law,
             law_title,
         )
 
-        # print a status updatei
+        # print a status update
         result_status = ouf.bar(
             n_succesfull_applied_changes,
             len(change_requests),

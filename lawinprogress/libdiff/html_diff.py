@@ -13,7 +13,11 @@ def mark_text(tokens: List[str], kind: str) -> List[str]:
     """Put html background color on a span of text."""
     assert kind in ["add", "remove"]
     if len(tokens) > 0:
-        tokens[0] = f'<span class="span-{kind}">{tokens[0]}'
+        if (tokens[0].strip()) or (len(tokens) == 1):
+            tokens[0] = f'<span class="span-{kind}">{tokens[0]}'
+        else:
+            # in this case, the change is at the beginning of the string and we dont intend properly
+            tokens[1] = f'<span class="span-{kind}">{tokens[1]}'
         tokens[-1] += "</span>"
     return tokens
 
@@ -98,7 +102,7 @@ def html_sidebyside(
                 )
             except IndexError as err:
                 # if we are out of changes expose the error
-                out += f'<div class="change-bg" id="change-{change_idx}">Something went wrong: {str(err)}</div>'
+                out += f'<div class="change-bg" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>'
             change_idx += 1
 
             # here we add background color

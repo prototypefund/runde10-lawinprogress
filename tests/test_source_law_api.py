@@ -2,10 +2,18 @@
 import pytest
 import requests
 
-from lawinprogress.source_law_api import get_source_law_rechtsinformationsportal
+from lawinprogress.source_law_api import (
+    FuzzyLawSlugRetriever,
+    get_source_law_rechtsinformationsportal,
+)
 
 
 class MockResponse:
+
+    # mock status_code property always returns 200
+    @property
+    def status_code(self):
+        return 200
 
     # mock json() method always returns a specific testing dictionary
     @staticmethod
@@ -51,3 +59,18 @@ def test_get_source_law_rechtsinformationsportal_success(monkeypatch):
 
     assert len(source_law) == 5
     assert set(source_law[0].keys()) == return_keys
+
+
+@pytest.mark.parametrize(
+    "test_law_title,expected_slug",
+    [
+        ("Wettbewerbsregistergesetzes", "wregg"),
+        ("Zivilprozessordnung", "zpo"),
+        ("Strafprozessordnung", "stpo"),
+        ("Arbeitsgerichtsgesetzes zum 1. Januar 2022", "arbgg"),
+    ],
+)
+def test_fuzzy_slug_retrieval(test_law_title, expected_slug):
+    """Test if slug retieval works and fails as expected."""
+    slug = FuzzyLawSlugRetriever.fuzzyfind(test_law_title)
+    assert slug == expected_slug
