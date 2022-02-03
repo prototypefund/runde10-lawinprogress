@@ -1,12 +1,13 @@
 """Classes and functions to get and handle source laws from rechtsinformationsportal."""
-import os
 import json
+import os
 from functools import lru_cache
 from itertools import chain
 from typing import List
 
 import requests
-#from thefuzz import process
+
+# from thefuzz import process
 from rapidfuzz import process
 
 SOURCE_LAW_LOOKUP_PATH = "./data/source_laws/rechtsinformationsportalAPI.json"

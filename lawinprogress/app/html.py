@@ -1,12 +1,12 @@
 """LiP Webapp."""
-import os
 import logging
+import os
 import random
 import string
 import time
 
 from anytree import PreOrderIter
-from fastapi import FastAPI, Form, Request, UploadFile, HTTPException
+from fastapi import FastAPI, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
@@ -114,7 +114,8 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
     except Exception as err:
         logger.info(err)
         return templates.TemplateResponse(
-            "errorpage.html", context={"request": request},
+            "errorpage.html",
+            context={"request": request},
         )
 
 

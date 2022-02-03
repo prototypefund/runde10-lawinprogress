@@ -34,6 +34,7 @@ def parse_change_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
         r"^\d{1,2}\.",
         r"^[a-z]\)",
         r"^[a-z][a-z]\)",
+        r"^[a-z][a-z][a-z]\)",
         r"^\([a-z0-9]{1,3}\)",
     ]
     # build the tree

@@ -161,7 +161,7 @@ def preprocess_raw_law(text: str) -> str:
             ]
         ):
             outtext += "\n" + line
-        elif line.startswith("§"):
+        elif any(re.match(pattern, line) for pattern in [r"^§", r"^(In|Dem|Nach)\s*§"]):
             outtext += "\n## " + line
         else:
             outtext += line
