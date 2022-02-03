@@ -1,11 +1,12 @@
 """LiP Webapp."""
+import os
 import logging
 import random
 import string
 import time
 
 from anytree import PreOrderIter
-from fastapi import FastAPI, Form, Request, UploadFile
+from fastapi import FastAPI, Form, Request, UploadFile, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
@@ -109,17 +110,27 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
     except Exception as err:
         logger.info(err)
         return templates.TemplateResponse(
-            "errorpage.html", context={"request": request}
+            "errorpage.html", context={"request": request},
         )
 
 
 @app.get("/imgs/{image_name}")
-def get_image_resource(image_name: str):
+async def get_image_resource(request: Request, image_name: str):
     """Fetch image resource from server."""
-    return FileResponse(f"lawinprogress/templates/imgs/{image_name}")
+    file_path = f"lawinprogress/templates/imgs/{image_name}"
+    if os.path.isfile(file_path):
+        return FileResponse(file_path)
+    else:
+        logger.info("Requested file not found.")
+        raise HTTPException(status_code=404, detail="Requested file not found")
 
 
 @app.get("/css/{sheet}")
-def get_css_resource(sheet: str):
+async def get_css_resource(sheet: str):
     """Fetch css stylesheet resource from server."""
-    return FileResponse(f"lawinprogress/templates/css/{sheet}")
+    file_path = f"lawinprogress/templates/css/{sheet}"
+    if os.path.isfile(file_path):
+        return FileResponse(file_path)
+    else:
+        logger.info("Requested file not found.")
+        raise HTTPException(status_code=404, detail="Requested file not found")
