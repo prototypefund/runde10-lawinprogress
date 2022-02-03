@@ -84,7 +84,7 @@ def extract_law_titles(proposals_list: List[str]) -> List[str]:
     raw_titles_list = []
     for proposal in proposals_list:
         raw_title = ""
-        proposal_lines = ("#" + proposal).split("\n")
+        proposal_lines = ("#" + proposal.lstrip()).split("\n")
         last_line_is_title = False
         for line in proposal_lines:
             # add lines starting with Änderung or similar
