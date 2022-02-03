@@ -11,6 +11,7 @@ from lawinprogress.generate_diff import (
 )
 
 
+# @pytest.mark.skip("PDF processing test skipped.")
 @pytest.mark.parametrize(
     "pdf_path,expected",
     [
@@ -72,7 +73,7 @@ def test_parse_and_apply_changes():
     """Test if changes are parsed and applied as expected."""
 
 
-# @pytest.mark.skip("End2end test skipped.")
+@pytest.mark.skip("End2end test skipped.")
 @pytest.mark.parametrize(
     "pdf_path,expected",
     [
