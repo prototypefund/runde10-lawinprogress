@@ -43,14 +43,14 @@ def _find_node(location_list: List[str], parse_tree: LawTextNode) -> List[LawTex
         )
         if len(search_result) == 0:
             # no path found
-            # print(f"Location {location} not found.")
+            if current_node.bulletpoint.startswith("Kapitel"):
+                return current_node
             return None
         if len(search_result) == 1:
             # exactly one path found; as it should be
             current_node = search_result[0]
         else:
             # more than one path found; should not happen - Stop here
-            # print(f"Multiple paths to location {location} found. Stopping.")
             return None
 
     return current_node
@@ -124,7 +124,7 @@ def apply_changes(
                 )
                 n_succesfull_applied_changes += 1
             else:
-                change_result = ChangeResult(change, node, status=1, message="SKIPPED")
+                change_result = ChangeResult(change, node, status=0, message="SKIPPED")
             if res_law_tree.to_text() != tree_text_before:
                 # if something changed, then we successfully applied something
                 n_succesfull_applied_changes += change_result.status

@@ -87,7 +87,11 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
 
             # generate the html diff
             applied_change_results = [
-                node.changes for node in PreOrderIter(res_law_tree) if node.changes
+                node.changes
+                for node in PreOrderIter(
+                    res_law_tree, filter_=lambda node: node.bulletpoint != "source"
+                )
+                if node.changes
             ]
             # get the diff
             html_side_by_side = html_diffs(

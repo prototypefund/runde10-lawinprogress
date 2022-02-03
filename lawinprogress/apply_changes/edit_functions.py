@@ -235,13 +235,20 @@ def _append(node: LawTextNode, change: Change) -> ChangeResult:
             re.match(pattern, change_text) for pattern in BULLETPOINT_PATTERNS
         ]
         if any(bulletpoint_matches):
-            # if starts with bulletpoint insert directly into the tree
             match = [m for m in bulletpoint_matches if m][0]
             bulletpoint_match = change_text[match.span()[0] : match.span()[1]]
-            node.insert_child(
-                text=change_text[match.span()[1] + 1 :],
-                bulletpoint=bulletpoint_match,
-            )
+            # if it starts with the bulletpoint that matched, append to the parent node
+            if bulletpoint_match == node.bulletpoint:
+                node.parent.insert_child(
+                    text=change_text[match.span()[1] + 1 :],
+                    bulletpoint=bulletpoint_match,
+                )
+            # else if it starts with bulletpoint insert directly into the tree
+            else:
+                node.insert_child(
+                    text=change_text[match.span()[1] + 1 :],
+                    bulletpoint=bulletpoint_match,
+                )
         else:
             node.text = node.text + " " + __clean_text(change_text)
     else:

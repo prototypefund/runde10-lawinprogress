@@ -97,7 +97,8 @@ def parse_change_location(line: str) -> List[str]:
         List of strings, every string is one step of the location to change.
     """
     location_identifiers = [
-        r"Inhaltsübersicht?",
+        r"Inhaltsübersicht",
+        r"Kapitel\s*\d{1,3}",
         r"§\s+\d{1,3}[a-z]?",
         r"Überschrift",
         r"Absatz\s+\d{1,3}",
@@ -176,9 +177,9 @@ def parse_change_text(line: str) -> List[str]:
     """
     return [
         line[m.span()[0] : m.span()[1]]
-        .replace("Komma", ",")
-        .replace("Semikolon", ";")
-        .replace("Punkt", ".")
+        .replace("Komma", " ,")
+        .replace("Semikolon", " ;")
+        .replace("Punkt", " .")
         .strip()
         for m in re.finditer(
             r"((?<=„)(.|\n)*?(?=“)|Komma|Semikolon|Punkt)", line, re.MULTILINE
