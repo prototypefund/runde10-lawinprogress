@@ -4,6 +4,7 @@ Example usage:
     poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf --html
 """
 import os
+import logging
 from typing import List, Tuple
 
 import click
@@ -57,6 +58,7 @@ def process_pdf(change_law_path: str) -> Tuple[List[str], List[str]]:
 def retrieve_source_law(search_title: str) -> List[dict]:
     """Retrieve the soruce law from the API."""
     slug = FuzzyLawSlugRetriever.fuzzyfind(search_title)
+    logging.info(slug)
 
     if slug:
         return get_source_law_rechtsinformationsportal(slug)

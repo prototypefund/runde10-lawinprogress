@@ -95,6 +95,7 @@ def parse_source_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
         r"\n§\s*\d{1,3}[a-z]?",
         r"\n\s*\([a-z0-9]{1,3}\)",
         r"\n\s*\d{1,2}\.",
+        r"\n\s*\d{1,2}[a-z]{1,2}\.",
         r"\n\s*[a-z]\)",
     ]
 
