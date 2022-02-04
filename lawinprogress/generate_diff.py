@@ -3,8 +3,8 @@
 Example usage:
     poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf --html
 """
-import os
 import logging
+import os
 from typing import List, Tuple
 
 import click
@@ -58,7 +58,7 @@ def process_pdf(change_law_path: str) -> Tuple[List[str], List[str]]:
 def retrieve_source_law(search_title: str) -> List[dict]:
     """Retrieve the soruce law from the API."""
     slug = FuzzyLawSlugRetriever.fuzzyfind(search_title)
-    logging.info(slug)
+    logging.info(f"Identified slug: {slug}")
 
     if slug:
         return get_source_law_rechtsinformationsportal(slug)
@@ -86,7 +86,7 @@ def parse_and_apply_changes(
     """
     # format the change requests and parse them to tree
     clean_change_law = preprocess_raw_law(change_law_text)
-    parsed_change_law_tree = LawTextNode(text=law_title, bulletpoint="change")
+    parsed_change_law_tree = LawTextNode(text=law_title, bulletpoint="Titel:")
     parsed_change_law_tree = parse_change_law_tree(
         text=clean_change_law, source_node=parsed_change_law_tree
     )

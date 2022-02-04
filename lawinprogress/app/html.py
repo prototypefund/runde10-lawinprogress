@@ -89,7 +89,7 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
             applied_change_results = [
                 node.changes
                 for node in PreOrderIter(
-                    res_law_tree, filter_=lambda node: node.bulletpoint != "source"
+                    res_law_tree,
                 )
                 if node.changes
             ]
@@ -98,6 +98,7 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
                 parsed_law_tree.to_text(),
                 res_law_tree.to_text(),
                 applied_change_results,
+                title=law_title,
             )
             results.append(html_side_by_side)
 

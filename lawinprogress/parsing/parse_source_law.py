@@ -22,7 +22,7 @@ def parse_source_law(source_law: List[dict], law_title: str) -> LawTextNode:
     # TODO: Parse Inhaltsübersicht
 
     # create the source node
-    source_law_tree = LawTextNode(text=law_title, bulletpoint="source")
+    source_law_tree = LawTextNode(text=law_title, bulletpoint="Titel:")
     source_law_tree._id = None
 
     for law_item in source_law:

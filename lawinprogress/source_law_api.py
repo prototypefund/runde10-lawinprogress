@@ -6,7 +6,6 @@ from itertools import chain
 from typing import List
 
 import requests
-
 from rapidfuzz import fuzz, process
 
 SOURCE_LAW_LOOKUP_PATH = "./data/source_laws/rechtsinformationsportalAPI.json"
@@ -83,5 +82,7 @@ class FuzzyLawSlugRetriever:
     def fuzzyfind(cls, search_title: str) -> str:
         """Run fuzzy matching on the title string and return the top result."""
         lookup_dict = cls.get_lookup()
-        result = process.extractOne(search_title, list(lookup_dict.keys()), scorer=fuzz.QRatio)
+        result = process.extractOne(
+            search_title, list(lookup_dict.keys()), scorer=fuzz.QRatio
+        )
         return lookup_dict.get(result[0], None)
