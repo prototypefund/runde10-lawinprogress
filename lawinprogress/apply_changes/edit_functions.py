@@ -78,9 +78,14 @@ def _replace(node: LawTextNode, change: Change) -> ChangeResult:
         sentence_numbers = re.findall(r"\d{1,3}", change.sentences[0])
         if "bis" in change.sentences[0]:
             # sentence range
-            sentences[
-                int(sentence_numbers[0]) - 1 : int(sentence_numbers[1]) - 1
-            ] = __clean_text(change.text[0].strip())
+            for del_idx in sorted(
+                list(range(int(sentence_numbers[0]) - 1, int(sentence_numbers[1]) - 1)),
+                reverse=True,
+            ):
+                del sentences[del_idx]
+            sentences.insert(
+                int(sentence_numbers[0]) - 1, __clean_text(change.text[0].strip())
+            )
         elif "und" in change.sentences[0]:
             # multiple sentences
             msg = "Replace with multiple sentences 'und' and one text is currently not supported."
