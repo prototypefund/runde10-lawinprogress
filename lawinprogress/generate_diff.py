@@ -52,6 +52,8 @@ def process_pdf(change_law_path: str) -> Tuple[List[str], List[str]]:
     proposals_list = extract_separate_change_proposals(change_law_extract)
     law_titles = extract_law_titles(proposals_list)
     law_titles, proposals_list = remove_inkrafttreten(law_titles, proposals_list)
+    logging.info(law_titles)
+    logging.info([proposal[:20] for proposal in proposals_list])
     return law_titles, proposals_list
 
 
