@@ -70,7 +70,7 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
             # find and load the source law
             source_law = retrieve_source_law(law_title)
             if not source_law:
-                results.append("<p>Source law not found.</p>")
+                results.append("<p></p><p>Source law not found.</p><p></p>")
 
             # Parse the source and change law and apply the requested changes.
             (
