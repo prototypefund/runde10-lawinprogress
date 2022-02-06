@@ -88,6 +88,8 @@ def html_sidebyside(
         right = right_leading_ws * "&nbsp;" + right.strip()
         # if it contains marked spans, add background color
         if "<span" in left or "<span" in right:
+            # here we add background color for the left column
+            line.append(f'<div class="remove-bg">{left}</div>')
             # add the changes to the change column
             try:
                 line.append('<div class="change-bg" id="{}change-{}">{}</div>'.format(
@@ -102,13 +104,12 @@ def html_sidebyside(
                 line.append(f'<div class="change-bg" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>')
             change_idx += 1
 
-            # here we add background color
-            line.append(f'<div class="remove-bg">{left}</div>')
+            # here we add background color for the right column
             line.append(f'<div class="add-bg">{right}</div>')
         else:
             # if nothing to color, just put it in a plain diff
-            line.append('<div class="change-bg"></div>')
             line.append(f'<div style="padding: 2px;">{left}</div>')
+            line.append('<div class="change-bg"></div>')
             line.append(f'<div style="padding: 2px;">{right}</div>')
         lines.append(line)
     return lines
