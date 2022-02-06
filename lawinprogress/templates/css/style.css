@@ -9,7 +9,7 @@ body {font-family: "Lato", sans-serif;}
   border: 0px solid #6D696A;
   width: 100%;
   border-left: none;
-  height: 65vh;
+  height: 55vh;
 }
 
 .scrollable {
@@ -17,7 +17,7 @@ body {font-family: "Lato", sans-serif;}
   float: left;
   border-left: none;
   padding: 3px 12px;
-  height: 65vh;
+  height: 55vh;
 }
 
 /* classes to style the presentation of the diff */
@@ -57,16 +57,3 @@ body {font-family: "Lato", sans-serif;}
   background: #F0EDE6;
   padding: 2px;
 }
-
-/* Style the prev/next buttons */
-
-/*button {
-  text-decoration: none;
-  display: inline-block;
-  padding: 8px 128px;
-}*/
-
-/*button:hover {
-  background-color: #ddd;
-  color: black;
-}*/

@@ -103,19 +103,19 @@
           <div class="level-right">
             <p class="level-item">
               <label class="checkbox">
-                <input type="checkbox" checked="checked">
+                <input type="checkbox" checked="checked" id="check_old" onclick="toggleColumn('old')">
                 Alte Fassung
               </label>
             </p>
             <p class="level-item">
               <label class="checkbox">
-                <input type="checkbox">
+                <input type="checkbox" id="check_change" onclick="toggleColumn('change')">
                 Änderungsbefehl
               </label>
             </p>
             <p class="level-item">
               <label class="checkbox">
-                <input type="checkbox" checked="checked">
+                <input type="checkbox" checked="checked" id="check_new" onclick="toggleColumn('new')">
                 Neue Fassung
               </label>
             </p>
@@ -136,7 +136,7 @@
         <div class="scrollable">
             <h2 class="title" id="{{ law_title }}law-title"><center>{{ law_title}}</center></h2>
             <div class="diff-layout">
-              <h3 class="title is-4">Alte Fassung</h3><h3 class="title is-4">Änderungsbefehl</h3><h3 class="title is-4">Neue Fassung</h3>
+              <h3 class="title is-4 old">Alte Fassung</h3><h3 class="title is-4 change">Änderungsbefehl</h3><h3 class="title is-4 new">Neue Fassung</h3>
               {% for line in proposal_texts %}
                 {{ line[0]|safe }}
                 {{ line[1]|safe }}
@@ -199,6 +199,27 @@ function scrolldiv(direction, lawTitle) {
     num -= 1;
   }
 }
+</script>
+<script>
+  // handle the hidding of columns with checkboxes
+  function toggleColumn(column) {
+    // Get the checkbox
+    var checkBox = document.getElementById("check_"+column);
+    // Get the column elements
+    column_elem = document.getElementsByClassName(column);
+    grid_clmn = document.getElementsByClassName("diff-layout")[0]
+
+    // If the checkbox is checked, display the output text
+    if (checkBox.checked == true){
+      for (i = 0; i < column_elem.length; i++) {
+        column_elem[i].style.display = "block";
+      }
+    } else {
+      for (i = 0; i < column_elem.length; i++) {
+        column_elem[i].style.display = "none";
+      }
+    }
+  }
 </script>
 </body>
 </html> 

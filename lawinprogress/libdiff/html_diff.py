@@ -89,10 +89,10 @@ def html_sidebyside(
         # if it contains marked spans, add background color
         if "<span" in left or "<span" in right:
             # here we add background color for the left column
-            line.append(f'<div class="remove-bg">{left}</div>')
+            line.append(f'<div class="remove-bg old">{left}</div>')
             # add the changes to the change column
             try:
-                line.append('<div class="change-bg" id="{}change-{}">{}</div>'.format(
+                line.append('<div class="change-bg change" id="{}change-{}">{}</div>'.format(
                     title,
                     change_idx,
                     "<br><hr>".join(
@@ -101,16 +101,16 @@ def html_sidebyside(
                 ))
             except IndexError as err:
                 # if we are out of changes expose the error
-                line.append(f'<div class="change-bg" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>')
+                line.append(f'<div class="change-bg change" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>')
             change_idx += 1
 
             # here we add background color for the right column
-            line.append(f'<div class="add-bg">{right}</div>')
+            line.append(f'<div class="add-bg new">{right}</div>')
         else:
             # if nothing to color, just put it in a plain diff
-            line.append(f'<div style="padding: 2px;">{left}</div>')
-            line.append('<div class="change-bg"></div>')
-            line.append(f'<div style="padding: 2px;">{right}</div>')
+            line.append(f'<div style="padding: 2px;" class="old">{left}</div>')
+            line.append('<div class="change-bg change"></div>')
+            line.append(f'<div style="padding: 2px;" class="new">{right}</div>')
         lines.append(line)
     return lines
 
