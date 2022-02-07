@@ -125,6 +125,7 @@
     </div>
   </section>
   <section class="section">
+    <div class="container is-fluid">
     <!--Diff part-->
     {% for law_title, proposal_texts in result %}
       <div id="{{ law_title }}" class="tabcontent">
@@ -134,19 +135,35 @@
           <button class="button is-fullwidth" onclick="scrolldiv('forward', '{{ law_title }}')">&raquo;</button>
         </div>
         <div class="scrollable">
-            <h2 class="title" id="{{ law_title }}law-title"><center>{{ law_title}}</center></h2>
-            <div class="diff-layout">
-              <h3 class="title is-4 old">Alte Fassung</h3><h3 class="title is-4 change">Änderungsbefehl</h3><h3 class="title is-4 new">Neue Fassung</h3>
-              {% for line in proposal_texts %}
-                {{ line[0]|safe }}
-                {{ line[1]|safe }}
-                {{ line[2]|safe }}
-              {% endfor %}
-            </div>
+          <h2 class="title" id="{{ law_title }}law-title"><center>{{ law_title}}</center></h2>
+          <div class="diff-layout">
+            <article class="message">
+              <div class="message-header">
+                Alte Fassung
+              </div>
+            </article>
+            <article class="message">
+              <div class="message-header">
+                Änderungsbefehl
+              </div>
+            </article>
+            <article class="message">
+              <div class="message-header">
+                Neue Fassung
+              </div>
+            </article>
+            {% for line in proposal_texts %}
+              {{ line[0]|safe }}
+              {{ line[1]|safe }}
+              {{ line[2]|safe }}
+            {% endfor %}
           </div>
+          </div>
+        </div>
       </div>
     {% endfor %}
-</section>
+    </div>
+  </section>
 
 <script>
 // manage the tab content
