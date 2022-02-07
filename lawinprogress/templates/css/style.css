@@ -6,7 +6,7 @@ body {font-family: "Lato", sans-serif;}
 /* Style the tab content */
 .tabcontent {
   float: left;
-  border: 0px solid #6D696A;
+  /*border: 0px solid #6D696A;*/
   width: 100%;
   border-left: none;
   height: 60vh;
@@ -17,7 +17,7 @@ body {font-family: "Lato", sans-serif;}
   float: left;
   border-left: none;
   padding: 3px 12px;
-  height: 60vh;
+  height: 55vh;
 }
 
 /* classes to style the presentation of the diff */
@@ -28,7 +28,7 @@ body {font-family: "Lato", sans-serif;}
   /*grid-template-columns: auto auto auto;*/
   grid-column-gap: 10px;
   grid-row-gap: 0px;
-  font-family:DejaVu Sans Mono;
+  font-family: DejaVu Sans Mono;
 }
 
 .span-remove {

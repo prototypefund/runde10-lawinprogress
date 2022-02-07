@@ -16,8 +16,8 @@
   <section class="hero is-primary is-small">
     <!--HEADER-->
     <div class="hero-head">
-      <nav class="navbar is-left" role="navigation" aria-label="main navigation">
-        <div class="container">
+      <div class="container is-fluid">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
             <a class="navbar-item">
               <img src="imgs/lip_logo.png" alt="Law in Progress Logo">
@@ -33,11 +33,14 @@
               <span class="navbar-item">
               <div class="buttons">
                 <a class="button is-primary is-light" href="mailto: bug@lawinprogress.de">
-                  <strong>Report a bug</strong>
+                  <span class="icon">
+                    <i class="fa fa-bug"></i>
+                  </span>
+                  <span>Report a bug</span>
                 </a>
                 <a class="button is-light" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
                   <span class="icon">
-                    <i class="fa fa-download"></i>
+                    <i class="fa fa-gitlab"></i>
                   </span>
                   <span>Source Code</span>
                 </a>
@@ -45,8 +48,8 @@
               </span>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
     </div>
     <div class="hero-body">
       <!--Info bar-->
@@ -86,8 +89,8 @@
                   </div>
                   <div class="dropdown-menu" id="dropdown-menu" role="menu">
                     <div class="dropdown-content">
-                      {% for law_title, proposal_text in result %}
-                        <a class="dropdown-item tablinks" onclick="openLaw(event, '{{ law_title }}')" id="defaultOpen">{{ law_title }}</a>
+                      {% for law_title, n_changes, n_success, proposal_text in result %}
+                        <a class="dropdown-item tablinks" onclick="openLaw(event, '{{ law_title }}', '{{ n_changes }}', '{{ n_success }}')" id="defaultOpen">{{ law_title }}</a>
                       {% endfor %}
                     </div>
                   </div>
@@ -97,9 +100,9 @@
           </div>
           <!-- Right side -->
           <div class="level-right">
-            <p class="level-item"><strong>27 Änderungen</strong></p>
-            <p class="level-item is-success is-light">22 Angewandt</p>
-            <p class="level-item">5 nicht zuortbar</p>
+            <p class="level-item" id="n_changes"><strong>NaN Änderungen</strong></p>
+            <p class="level-item tag is-success" id="n_success">NaN Angewandt</p>
+            <p class="level-item tag is-danger" id="n_failure">NaN nicht zuortbar</p>
           </div>
         </nav>
       </div>
@@ -136,12 +139,12 @@
       </div>
     </div>
   </section>
-  <section class="section">
-    <div class="container is-fluid">
+  <section class="hero">
     <!--Diff part-->
-    {% for law_title, proposal_texts in result %}
+    <div class="hero-body">
+    {% for law_title, n_changes, n_success, proposal_texts in result %}
       <div id="{{ law_title }}" class="tabcontent">
-        <h2 class="title" id="{{ law_title }}law-title"><center>{{ law_title}}</center></h2>
+        <!--<h2 class="title" id="{{ law_title }}law-title"><center>{{ law_title}}</center></h2>-->
         <div class="diff-layout" style="grid-template-columns: auto auto auto;">
           <article class="message old">
             <div class="message-header">
@@ -158,12 +161,13 @@
               Neue Fassung
             </div>
           </article>
+          <p></p> <!--For some weird reason this removes the box under the last message header...-->
         </div>
-        <div class="field is-grouped">
+        <!--<div class="field is-grouped">
           <button class="button is-fullwidth" onclick="scrolldiv('back', '{{ law_title }}')">&laquo;</button>
           <button class="button is-fullwidth" onclick="scrolldiv('top', '{{ law_title }}')">Nach oben</button>
           <button class="button is-fullwidth" onclick="scrolldiv('forward', '{{ law_title }}')">&raquo;</button>
-        </div>
+        </div>-->
         <div class="scrollable">
           <div class="diff-layout" style="grid-template-columns: auto auto auto;">
             {% for line in proposal_texts %}
@@ -172,16 +176,14 @@
               {{ line[2]|safe }}
             {% endfor %}
           </div>
-          </div>
         </div>
       </div>
     {% endfor %}
     </div>
   </section>
-
 <script>
 // manage the tab content
-function openLaw(evt, lawTitle) {
+function openLaw(evt, lawTitle, nChanges, nSuccess) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -196,6 +198,11 @@ function openLaw(evt, lawTitle) {
 
   // change the active law in dropdown
   document.getElementById("active-law").innerHTML = lawTitle;
+
+  // change the number of changes for the active law in UI
+  document.getElementById("n_changes").innerHTML = "<strong>" + nChanges + " Änderungen</strong>";
+  document.getElementById("n_success").innerHTML = nSuccess + " angewandt";
+  document.getElementById("n_failure").innerHTML = (parseInt(nChanges) - parseInt(nSuccess)) + " nicht zuortbar";
 }
 
 // Get the element with id="defaultOpen" and click on it
