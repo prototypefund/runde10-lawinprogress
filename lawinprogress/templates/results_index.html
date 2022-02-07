@@ -9,13 +9,14 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
+    <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
     <link rel="manifest" href="/imgs/site.webmanifest">
 </head>
 <body>
   <section class="hero is-primary is-small">
     <!--HEADER-->
     <div class="hero-head">
-      <nav class="navbar">
+      <nav class="navbar is-left" role="navigation" aria-label="main navigation">
         <div class="container">
           <div class="navbar-brand">
             <a class="navbar-item">
@@ -35,7 +36,10 @@
                   <strong>Report a bug</strong>
                 </a>
                 <a class="button is-light" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
-                  Source code
+                  <span class="icon">
+                    <i class="fa fa-download"></i>
+                  </span>
+                  <span>Source Code</span>
                 </a>
               </div>
               </span>
@@ -43,6 +47,7 @@
           </div>
         </div>
       </nav>
+    </div>
     <div class="hero-body">
       <!--Info bar-->
       <div class="container is-fluid">
@@ -75,7 +80,7 @@
                     <button class="button is-primary is-light" aria-haspopup="true" aria-controls="dropdown-menu">
                       <span id="active-law">{{ result[0][0] }}</span>
                       <span class="icon is-small">
-                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        <i class="fa fa-angle-down" aria-hidden="true"></i>
                       </span>
                     </button>
                   </div>
@@ -136,29 +141,31 @@
     <!--Diff part-->
     {% for law_title, proposal_texts in result %}
       <div id="{{ law_title }}" class="tabcontent">
+        <h2 class="title" id="{{ law_title }}law-title"><center>{{ law_title}}</center></h2>
+        <div class="diff-layout" style="grid-template-columns: auto auto auto;">
+          <article class="message old">
+            <div class="message-header">
+              Alte Fassung
+            </div>
+          </article>
+          <article class="message change">
+            <div class="message-header">
+              Änderungsbefehl
+            </div>
+          </article>
+          <article class="message new">
+            <div class="message-header">
+              Neue Fassung
+            </div>
+          </article>
+        </div>
         <div class="field is-grouped">
           <button class="button is-fullwidth" onclick="scrolldiv('back', '{{ law_title }}')">&laquo;</button>
           <button class="button is-fullwidth" onclick="scrolldiv('top', '{{ law_title }}')">Nach oben</button>
           <button class="button is-fullwidth" onclick="scrolldiv('forward', '{{ law_title }}')">&raquo;</button>
         </div>
         <div class="scrollable">
-          <h2 class="title" id="{{ law_title }}law-title"><center>{{ law_title}}</center></h2>
           <div class="diff-layout" style="grid-template-columns: auto auto auto;">
-            <article class="message old">
-              <div class="message-header">
-                Alte Fassung
-              </div>
-            </article>
-            <article class="message change">
-              <div class="message-header">
-                Änderungsbefehl
-              </div>
-            </article>
-            <article class="message new">
-              <div class="message-header">
-                Neue Fassung
-              </div>
-            </article>
             {% for line in proposal_texts %}
               {{ line[0]|safe }}
               {{ line[1]|safe }}
@@ -231,19 +238,23 @@ function scrolldiv(direction, lawTitle) {
     var checkBox = document.getElementById("check_"+column);
     // Get the column elements
     column_elem = document.getElementsByClassName(column);
-    grid_clmn = document.getElementsByClassName("diff-layout")[0];
+    grid_layouts = document.getElementsByClassName("diff-layout");
 
     // If the checkbox is checked, display the output text
     if (checkBox.checked == true){
       for (i = 0; i < column_elem.length; i++) {
         column_elem[i].style.display = "block";
       }
-      grid_clmn.style.gridTemplateColumns = grid_clmn.style.gridTemplateColumns + " auto";
+      for (i = 0; i < grid_layouts.length; i++) {
+        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns + " auto";
+      }
     } else {
       for (i = 0; i < column_elem.length; i++) {
         column_elem[i].style.display = "none";
       }
-      grid_clmn.style.gridTemplateColumns = grid_clmn.style.gridTemplateColumns.slice(0, grid_clmn.style.gridTemplateColumns.length - 5);
+      for (i = 0; i < grid_layouts.length; i++) {
+        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns.slice(0, grid_layouts[i].style.gridTemplateColumns.length - 5);
+      }
     }
   }
   toggleColumn("change")
