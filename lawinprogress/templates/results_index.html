@@ -136,18 +136,18 @@
         </div>
         <div class="scrollable">
           <h2 class="title" id="{{ law_title }}law-title"><center>{{ law_title}}</center></h2>
-          <div class="diff-layout">
-            <article class="message">
+          <div class="diff-layout" style="grid-template-columns: auto auto auto;">
+            <article class="message old">
               <div class="message-header">
                 Alte Fassung
               </div>
             </article>
-            <article class="message">
+            <article class="message change">
               <div class="message-header">
                 Änderungsbefehl
               </div>
             </article>
-            <article class="message">
+            <article class="message new">
               <div class="message-header">
                 Neue Fassung
               </div>
@@ -224,19 +224,22 @@ function scrolldiv(direction, lawTitle) {
     var checkBox = document.getElementById("check_"+column);
     // Get the column elements
     column_elem = document.getElementsByClassName(column);
-    grid_clmn = document.getElementsByClassName("diff-layout")[0]
+    grid_clmn = document.getElementsByClassName("diff-layout")[0];
 
     // If the checkbox is checked, display the output text
     if (checkBox.checked == true){
       for (i = 0; i < column_elem.length; i++) {
         column_elem[i].style.display = "block";
       }
+      grid_clmn.style.gridTemplateColumns = grid_clmn.style.gridTemplateColumns + " auto";
     } else {
       for (i = 0; i < column_elem.length; i++) {
         column_elem[i].style.display = "none";
       }
+      grid_clmn.style.gridTemplateColumns = grid_clmn.style.gridTemplateColumns.slice(0, grid_clmn.style.gridTemplateColumns.length - 5);
     }
   }
+  toggleColumn("change")
 </script>
 </body>
 </html> 
