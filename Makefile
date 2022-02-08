@@ -23,3 +23,7 @@ app:
 
 requirements:
 	poetry export -f requirements.txt --output requirements.txt --without-hashes
+
+style:
+	cd ./mybulma/ && npm run css-build
+	cp ./mybulma/css/mystyles.css ./lawinprogress/templates/css/bulma.css

@@ -57,19 +57,11 @@ def html_sidebyside(
     left_text: List[str],
     right_text: List[str],
     change_results: List[List[ChangeResult]],
+    title: str,
 ) -> str:
     """Create a side-by-side div-table for the diff/synopsis."""
     # page title
-    title = left_text[0].split("source ")[-1]
     out = f'<center><h2 id="{title}law-title">{title}</h2></center>'
-
-    # show changes of the change law
-    # out += "<center><h3>Änderungen</h3></center>"
-    # for change_res in list(chres for res in change_results for chres in res):
-    #    if change_res.status != 0:
-    #        out += f'<div>&#9989; {change_res.change.raw_text}</div>'
-    #    else:
-    #        out += f'<div>&#274C; {change_res.change.raw_text}</div>'
 
     # prepare successfull changes
     success_changes = [
@@ -79,45 +71,53 @@ def html_sidebyside(
     ]
 
     # create the three column layout
-    out += '<div class="diff-layout">'
-    # make it align nicely
-    out += "<p></p><p></p><p></p>"
-    out += "<h3><center>Änderungsbefehl</center></h3><h3><center>alte Fassung</center></h3><h3><center>neue Fassung</center></h3>"
-    change_idx = 0
+    change_idx = 0  # count the changes for indexing html ids
+    old, change, new = [], [], []
     for left, right in zip_longest(left_text[1:], right_text[1:], fillvalue=""):
         left_leading_ws = len(left) - len(left.lstrip()) - 5
         right_leading_ws = len(right) - len(right.lstrip()) - 5
-        left = left_leading_ws * "&nbsp;" + left.strip()
-        right = right_leading_ws * "&nbsp;" + right.strip()
+        # style the headlines a bit
+        if left_leading_ws == 0:
+            left = '<h3 class="title is-4">' + left.strip() + "</h3>"
+            right = '<h3 class="title is-4">' + right.strip() + "</h3>"
+        elif left_leading_ws == 4:
+            left = '<h3 class="title is-5">' + 4*"&nbsp;" + left.strip() + "</h3>"
+            right = '<h3 class="title is-5">' + 4*"&nbsp;" + right.strip() + "</h3>"
+        else:
+            left = left_leading_ws * "&nbsp;" + left.strip()
+            right = right_leading_ws * "&nbsp;" + right.strip()
         # if it contains marked spans, add background color
         if "<span" in left or "<span" in right:
+            # here we add background color for the left column
+            old.append(f'<div class="remove-bg old" id="{title}old-{change_idx}">{left}</div>')
             # add the changes to the change column
             try:
-                out += '<div class="change-bg" id="{}change-{}">{}</div>'.format(
+                change.append('<div class="change-bg change" id="{}change-{}">{}</div>'.format(
                     title,
                     change_idx,
                     "<br><hr>".join(
                         [res.change.raw_text for res in success_changes[change_idx]]
                     ),
-                )
+                ))
             except IndexError as err:
                 # if we are out of changes expose the error
-                out += f'<div class="change-bg" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>'
-            change_idx += 1
+                change.append(f'<div class="change-bg change" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>')
+            # here we add background color for the right column
+            new.append(f'<div class="add-bg new" id="{title}new-{change_idx}">{right}</div>')
 
-            # here we add background color
-            out += f'<div class="remove-bg">{left}</div>'
-            out += f'<div class="add-bg">{right}</div>'
+            change_idx += 1
         else:
             # if nothing to color, just put it in a plain diff
-            out += '<div class="change-bg"></div>'
-            out += f'<div style="padding: 2px;">{left}</div>'
-            out += f'<div style="padding: 2px;">{right}</div>'
-    return out
+            old.append(f'<div style="padding: 2px;" class="old">{left}</div>')
+            change.append('<div class="change-bg change"></div>')
+            new.append(f'<div style="padding: 2px;" class="new">{right}</div>')
+
+    # return lines
+    return [(old_i, change_i, new_i) for old_i, change_i, new_i in zip(old, change, new)]
 
 
 def html_diffs(
-    text_a: str, text_b: str, change_results: List[List[ChangeResult]]
+    text_a: str, text_b: str, change_results: List[List[ChangeResult]], title: str
 ) -> str:
     """Main function to get the side-by-side diff of two strings in html."""
     text_a = html.escape(text_a)
@@ -129,4 +129,4 @@ def html_diffs(
         out_a.append(untokenize(mark_a))
         out_b.append(untokenize(mark_b))
 
-    return html_sidebyside(out_a, out_b, change_results)
+    return html_sidebyside(out_a, out_b, change_results, title)

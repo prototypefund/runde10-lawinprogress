@@ -88,7 +88,13 @@ def extract_law_titles(proposals_list: List[str]) -> List[str]:
         last_line_is_title = False
         for line in proposal_lines:
             # add lines starting with Änderung or similar
-            if line.startswith("#Änderung") or line.startswith("#Weitere Änderung"):
+            if any(re.match(pattern, line)
+                for pattern in [
+                    "^#Änderung",
+                    "^#Weitere\s*Änderung",
+                    "^#Folgeänderungen",
+                ]
+            ):
                 raw_title += line
                 last_line_is_title = True
                 continue
@@ -105,11 +111,10 @@ def extract_law_titles(proposals_list: List[str]) -> List[str]:
     titles_clean_aenderung = []
     for title in titles_clean_par_sign:
         if re.search(r"Änderung \b(de[rs])\b ", title) is not None:
-            titles_clean_aenderung.append(
-                re.split(r"Änderung \b(de[rs])\b ", title)[2].strip()
-            )
+            clean_title = re.split(r"Änderung \b(de[rs])\b ", title)[2].strip()
+            titles_clean_aenderung.append(clean_title)
         else:
-            titles_clean_aenderung.append(title.strip())
+            titles_clean_aenderung.append(title.strip().lstrip("#"))
     return titles_clean_aenderung
 
 

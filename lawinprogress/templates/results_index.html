@@ -5,36 +5,236 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/style.css">
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">-->
+    <link rel="stylesheet" href="css/bulma.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
+    <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
     <link rel="manifest" href="/imgs/site.webmanifest">
 </head>
 <body>
-  <img src="imgs/lip_logo.png" alt="Law in Progress" width="300">
-  <p>Select a law from {{ name }}:</p>
-  <div class="tab">
-  {% for law_title, proposal_text in result %}
-    <button class="tablinks" onclick="openLaw(event, '{{ law_title }}')" id="defaultOpen">{{ law_title }}</button>
-  {% endfor %}
-  </div>
-
-  {% for law_title, proposal_text in result %}
-    <div id="{{ law_title }}" class="tabcontent">
-      <center>
-          <button onclick="scrolldiv('back', '{{ law_title }}')">&laquo;</button>
-          <button onclick="scrolldiv('top', '{{ law_title }}')">Nach oben</button>
-          <button onclick="scrolldiv('forward', '{{ law_title }}')">&raquo;</button>
-      </center>
-      <div class="scrollable">
-      {{ proposal_text|safe }}
+  <section class="hero is-dark is-small">
+    <!--HEADER-->
+    <div class="hero-head">
+      <div class="container is-fluid">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <a class="navbar-item">
+              <img src="imgs/lip_logo.png" alt="Law in Progress Logo">
+            </a>
+            <span class="navbar-burger" data-target="navbarMenuHeroA">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </div>
+          <div id="navbarMenuHeroA" class="navbar-menu">
+            <div class="navbar-end">
+              <span class="navbar-item">
+              <div class="buttons">
+                <a class="button is-primary is-light" href="mailto: bug@lawinprogress.de">
+                  <span class="icon">
+                    <i class="fa fa-bug"></i>
+                  </span>
+                  <span>Report a bug</span>
+                </a>
+                <a class="button is-light" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
+                  <span class="icon">
+                    <i class="fa fa-gitlab"></i>
+                  </span>
+                  <span>Source Code</span>
+                </a>
+              </div>
+              </span>
+            </div>
+          </div>
+        </nav>
       </div>
     </div>
-  </div>
-  {% endfor %}
+    <div class="hero-body">
+      <!--Info bar-->
+      <div class="container is-fluid">
+        <nav class="level">
+          <!-- Left side -->
+          <div class="level-left">
+            <div class="level-item">
+              <p class="subtitle is-5">
+                Änderungen aus {{ name }}
+              </p>
+            </div>
+          </div>
+        
+          <!-- Right side -->
+          <div class="level-right"></div>
+        </nav>
+      </div>
+      <!--Select law-->
+      <div class="box container is-fluid">
+        <nav class="level">
+          <!-- Left side -->
+          <div class="level-left">
+            <div class="level-item">
+                <strong>betroffenes Gesetz auswählen</strong>:
+            </div>
+            <div class="level-item">
+              <div class="field has-addons">
+                <div class="dropdown is-active" onclick="this.classList.toggle('is-active')">
+                  <div class="dropdown-trigger">
+                    <button class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
+                      <span id="active-law">{{ result[0][0] }}</span>
+                      <span class="icon is-small">
+                        <i class="fa fa-angle-down" aria-hidden="true"></i>
+                      </span>
+                    </button>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      {% for law_title, n_changes, n_success, proposal_text in result %}
+                        <a class="dropdown-item tablinks" onclick="openLaw(event, '{{ law_title }}', '{{ n_changes }}', '{{ n_success }}')" id="defaultOpen">
+                          {{ law_title }}
+                        </a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Right side -->
+          <div class="level-right">
+            <p class="level-item" id="n_changes"><strong>NaN Änderungen</strong></p>
+            <p class="level-item tag is-success" id="n_success">NaN Angewandt</p>
+            <p class="level-item tag is-danger" id="n_failure">NaN nicht zuortbar</p>
+          </div>
+        </nav>
+      </div>
 
+      <!--Column selector-->
+      <div class="container is-fluid">
+        <nav class="level">
+          <!-- Left side-->
+          <div class="level-right">
+          </div>
+        
+          <!-- Right side -->
+          <div class="level-right">
+            <p class="level-item">
+              Spaltenauswahl:
+            </p>
+            <p class="level-item">
+              <label class="checkbox">
+                <input type="checkbox" checked="checked" id="check_old" onclick="toggleColumn('old')">
+                Alte Fassung
+              </label>
+            </p>
+            <p class="level-item">
+              <label class="checkbox">
+                <input type="checkbox" id="check_change" onclick="toggleColumn('change')">
+                Änderungsbefehl
+              </label>
+            </p>
+            <p class="level-item">
+              <label class="checkbox">
+                <input type="checkbox" checked="checked" id="check_new" onclick="toggleColumn('new')">
+                Neue Fassung
+              </label>
+            </p>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </section>
+  <section class="hero">
+    <!--Diff part-->
+    <div class="hero-body">
+    {% for law_title, n_changes, n_success, proposal_texts in result %}
+      <div id="{{ law_title }}" class="tabcontent">
+        <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
+          <article class="message old">
+            <div class="message-header">
+              Alte Fassung
+              <div class="buttons has-addons">
+                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'old')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'old')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'old')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </article>
+          <article class="message change">
+            <div class="message-header">
+              Änderungsbefehl
+              <div class="buttons has-addons">
+                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'change')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'change')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'change')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </article>
+          <article class="message new">
+            <div class="message-header">
+              Neue Fassung
+              <div class="buttons has-addons">
+                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'new')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'new')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'new')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </article>
+          <p></p> <!--For some weird reason this removes the box under the last message header...-->
+        </div>
+        <div class="scrollable">
+          <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
+            {% for line in proposal_texts %}
+              {{ line[0]|safe }}
+              {{ line[1]|safe }}
+              {{ line[2]|safe }}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </section>
 <script>
-function openLaw(evt, lawTitle) {
+// manage the tab content
+function openLaw(evt, lawTitle, nChanges, nSuccess) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -46,39 +246,76 @@ function openLaw(evt, lawTitle) {
   }
   document.getElementById(lawTitle).style.display = "block";
   evt.currentTarget.className += " active";
+
+  // change the active law in dropdown
+  document.getElementById("active-law").innerHTML = lawTitle;
+
+  // change the number of changes for the active law in UI
+  document.getElementById("n_changes").innerHTML = "<strong>" + nChanges + " Änderungen</strong>";
+  document.getElementById("n_success").innerHTML = nSuccess + " angewandt";
+  document.getElementById("n_failure").innerHTML = (parseInt(nChanges) - parseInt(nSuccess)) + " nicht zuortbar";
 }
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 </script>
 <script>
-    let num = 0;
-    
-    function scrolldiv(direction, lawTitle) {
-    	if (direction === "top"){
-    		var elem = document.getElementById(lawTitle + "law-title");
-		elem.scrollIntoView();
-		num = 0;
-    	}
-        if (num < 0) {
-           num = 0;
-        }
-        try {
-	    	if (direction === "forward"){
-		   var elem = document.getElementById(lawTitle + "change-" + num);
-		   elem.scrollIntoView();
-		   num += 1;
-		}
-		if (direction === "back" && num > 0){
-		   var elem = document.getElementById(lawTitle + "change-" + num);
-		   elem.scrollIntoView();
-		   num -= 1;
-		}
-	}
-	catch {
-		num -= 1;
-	}
+// up and down buttons
+let num = 0;
+
+function scrolldiv(direction, lawTitle, type) {
+  if (direction === "top"){
+    var elem = document.getElementById(lawTitle + "law-title");
+    elem.scrollIntoView();
+    num = 0;
+  }
+  if (num < 0) {
+    num = 0;
+  }
+  try {
+    if (direction === "forward"){
+      var elem = document.getElementById(lawTitle + type + "-" + num);
+      elem.scrollIntoView();
+      num += 1;
     }
+    if (direction === "back" && num > 0){
+      var elem = document.getElementById(lawTitle + type + "-" + num);
+      elem.scrollIntoView();
+      num -= 1;
+    }
+  }
+  catch {
+    num -= 1;
+  }
+}
+</script>
+<script>
+  // handle the hidding of columns with checkboxes
+  function toggleColumn(column) {
+    // Get the checkbox
+    var checkBox = document.getElementById("check_"+column);
+    // Get the column elements
+    column_elem = document.getElementsByClassName(column);
+    grid_layouts = document.getElementsByClassName("diff-layout");
+
+    // If the checkbox is checked, display the output text
+    if (checkBox.checked == true){
+      for (i = 0; i < column_elem.length; i++) {
+        column_elem[i].style.display = "block";
+      }
+      for (i = 0; i < grid_layouts.length; i++) {
+        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns + " 1fr";
+      }
+    } else {
+      for (i = 0; i < column_elem.length; i++) {
+        column_elem[i].style.display = "none";
+      }
+      for (i = 0; i < grid_layouts.length; i++) {
+        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns.slice(0, grid_layouts[i].style.gridTemplateColumns.length - 4);
+      }
+    }
+  }
+  toggleColumn("change")
 </script>
 </body>
 </html> 
