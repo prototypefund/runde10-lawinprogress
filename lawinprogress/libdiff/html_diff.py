@@ -61,15 +61,6 @@ def html_sidebyside(
     """Create a side-by-side div-table for the diff/synopsis."""
     # page title
     title = left_text[0].split("source ")[-1]
-    lines = []
-
-    # show changes of the change law
-    # out += "<center><h3>Änderungen</h3></center>"
-    # for change_res in list(chres for res in change_results for chres in res):
-    #    if change_res.status != 0:
-    #        out += f'<div>&#9989; {change_res.change.raw_text}</div>'
-    #    else:
-    #        out += f'<div>&#274C; {change_res.change.raw_text}</div>'
 
     # prepare successfull changes
     success_changes = [
@@ -79,20 +70,28 @@ def html_sidebyside(
     ]
 
     # create the three column layout
-    change_idx = 0
+    change_idx = 0  # count the changes for indexing html ids
+    old, change, new = [], [], []
     for left, right in zip_longest(left_text[1:], right_text[1:], fillvalue=""):
-        line = []
         left_leading_ws = len(left) - len(left.lstrip()) - 5
         right_leading_ws = len(right) - len(right.lstrip()) - 5
-        left = left_leading_ws * "&nbsp;" + left.strip()
-        right = right_leading_ws * "&nbsp;" + right.strip()
+        # style the headlines a bit
+        if left_leading_ws == 0:
+            left = '<h3 class="title is-4">' + left.strip() + "</h3>"
+            right = '<h3 class="title is-4">' + right.strip() + "</h3>"
+        elif left_leading_ws == 4:
+            left = '<h3 class="title is-5">' + 4*"&nbsp;" + left.strip() + "</h3>"
+            right = '<h3 class="title is-5">' + 4*"&nbsp;" + right.strip() + "</h3>"
+        else:
+            left = left_leading_ws * "&nbsp;" + left.strip()
+            right = right_leading_ws * "&nbsp;" + right.strip()
         # if it contains marked spans, add background color
         if "<span" in left or "<span" in right:
             # here we add background color for the left column
-            line.append(f'<div class="remove-bg old" id="{title}old-{change_idx}">{left}</div>')
+            old.append(f'<div class="remove-bg old" id="{title}old-{change_idx}">{left}</div>')
             # add the changes to the change column
             try:
-                line.append('<div class="change-bg change" id="{}change-{}">{}</div>'.format(
+                change.append('<div class="change-bg change" id="{}change-{}">{}</div>'.format(
                     title,
                     change_idx,
                     "<br><hr>".join(
@@ -101,18 +100,19 @@ def html_sidebyside(
                 ))
             except IndexError as err:
                 # if we are out of changes expose the error
-                line.append(f'<div class="change-bg change" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>')
-            change_idx += 1
-
+                change.append(f'<div class="change-bg change" id="{title}change-{change_idx}">Something went wrong: {str(err)}</div>')
             # here we add background color for the right column
-            line.append(f'<div class="add-bg new" id="{title}new-{change_idx}">{right}</div>')
+            new.append(f'<div class="add-bg new" id="{title}new-{change_idx}">{right}</div>')
+
+            change_idx += 1
         else:
             # if nothing to color, just put it in a plain diff
-            line.append(f'<div style="padding: 2px;" class="old">{left}</div>')
-            line.append('<div class="change-bg change"></div>')
-            line.append(f'<div style="padding: 2px;" class="new">{right}</div>')
-        lines.append(line)
-    return lines
+            old.append(f'<div style="padding: 2px;" class="old">{left}</div>')
+            change.append('<div class="change-bg change"></div>')
+            new.append(f'<div style="padding: 2px;" class="new">{right}</div>')
+
+    # return lines
+    return [(old_i, change_i, new_i) for old_i, change_i, new_i in zip(old, change, new)]
 
 
 def html_diffs(
