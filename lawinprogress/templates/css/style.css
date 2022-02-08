@@ -9,14 +9,14 @@ body {font-family: "Lato", sans-serif;}
   /*border: 0px solid #6D696A;*/
   width: 100%;
   border-left: none;
-  height: 60vh;
+  height: 55vh;
 }
 
 .scrollable {
   overflow: auto;
   float: left;
   border-left: none;
-  padding: 3px 12px;
+  padding: 3px 6px;
   height: 55vh;
 }
 

@@ -14,7 +14,7 @@
     <link rel="manifest" href="/imgs/site.webmanifest">
 </head>
 <body>
-  <section class="hero is-primary is-small">
+  <section class="hero is-dark is-small">
     <!--HEADER-->
     <div class="hero-head">
       <div class="container is-fluid">
@@ -81,7 +81,7 @@
               <div class="field has-addons">
                 <div class="dropdown is-active" onclick="this.classList.toggle('is-active')">
                   <div class="dropdown-trigger">
-                    <button class="button is-primary is-light" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <button class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
                       <span id="active-law">{{ result[0][0] }}</span>
                       <span class="icon is-small">
                         <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -91,7 +91,9 @@
                   <div class="dropdown-menu" id="dropdown-menu" role="menu">
                     <div class="dropdown-content">
                       {% for law_title, n_changes, n_success, proposal_text in result %}
-                        <a class="dropdown-item tablinks" onclick="openLaw(event, '{{ law_title }}', '{{ n_changes }}', '{{ n_success }}')" id="defaultOpen">{{ law_title }}</a>
+                        <a class="dropdown-item tablinks" onclick="openLaw(event, '{{ law_title }}', '{{ n_changes }}', '{{ n_success }}')" id="defaultOpen">
+                          {{ law_title }}
+                        </a>
                       {% endfor %}
                     </div>
                   </div>
