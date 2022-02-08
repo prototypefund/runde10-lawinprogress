@@ -117,6 +117,9 @@
           <!-- Right side -->
           <div class="level-right">
             <p class="level-item">
+              Spaltenauswahl:
+            </p>
+            <p class="level-item">
               <label class="checkbox">
                 <input type="checkbox" checked="checked" id="check_old" onclick="toggleColumn('old')">
                 Alte Fassung
@@ -144,32 +147,77 @@
     <div class="hero-body">
     {% for law_title, n_changes, n_success, proposal_texts in result %}
       <div id="{{ law_title }}" class="tabcontent">
-        <!--<h2 class="title" id="{{ law_title }}law-title"><center>{{ law_title}}</center></h2>-->
-        <div class="diff-layout" style="grid-template-columns: auto auto auto;">
+        <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
           <article class="message old">
             <div class="message-header">
               Alte Fassung
+              <div class="buttons has-addons">
+                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'old')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'old')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'old')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
             </div>
           </article>
           <article class="message change">
             <div class="message-header">
               Änderungsbefehl
+              <div class="buttons has-addons">
+                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'change')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'change')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'change')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
             </div>
           </article>
           <article class="message new">
             <div class="message-header">
               Neue Fassung
+              <div class="buttons has-addons">
+                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'new')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'new')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'new')">
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
             </div>
           </article>
           <p></p> <!--For some weird reason this removes the box under the last message header...-->
         </div>
-        <!--<div class="field is-grouped">
-          <button class="button is-fullwidth" onclick="scrolldiv('back', '{{ law_title }}')">&laquo;</button>
-          <button class="button is-fullwidth" onclick="scrolldiv('top', '{{ law_title }}')">Nach oben</button>
-          <button class="button is-fullwidth" onclick="scrolldiv('forward', '{{ law_title }}')">&raquo;</button>
-        </div>-->
         <div class="scrollable">
-          <div class="diff-layout" style="grid-template-columns: auto auto auto;">
+          <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
             {% for line in proposal_texts %}
               {{ line[0]|safe }}
               {{ line[1]|safe }}
@@ -212,7 +260,7 @@ document.getElementById("defaultOpen").click();
 // up and down buttons
 let num = 0;
 
-function scrolldiv(direction, lawTitle) {
+function scrolldiv(direction, lawTitle, type) {
   if (direction === "top"){
     var elem = document.getElementById(lawTitle + "law-title");
     elem.scrollIntoView();
@@ -223,12 +271,12 @@ function scrolldiv(direction, lawTitle) {
   }
   try {
     if (direction === "forward"){
-      var elem = document.getElementById(lawTitle + "change-" + num);
+      var elem = document.getElementById(lawTitle + type + "-" + num);
       elem.scrollIntoView();
       num += 1;
     }
     if (direction === "back" && num > 0){
-      var elem = document.getElementById(lawTitle + "change-" + num);
+      var elem = document.getElementById(lawTitle + type + "-" + num);
       elem.scrollIntoView();
       num -= 1;
     }
@@ -253,14 +301,14 @@ function scrolldiv(direction, lawTitle) {
         column_elem[i].style.display = "block";
       }
       for (i = 0; i < grid_layouts.length; i++) {
-        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns + " auto";
+        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns + " 1fr";
       }
     } else {
       for (i = 0; i < column_elem.length; i++) {
         column_elem[i].style.display = "none";
       }
       for (i = 0; i < grid_layouts.length; i++) {
-        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns.slice(0, grid_layouts[i].style.gridTemplateColumns.length - 5);
+        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns.slice(0, grid_layouts[i].style.gridTemplateColumns.length - 4);
       }
     }
   }

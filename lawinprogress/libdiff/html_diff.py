@@ -89,7 +89,7 @@ def html_sidebyside(
         # if it contains marked spans, add background color
         if "<span" in left or "<span" in right:
             # here we add background color for the left column
-            line.append(f'<div class="remove-bg old">{left}</div>')
+            line.append(f'<div class="remove-bg old" id="{title}old-{change_idx}">{left}</div>')
             # add the changes to the change column
             try:
                 line.append('<div class="change-bg change" id="{}change-{}">{}</div>'.format(
@@ -105,7 +105,7 @@ def html_sidebyside(
             change_idx += 1
 
             # here we add background color for the right column
-            line.append(f'<div class="add-bg new">{right}</div>')
+            line.append(f'<div class="add-bg new" id="{title}new-{change_idx}">{right}</div>')
         else:
             # if nothing to color, just put it in a plain diff
             line.append(f'<div style="padding: 2px;" class="old">{left}</div>')
