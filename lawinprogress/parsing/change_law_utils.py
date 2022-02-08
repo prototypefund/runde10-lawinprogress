@@ -130,13 +130,13 @@ def preprocess_raw_law(text: str) -> str:
     # remove linebreak wordsplits
     text = re.sub(r"\b-\n\b", "", text)
 
+    # remove footnotes
+    text = remove_footnotes(text)
+
     # remove header and footer artifacts
     text = "\n".join(
         [remove_header_footer_artifacts_from_line(line) for line in text.split("\n")]
     )
-
-    # remove footnotes
-    text = remove_footnotes(text)
 
     # Remove newlines between quotation marks
     try:

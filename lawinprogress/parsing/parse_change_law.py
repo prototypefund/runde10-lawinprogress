@@ -102,7 +102,7 @@ def parse_change_location(line: str) -> List[str]:
         r"Kapitel\s*\d{1,3}",
         r"§\s+\d{1,3}[a-z]?",
         r"Überschrift",
-        r"Absatz\s+\d{1,3}",
+        r"Absatz\s+\d{1,3}[a-z]?",
         r"Abs.\s+\d{1,3}",
         r"Nummer\s+\d{1,3}",
         r"Nr.\s+\d{1,3}",

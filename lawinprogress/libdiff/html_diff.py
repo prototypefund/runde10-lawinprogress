@@ -57,10 +57,11 @@ def html_sidebyside(
     left_text: List[str],
     right_text: List[str],
     change_results: List[List[ChangeResult]],
+    title: str,
 ) -> str:
     """Create a side-by-side div-table for the diff/synopsis."""
     # page title
-    title = left_text[0].split("source ")[-1]
+    out = f'<center><h2 id="{title}law-title">{title}</h2></center>'
 
     # prepare successfull changes
     success_changes = [
@@ -116,7 +117,7 @@ def html_sidebyside(
 
 
 def html_diffs(
-    text_a: str, text_b: str, change_results: List[List[ChangeResult]]
+    text_a: str, text_b: str, change_results: List[List[ChangeResult]], title: str
 ) -> str:
     """Main function to get the side-by-side diff of two strings in html."""
     text_a = html.escape(text_a)
@@ -128,4 +129,4 @@ def html_diffs(
         out_a.append(untokenize(mark_a))
         out_b.append(untokenize(mark_b))
 
-    return html_sidebyside(out_a, out_b, change_results)
+    return html_sidebyside(out_a, out_b, change_results, title)
