@@ -20,7 +20,7 @@
       <div class="container is-fluid">
         <nav class="navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
-            <a class="navbar-item">
+            <a class="navbar-item" style="background-color: whitesmoke;">
               <img src="imgs/lip_logo.png" alt="Law in Progress Logo">
             </a>
             <span class="navbar-burger" data-target="navbarMenuHeroA">
@@ -221,6 +221,9 @@
         </div>
         <div class="scrollable">
           <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
+            <p class="old" id="scrolltarget-old-{{ law_title }}"></p>
+            <p class="change" id="scrolltarget-change-{{ law_title }}"></p>
+            <p class="new" id="scrolltarget-new-{{ law_title }}"></p>
             {% for line in proposal_texts %}
               {{ line[0]|safe }}
               {{ line[1]|safe }}
@@ -265,7 +268,7 @@ let num = 0;
 
 function scrolldiv(direction, lawTitle, type) {
   if (direction === "top"){
-    var elem = document.getElementById(lawTitle + "law-title");
+    var elem = document.getElementById("scrolltarget-new-" + lawTitle);
     elem.scrollIntoView();
     num = 0;
   }

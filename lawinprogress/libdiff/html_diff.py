@@ -60,9 +60,6 @@ def html_sidebyside(
     title: str,
 ) -> str:
     """Create a side-by-side div-table for the diff/synopsis."""
-    # page title
-    out = f'<center><h2 id="{title}law-title">{title}</h2></center>'
-
     # prepare successfull changes
     success_changes = [
         [change_result for change_result in results if change_result.status != 0]
@@ -73,7 +70,7 @@ def html_sidebyside(
     # create the three column layout
     change_idx = 0  # count the changes for indexing html ids
     old, change, new = [], [], []
-    for left, right in zip_longest(left_text[1:], right_text[1:], fillvalue=""):
+    for left, right in zip_longest(left_text, right_text, fillvalue=""):
         left_leading_ws = len(left) - len(left.lstrip()) - 5
         right_leading_ws = len(right) - len(right.lstrip()) - 5
         # style the headlines a bit
