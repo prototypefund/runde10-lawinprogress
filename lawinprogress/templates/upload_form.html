@@ -10,40 +10,95 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
     <link rel="manifest" href="/imgs/site.webmanifest">
+    <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
   </head>
   <body>
-    <section class="section">
-    <div class="container">
-      <div class="is-primary notification is-light">
-	    <center>
-	    <img src="imgs/lip_logo.png" alt="Law in Progress" width="500">
-        <article class="message">
-          <div class="message-body">
-              <p>Das Online-Tool "Law in Progress" macht Gesetzentwürfe und deren Konsequenzen für bestehende Gesetze durch automatische Erstellung einer Synopse sichtbar und nachvollziehbar.</p>
-              <hr>
-              <p><b>Akutelle Beispiel-PDFs:</b></p>
-              <div class="content">
-              <ul>
-                  <li><a target="_blank" href="https://dserver.bundestag.de/btd/20/002/2000275.pdf" title="Gesetz zur Änderung des Infektionsschutzgesetzes">Gesetz zur Änderung des Infektionsschutzgesetzes</a></li>
-                  <li><a target="_blank" href="https://dserver.bundestag.de/brd/2022/0010-22(neu).pdf" title="Entwurf eines Gesetzes zur Beförderung des Tierwohls in der
-                    landwirtschaftlichen Nutztierhaltung">Entwurf eines Gesetzes zur Beförderung des Tierwohls in der
-                    landwirtschaftlichen Nutztierhaltung</a></li>
-              </ul>
+    <section class="hero">
+      <!-- Hero head: will stick at the top -->
+      <div class="hero-head">
+        <header class="navbar">
+          <div class="container">
+            <div class="navbar-brand">
+              <a class="navbar-item">
+                <img src="imgs/lip_logo.png" alt="Law in Progress">
+              </a>
+              <span class="navbar-burger" data-target="navbarMenuHeroC">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </div>
+            <div id="navbarMenuHeroC" class="navbar-menu">
+              <div class="navbar-end">
+                <span class="navbar-item">
+                  <a class="button is-primary is-inverted" href="https://gitlab.com/nototast/lawinprogress/" target="_blank">
+                    <span class="icon">
+                      <i class="fa fa-gitlab"></i>
+                    </span>
+                    <span>Source code</span>
+                  </a>
+                </span>
               </div>
+            </div>
           </div>
-        </article>
-        <br>
-	    <h2 class="subtitle">{{ result }}</h2>
-	    <form method="post" enctype="multipart/form-data">
-	    	<input class="button" type="file" name="change_law_pdf" value=""/>
-            <button class="button is-primary" id="upload-button" type="submit" value="Hochladen" onclick="this.className += ' ' + 'is-loading'">Hochladen</button>
-	    </form>
-        <hr>
-        <img src="imgs/logo_prototypefund.png" alt="Prototype Fund Logo" width="200">
-        <img src="imgs/BMBF_gefoerdert_2021_en.png" alt="BMBF Logo" width="200">
-	    </center>
+        </header>
       </div>
-    </div>
+    
+      <!-- Hero content: will be in the middle -->
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <img src="imgs/lip_logo.png" alt="Law in Progress" width="500">
+          <p class="title">
+            Wir machen Gesetzesänderungen transparent.
+          </p>
+        </div>
+      </div>
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <article class="message">
+            <div class="message-header">
+              <p>{{ result }}</p>
+            </div>
+            <div class="message-body content">
+              <center>
+              <form method="post" enctype="multipart/form-data">
+                <input class="button" type="file" name="change_law_pdf" value=""/>
+                  <button class="button is-primary" id="upload-button" type="submit" value="Hochladen" onclick="this.className += ' ' + 'is-loading'">Hochladen</button>
+              </form>
+              </center>
+              <hr>
+              <p><strong>Aktuelle Beispiel-PDFs:</strong></p>
+              <ul>
+                <li><a target="_blank" href="https://dserver.bundestag.de/btd/20/002/2000275.pdf" title="Gesetz zur Änderung des Infektionsschutzgesetzes">Gesetz zur Änderung des Infektionsschutzgesetzes</a></li>
+                <li><a target="_blank" href="https://dserver.bundestag.de/brd/2022/0010-22(neu).pdf" title="Entwurf eines Gesetzes zur Beförderung des Tierwohls in der
+                  landwirtschaftlichen Nutztierhaltung">Entwurf eines Gesetzes zur Beförderung des Tierwohls in der landwirtschaftlichen Nutztierhaltung</a></li>
+              </ul>
+            </div>
+          </article>
+        </div>
+        <div class="container is-max-desktop">
+          <article class="message">
+            <div class="message-header">
+              <p>Gefördert von</p>
+            </div>
+            <div class="message-body content has-text-centered">
+              <img src="imgs/logo_prototypefund.png" alt="Prototype Fund Logo" width="100">
+              <img src="imgs/BMBF_gefoerdert_2021_en.png" alt="BMBF Logo" width="100">
+            </div>
+          </article>
+        </div>
+      </div>
+    
+      <!-- Hero footer: will stick at the bottom -->
+      <div class="hero-foot">
+        <nav class="tabs is-fullwidth">
+          <div class="container">
+            <ul>
+              <li><a>made with &#x1F49A;, python and bulma by Tobias Sterbak & Noa Tamir</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </section>
   </body>
 </html>
