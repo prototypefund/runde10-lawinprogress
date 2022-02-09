@@ -13,10 +13,10 @@ body {font-family: "Lato", sans-serif;}
 }
 
 .scrollable {
+  font-family: DejaVu Sans Mono;
   overflow: auto;
   float: left;
   border-left: none;
-  padding: 3px 6px;
   height: 55vh;
 }
 
@@ -28,7 +28,6 @@ body {font-family: "Lato", sans-serif;}
   /*grid-template-columns: auto auto auto;*/
   grid-column-gap: 10px;
   grid-row-gap: 0px;
-  font-family: DejaVu Sans Mono;
 }
 
 .span-remove {

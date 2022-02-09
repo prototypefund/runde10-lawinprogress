@@ -17,10 +17,10 @@
   <section class="hero is-dark is-small">
     <!--HEADER-->
     <div class="hero-head">
-      <div class="container is-fluid">
+      <div class="container is-fluid" style="background-color: white;">
         <nav class="navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
-            <a class="navbar-item" style="background-color: whitesmoke;">
+            <a class="navbar-item">
               <img src="imgs/lip_logo.png" alt="Law in Progress Logo">
             </a>
             <span class="navbar-burger" data-target="navbarMenuHeroA">
@@ -33,13 +33,13 @@
             <div class="navbar-end">
               <span class="navbar-item">
               <div class="buttons">
-                <a class="button is-primary is-light" href="mailto: bug@lawinprogress.de">
+                <a class="button is-primary" href="mailto: bug@lawinprogress.de">
                   <span class="icon">
                     <i class="fa fa-bug"></i>
                   </span>
                   <span>Report a bug</span>
                 </a>
-                <a class="button is-light" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
+                <a class="button is-primary" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
                   <span class="icon">
                     <i class="fa fa-gitlab"></i>
                   </span>
@@ -54,20 +54,12 @@
     </div>
     <div class="hero-body">
       <!--Info bar-->
-      <div class="container is-fluid">
-        <nav class="level">
-          <!-- Left side -->
-          <div class="level-left">
-            <div class="level-item">
-              <p class="subtitle is-5">
-                Änderungen aus {{ name }}
-              </p>
-            </div>
-          </div>
-        
-          <!-- Right side -->
-          <div class="level-right"></div>
-        </nav>
+      <div class="block">
+        <div class="container is-fluid">
+          <h2 class="subtitle is-3">
+            Änderungen aus {{ name }}
+          </h2>
+        </div>
       </div>
       <!--Select law-->
       <div class="box container is-fluid">
@@ -81,7 +73,7 @@
               <div class="field has-addons">
                 <div class="dropdown is-active" onclick="this.classList.toggle('is-active')">
                   <div class="dropdown-trigger">
-                    <button class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <button class="button is-dark" aria-haspopup="true" aria-controls="dropdown-menu">
                       <span id="active-law">{{ result[0][0] }}</span>
                       <span class="icon is-small">
                         <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -151,21 +143,21 @@
     {% for law_title, n_changes, n_success, proposal_texts in result %}
       <div id="{{ law_title }}" class="tabcontent">
         <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
-          <article class="message old">
+          <article class="message old is-dark">
             <div class="message-header">
               Alte Fassung
               <div class="buttons has-addons">
-                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'old')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('back', '{{ law_title }}', 'old')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-up" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'old')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('forward', '{{ law_title }}', 'old')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'old')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('top', '{{ law_title }}', 'old')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                   </span>
@@ -173,21 +165,21 @@
               </div>
             </div>
           </article>
-          <article class="message change">
+          <article class="message change is-dark">
             <div class="message-header">
               Änderungsbefehl
               <div class="buttons has-addons">
-                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'change')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('back', '{{ law_title }}', 'change')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-up" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'change')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('forward', '{{ law_title }}', 'change')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'change')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('top', '{{ law_title }}', 'change')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                   </span>
@@ -195,21 +187,21 @@
               </div>
             </div>
           </article>
-          <article class="message new">
+          <article class="message new is-dark">
             <div class="message-header">
               Neue Fassung
               <div class="buttons has-addons">
-                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'new')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('back', '{{ law_title }}', 'new')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-up" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'new')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('forward', '{{ law_title }}', 'new')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'new')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('top', '{{ law_title }}', 'new')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                   </span>
