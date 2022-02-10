@@ -58,7 +58,7 @@ from lawinprogress.generate_diff import (
 def test_process_pdf(pdf_path, expected):
     """Test if pdfs are processed as expected."""
     expected_law_titles, expected_proposals_list = expected
-    law_titles, proposals_list = process_pdf(pdf_path)
+    law_titles, proposals_list, full_law_title = process_pdf(pdf_path)
     print(law_titles)
 
     assert len(law_titles) == len(expected_law_titles)
