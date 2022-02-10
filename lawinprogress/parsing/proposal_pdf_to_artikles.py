@@ -29,7 +29,10 @@ def extract_raw_proposal(text: str) -> str:
     """
     # extract the full title of the law
     full_law_title = re.search(r"\nEntwurf(.|\n)*?A.", text)[0].split("(")[0]
-    return re.split(r"\nArtikel 1.*?\n", text, maxsplit=1)[1].split("Begründung")[0], full_law_title
+    return (
+        re.split(r"\nArtikel 1.*?\n", text, maxsplit=1)[1].split("Begründung")[0],
+        full_law_title,
+    )
 
 
 def extract_separate_change_proposals(text: str) -> List[str]:
@@ -90,7 +93,8 @@ def extract_law_titles(proposals_list: List[str]) -> List[str]:
         last_line_is_title = False
         for line in proposal_lines:
             # add lines starting with Änderung or similar
-            if any(re.match(pattern, line)
+            if any(
+                re.match(pattern, line)
                 for pattern in [
                     "^#Änderung",
                     "^#Weitere\s*Änderung",

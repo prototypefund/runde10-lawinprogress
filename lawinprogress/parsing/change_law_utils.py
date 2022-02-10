@@ -47,7 +47,7 @@ def remove_newline_in_quoted_text(text: str, fix: bool = False) -> str:
                 open_quote_idx = open_quotes.pop()
             except IndexError as err:
                 if fix:
-                    open_quote_idx = char_idx              
+                    open_quote_idx = char_idx
                 else:
                     # more closing quotes than opening quotes.
                     raise QuotationMismatchError(
