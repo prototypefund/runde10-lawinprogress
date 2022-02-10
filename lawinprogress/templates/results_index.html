@@ -14,13 +14,13 @@
     <link rel="manifest" href="/imgs/site.webmanifest">
 </head>
 <body>
-  <section class="hero is-dark is-small">
+  <section class="hero has-background-grey-dark is-dark is-small">
     <!--HEADER-->
     <div class="hero-head">
-      <div class="container is-fluid" style="background-color: white;">
+      <div class="container is-fluid has-background-light">
         <nav class="navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
-            <a class="navbar-item">
+            <a class="navbar-item has-background-light">
               <img src="imgs/lip_logo.png" alt="Law in Progress Logo">
             </a>
             <span class="navbar-burger" data-target="navbarMenuHeroA">
@@ -33,13 +33,13 @@
             <div class="navbar-end">
               <span class="navbar-item">
               <div class="buttons">
-                <a class="button is-primary" href="mailto: bug@lawinprogress.de">
+                <a class="button is-dark has-background-grey-dark" href="mailto: bug@lawinprogress.de">
                   <span class="icon">
                     <i class="fa fa-bug"></i>
                   </span>
                   <span>Report a bug</span>
                 </a>
-                <a class="button is-primary" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
+                <a class="button is-dark has-background-grey-dark" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
                   <span class="icon">
                     <i class="fa fa-gitlab"></i>
                   </span>
@@ -73,7 +73,7 @@
               <div class="field has-addons">
                 <div class="dropdown is-active" onclick="this.classList.toggle('is-active')">
                   <div class="dropdown-trigger">
-                    <button class="button is-dark" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <button class="button is-dark has-background-grey-dark" aria-haspopup="true" aria-controls="dropdown-menu">
                       <span id="active-law">{{ result[0][0] }}</span>
                       <span class="icon is-small">
                         <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -143,7 +143,7 @@
     {% for law_title, n_changes, n_success, proposal_texts in result %}
       <div id="{{ law_title }}" class="tabcontent">
         <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
-          <article class="message old is-dark">
+          <article class="message old is-grey" style="margin-bottom: 0rem;">
             <div class="message-header">
               Alte Fassung
               <div class="buttons has-addons">
@@ -165,7 +165,7 @@
               </div>
             </div>
           </article>
-          <article class="message change is-dark">
+          <article class="message change is-grey" style="margin-bottom: 0rem;">
             <div class="message-header">
               Änderungsbefehl
               <div class="buttons has-addons">
@@ -187,7 +187,7 @@
               </div>
             </div>
           </article>
-          <article class="message new is-dark">
+          <article class="message new is-grey" style="margin-bottom: 0rem;">
             <div class="message-header">
               Neue Fassung
               <div class="buttons has-addons">
