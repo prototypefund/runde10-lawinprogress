@@ -27,7 +27,9 @@ def extract_raw_proposal(text: str) -> str:
     Returns:
         Proposal text.
     """
-    return re.split(r"\nArtikel 1.*?\n", text, maxsplit=1)[1].split("Begründung")[0]
+    # extract the full title of the law
+    full_law_title = re.search(r"\nEntwurf(.|\n)*?A.", text)[0].split("(")[0]
+    return re.split(r"\nArtikel 1.*?\n", text, maxsplit=1)[1].split("Begründung")[0], full_law_title
 
 
 def extract_separate_change_proposals(text: str) -> List[str]:

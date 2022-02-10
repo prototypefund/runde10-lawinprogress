@@ -48,13 +48,13 @@ def process_pdf(change_law_path: str) -> Tuple[List[str], List[str]]:
     change_law_raw = read_pdf_law(change_law_path)
 
     # idenfify the different laws affected
-    change_law_extract = extract_raw_proposal(change_law_raw)
+    change_law_extract, full_law_title = extract_raw_proposal(change_law_raw)
     proposals_list = extract_separate_change_proposals(change_law_extract)
     law_titles = extract_law_titles(proposals_list)
     law_titles, proposals_list = remove_inkrafttreten(law_titles, proposals_list)
     logging.info(law_titles)
     logging.info([proposal[:20] for proposal in proposals_list])
-    return law_titles, proposals_list
+    return law_titles, proposals_list, full_law_title
 
 
 def retrieve_source_law(search_title: str) -> List[dict]:
@@ -157,7 +157,7 @@ def generate_diff(change_law_path: str, output_path: str, html: bool):
     click.echo("\n" + "#" * 150 + "\n")
 
     # process the pdf
-    law_titles, proposals_list = process_pdf(change_law_path)
+    law_titles, proposals_list, full_law_title = process_pdf(change_law_path)
 
     # parse and apply changes for every law that should be changed
     for law_title, change_law_text in zip(law_titles, proposals_list):
