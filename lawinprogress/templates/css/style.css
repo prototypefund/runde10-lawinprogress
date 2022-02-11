@@ -1,3 +1,11 @@
+@font-face {
+  font-family: MerriweatherSans;
+  src: url(MerriweatherSans-Medium.ttf);
+}
+@font-face {
+  font-family: Merriweather-Regular;
+  src: url(Merriweather-Regular.ttf);
+}
 /* classes to style the tabs on the left  */
 
 * {
@@ -5,7 +13,7 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-body {font-family: "Lato", sans-serif;}
+body {font-family: MerriweatherSans;}
 
 /* Style the tab content */
 .tabcontent {
@@ -16,7 +24,7 @@ body {font-family: "Lato", sans-serif;}
 }
 
 .scrollable {
-  font-family: DejaVu Sans Mono;
+  font-family: Merriweather-Regular;
   overflow: auto;
   float: left;
   border-left: none;
