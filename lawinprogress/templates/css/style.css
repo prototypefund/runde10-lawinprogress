@@ -1,12 +1,19 @@
+@font-face {
+  font-family: MerriweatherSans;
+  src: url(MerriweatherSans-Medium.ttf);
+}
 /* classes to style the tabs on the left  */
 
-* {box-sizing: border-box}
-body {font-family: "Lato", sans-serif;}
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {font-family: MerriweatherSans;}
 
 /* Style the tab content */
 .tabcontent {
   float: left;
-  /*border: 0px solid #6D696A;*/
   width: 100%;
   border-left: none;
   height: 55vh;
@@ -16,7 +23,6 @@ body {font-family: "Lato", sans-serif;}
   overflow: auto;
   float: left;
   border-left: none;
-  padding: 3px 6px;
   height: 55vh;
 }
 
@@ -28,7 +34,6 @@ body {font-family: "Lato", sans-serif;}
   /*grid-template-columns: auto auto auto;*/
   grid-column-gap: 10px;
   grid-row-gap: 0px;
-  font-family: DejaVu Sans Mono;
 }
 
 .span-remove {
@@ -38,18 +43,18 @@ body {font-family: "Lato", sans-serif;}
 }
 
 .remove-bg {
-  background: #FFC2C8;
+  background: #ffcbbd;/*#FFC2C8;*/
   padding: 2px;
 }
 
 .span-add {
-  background: #27C43E;
+  background: #2ea769;/*#27C43E;*/
   border-radius: 3px;
   padding: 1px;
 }
 
 .add-bg {
-  background: #90F39F;
+  background: #c8f0da;/*#90F39F;*/
   padding: 2px;
 }
 

@@ -25,6 +25,7 @@ def parse_source_law(source_law: List[dict], law_title: str) -> LawTextNode:
     source_law_tree = LawTextNode(text=law_title, bulletpoint="Titel:")
     source_law_tree._id = None
 
+    html_pattern = re.compile(r'<.*?>')
     for law_item in source_law:
         # find the parent node
         parent_node = anytree.search.findall(
@@ -65,7 +66,7 @@ def parse_source_law(source_law: List[dict], law_title: str) -> LawTextNode:
         else:
             # else just clean and add a new node
             law_text = (
-                law_text.replace("<P>", "").replace("</P>", "")
+                html_pattern.sub("", law_text)
                 if law_text
                 else "(weggefallen)"
             )

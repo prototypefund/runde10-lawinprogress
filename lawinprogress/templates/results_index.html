@@ -4,8 +4,7 @@
     <title>Law In Progress</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/css/style.css">
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">-->
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/bulma.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
@@ -14,13 +13,13 @@
     <link rel="manifest" href="/imgs/site.webmanifest">
 </head>
 <body>
-  <section class="hero is-dark is-small">
+  <section class="hero has-background-grey-dark is-dark is-small">
     <!--HEADER-->
     <div class="hero-head">
-      <div class="container is-fluid">
+      <div class="container is-fluid has-background-light">
         <nav class="navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
-            <a class="navbar-item">
+            <a class="navbar-item has-background-light">
               <img src="imgs/lip_logo.png" alt="Law in Progress Logo">
             </a>
             <span class="navbar-burger" data-target="navbarMenuHeroA">
@@ -33,13 +32,13 @@
             <div class="navbar-end">
               <span class="navbar-item">
               <div class="buttons">
-                <a class="button is-primary is-light" href="mailto: bug@lawinprogress.de">
+                <a class="button is-dark has-background-grey-dark" href="mailto: bug@lawinprogress.de">
                   <span class="icon">
                     <i class="fa fa-bug"></i>
                   </span>
                   <span>Report a bug</span>
                 </a>
-                <a class="button is-light" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
+                <a class="button is-dark has-background-grey-dark" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
                   <span class="icon">
                     <i class="fa fa-gitlab"></i>
                   </span>
@@ -81,7 +80,7 @@
               <div class="field has-addons">
                 <div class="dropdown is-active" onclick="this.classList.toggle('is-active')">
                   <div class="dropdown-trigger">
-                    <button class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <button class="button is-dark has-background-grey-dark" aria-haspopup="true" aria-controls="dropdown-menu">
                       <span id="active-law">{{ result[0][0] }}</span>
                       <span class="icon is-small">
                         <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -151,21 +150,21 @@
     {% for law_title, n_changes, n_success, proposal_texts in result %}
       <div id="{{ law_title }}" class="tabcontent">
         <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
-          <article class="message old">
+          <article class="message old is-grey" style="margin-bottom: 0rem;">
             <div class="message-header">
               Alte Fassung
               <div class="buttons has-addons">
-                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'old')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('back', '{{ law_title }}', 'old')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-up" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'old')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('forward', '{{ law_title }}', 'old')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'old')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('top', '{{ law_title }}', 'old')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                   </span>
@@ -173,21 +172,21 @@
               </div>
             </div>
           </article>
-          <article class="message change">
+          <article class="message change is-grey" style="margin-bottom: 0rem;">
             <div class="message-header">
               Änderungsbefehl
               <div class="buttons has-addons">
-                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'change')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('back', '{{ law_title }}', 'change')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-up" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'change')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('forward', '{{ law_title }}', 'change')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'change')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('top', '{{ law_title }}', 'change')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                   </span>
@@ -195,21 +194,21 @@
               </div>
             </div>
           </article>
-          <article class="message new">
+          <article class="message new is-grey" style="margin-bottom: 0rem;">
             <div class="message-header">
               Neue Fassung
               <div class="buttons has-addons">
-                <button class="button is-small is-dark" onclick="scrolldiv('back', '{{ law_title }}', 'new')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('back', '{{ law_title }}', 'new')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-up" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('forward', '{{ law_title }}', 'new')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('forward', '{{ law_title }}', 'new')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-dark" onclick="scrolldiv('top', '{{ law_title }}', 'new')">
+                <button class="button is-small is-light is-outlined" onclick="scrolldiv('top', '{{ law_title }}', 'new')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                   </span>
@@ -221,6 +220,9 @@
         </div>
         <div class="scrollable">
           <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
+            <p class="old" id="scrolltarget-old-{{ law_title }}"></p>
+            <p class="change" id="scrolltarget-change-{{ law_title }}"></p>
+            <p class="new" id="scrolltarget-new-{{ law_title }}"></p>
             {% for line in proposal_texts %}
               {{ line[0]|safe }}
               {{ line[1]|safe }}
@@ -265,7 +267,7 @@ let num = 0;
 
 function scrolldiv(direction, lawTitle, type) {
   if (direction === "top"){
-    var elem = document.getElementById(lawTitle + "law-title");
+    var elem = document.getElementById("scrolltarget-new-" + lawTitle);
     elem.scrollIntoView();
     num = 0;
   }
