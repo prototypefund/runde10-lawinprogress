@@ -6,9 +6,15 @@ import regex as re
 
 from lawinprogress.parsing.lawtree import LawTextNode
 
+HTML_PATTERN = re.compile(r"<.*?>")
+
 
 def clean_up_structured_string(string: str) -> str:
     """Remove table structure and replace by appropriate newlines for parsing."""
+    # remove footnote links
+    string = re.sub(r"<SUP.*?SUP\>", "", string)
+
+    # remove other structured tags
     string = re.sub(r"<DL.*?>", "", string)
     string = re.sub(r"</DL>", "", string)
     strings = [
@@ -25,7 +31,6 @@ def parse_source_law(source_law: List[dict], law_title: str) -> LawTextNode:
     source_law_tree = LawTextNode(text=law_title, bulletpoint="Titel:")
     source_law_tree._id = None
 
-    html_pattern = re.compile(r'<.*?>')
     for law_item in source_law:
         # find the parent node
         parent_node = anytree.search.findall(
@@ -65,11 +70,7 @@ def parse_source_law(source_law: List[dict], law_title: str) -> LawTextNode:
             )
         else:
             # else just clean and add a new node
-            law_text = (
-                html_pattern.sub("", law_text)
-                if law_text
-                else "(weggefallen)"
-            )
+            law_text = HTML_PATTERN.sub("", law_text) if law_text else "(weggefallen)"
 
             new_node = LawTextNode(
                 text=law_text,
@@ -108,7 +109,9 @@ def parse_source_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:
             split_text = re.split(pattern, text)
             for idx, match in enumerate(re.finditer(pattern, text)):
                 new_node = LawTextNode(
-                    text=re.split("|".join(patterns), split_text[idx + 1].strip())[0],
+                    text=HTML_PATTERN.sub(
+                        "", re.split("|".join(patterns), split_text[idx + 1].strip())[0]
+                    ),
                     # store the text for this bullet point on this level
                     bulletpoint=text[match.span()[0] : match.span()[1]].strip(),
                     # apply the function recursively to get all levels

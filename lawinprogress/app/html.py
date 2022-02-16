@@ -65,7 +65,9 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
         logger.info(f"Processing {change_law_pdf.filename}...")
 
         results, n_changes, n_success = [], [], []
-        for law_title, change_law_text in zip(law_titles, proposals_list):
+        for law_idx, (law_title, change_law_text) in enumerate(
+            zip(law_titles, proposals_list)
+        ):
             logger.info(f"Started processing change for {law_title}...")
             # find and load the source law
             source_law = retrieve_source_law(law_title)
@@ -98,13 +100,14 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
                 parsed_law_tree.to_text(),
                 res_law_tree.to_text(),
                 applied_change_results,
-                title=law_title,
+                title=f"{law_idx+1}. {law_title}",
             )
             results.append(html_side_by_side)
             n_changes.append(len(change_requests))
             n_success.append(n_succesfull_applied_changes)
 
         # prepare the html output and return it
+        law_titles = [f"{idx+1}. {title}" for idx, title in enumerate(law_titles)]
         result = list(zip(law_titles, n_changes, n_success, results))
         return templates.TemplateResponse(
             "results_index.html",

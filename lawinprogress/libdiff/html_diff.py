@@ -117,10 +117,7 @@ def html_sidebyside(
             change.append('<div class="change-bg change"></div>')
             new.append(f'<div style="padding: 2px;" class="new">{right}</div>')
 
-    # return lines
-    return [
-        (old_i, change_i, new_i) for old_i, change_i, new_i in zip(old, change, new)
-    ]
+    return list(zip(old, change, new))
 
 
 def html_diffs(

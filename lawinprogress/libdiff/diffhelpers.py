@@ -22,6 +22,7 @@ def sentencize(string: str) -> List[str]:
 def align_seqs(
     seq_a: List[str], seq_b: List[str], fill: str = ""
 ) -> Tuple[List[str], List[str]]:
+    """Align two sequences with a filler."""
     out_a, out_b = [], []
     seqmatcher = difflib.SequenceMatcher(a=seq_a, b=seq_b, autojunk=False)
     for _, idx_a0, idx_a1, idx_b0, idx_b1 in seqmatcher.get_opcodes():
