@@ -4,6 +4,9 @@ cache:
   paths:
     - /.poetry/bin/
 
+variables:
+  coverage_report_view: "true"
+
 before_script:
   - test -e $HOME/.poetry/bin/ || curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
   - export PATH="$PATH:$HOME/.poetry/bin/" 
@@ -26,4 +29,11 @@ unit-test-job:
   stage: test
   script:
     - echo "Running unit tests..."
-    - make test
+    - poetry run coverage run -m pytest tests/
+    - poetry run coverage report
+    - poetry run coverage xml
+  artifacts:
+    paths:
+    - ./coverage.xml
+    reports:
+      cobertura: coverage.xml
