@@ -65,7 +65,9 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
         logger.info(f"Processing {change_law_pdf.filename}...")
 
         results, n_changes, n_success = [], [], []
-        for law_idx, (law_title, change_law_text) in enumerate(zip(law_titles, proposals_list)):
+        for law_idx, (law_title, change_law_text) in enumerate(
+            zip(law_titles, proposals_list)
+        ):
             logger.info(f"Started processing change for {law_title}...")
             # find and load the source law
             source_law = retrieve_source_law(law_title)
