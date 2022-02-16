@@ -62,6 +62,7 @@ def generate_diff(request: Request, change_law_pdf: UploadFile = Form(...)):
     """
     try:
         law_titles, proposals_list, full_law_title = process_pdf(change_law_pdf.file)
+        law_titles = [f"{idx+1}. {title}" for idx, title in enumerate(law_titles)]
         logger.info(f"Processing {change_law_pdf.filename}...")
 
         results, n_changes, n_success = [], [], []
