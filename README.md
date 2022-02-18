@@ -15,6 +15,9 @@
     <a href="">Report Bug</a>
     ·
     <a href="mailto: hello@lawinprogress.de">Request Feature</a>
+    <br />
+    <br />
+    <img src="resources/law_in_progress_how_to.gif" alt="Law in Progress - How to">
   </p>
 </div>
 
@@ -74,4 +77,4 @@ To run the tests, run `make test`.
 
 ## Acknowledgements
 
-* Funded from September 2021 until February 2022 by ![logos of the "Bundesministerium für Bildung und Forschung", Prodotype Fund and OKFN-Deutschland](doc/pf_funding_logos.svg)
+* Funded from September 2021 until February 2022 by ![logos of the "Bundesministerium für Bildung und Forschung", Prodotype Fund and OKFN-Deutschland](resources/pf_funding_logos.svg)
