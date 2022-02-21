@@ -1,6 +1,6 @@
 @font-face {
-  font-family: MerriweatherSans;
-  src: url(MerriweatherSans-Medium.ttf);
+  font-family: OpenSans;
+  src: url(OpenSans-Regular.ttf);
 }
 /* classes to style the tabs on the left  */
 
@@ -9,7 +9,7 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-body {font-family: MerriweatherSans;}
+body {font-family: OpenSans;}
 
 /* Style the tab content */
 .tabcontent {
