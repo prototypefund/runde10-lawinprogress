@@ -4,13 +4,13 @@
     <title>Law In Progress</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/bulma.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
+    <link rel="stylesheet" href="{{ url_for('css', path='/bulma.css') }}">
+    <link rel="stylesheet" href="{{ url_for('css', path='/style.css') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('imgs', path='/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('imgs', path='/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('imgs', path='/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('imgs', path='/site.webmanifest') }}">
     <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
-    <link rel="manifest" href="/imgs/site.webmanifest">
 </head>
 <body>
   <section class="hero has-background-grey-dark is-dark is-small">
@@ -20,7 +20,7 @@
         <nav class="navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
             <a class="navbar-item has-background-light">
-              <img src="imgs/lip_logo.png" alt="Law in Progress Logo">
+              <img src="{{ url_for('imgs', path='/lip_logo.png') }}" alt="Law in Progress">
             </a>
             <span class="navbar-burger" data-target="navbarMenuHeroA">
               <span></span>

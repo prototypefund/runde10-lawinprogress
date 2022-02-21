@@ -4,12 +4,12 @@
     <title>Law In Progress</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/bulma.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
-    <link rel="manifest" href="/imgs/site.webmanifest">
+    <link rel="stylesheet" href="{{ url_for('css', path='/bulma.css') }}">
+    <link rel="stylesheet" href="{{ url_for('css', path='/style.css') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('imgs', path='/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('imgs', path='/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('imgs', path='/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('imgs', path='/site.webmanifest') }}">
     <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
   </head>
   <body>
@@ -20,7 +20,7 @@
           <div class="container">
             <div class="navbar-brand">
               <a class="navbar-item">
-                <img src="imgs/lip_logo.png" alt="Law in Progress">
+                <img src="{{ url_for('imgs', path='/lip_logo.png') }}" alt="Law in Progress">
               </a>
               <span class="navbar-burger" data-target="navbarMenuHeroC">
                 <span></span>
@@ -55,7 +55,7 @@
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
         <div class="container has-text-centered">
-          <img src="imgs/lip_logo.png" alt="Law in Progress" width="500">
+          <img src="{{ url_for('imgs', path='/lip_logo.png') }}" alt="Law in Progress" width="500">
           <p class="title">
           </p>
         </div>
@@ -89,7 +89,7 @@
               <p>Gefördert von</p>
             </div>
             <div class="message-body content has-text-centered">
-              <a href="https://prototypefund.de/en/project/law-in-progress/" target="_blank" rel="noopener noreferrer"><object alt="prototype fund logo" data="imgs/pf_funding_logos.svg" width="364" height="105"> </object></a>
+              <a href="https://prototypefund.de/en/project/law-in-progress/" target="_blank" rel="noopener noreferrer"><object alt="prototype fund logo" data="{{ url_for('imgs', path='/pf_funding_logos.svg') }}" width="364" height="105"> </object></a>
             </div>
           </article>
         </div>
