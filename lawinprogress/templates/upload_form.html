@@ -68,9 +68,9 @@
             </div>
             <div class="message-body content">
               <center>
-              <form method="post" enctype="multipart/form-data">
-                <input class="button" type="file" name="change_law_pdf" value=""/>
-                  <button class="button is-dark has-background-grey-dark" id="upload-button" type="submit" value="Hochladen" onclick="this.className += ' ' + 'is-loading'">Hochladen</button>
+              <form method="post" enctype="multipart/form-data" onsubmit="document.getElementById('upload-button').className += ' ' + 'is-loading'">
+                <input class="button" type="file" name="change_law_pdf" value="" required oninvalid="this.setCustomValidity('Wähle bitte ein PDF aus.')" />
+                  <button class="button is-dark has-background-grey-dark" id="upload-button" type="submit" value="Hochladen" >Hochladen</button>
               </form>
               </center>
               <hr>
