@@ -62,3 +62,10 @@ body {font-family: OpenSans;}
   background: #F0EDE6;
   padding: 2px;
 }
+
+/* Style the image inside the centered container, if needed */
+.responsive {
+  width: 100%;
+  max-width: 364px;
+  height: auto;
+}
