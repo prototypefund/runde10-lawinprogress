@@ -1,27 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Law In Progress</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('css', path='/bulma.css') }}">
-    <link rel="stylesheet" href="{{ url_for('css', path='/style.css') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('imgs', path='/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('imgs', path='/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('imgs', path='/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ url_for('imgs', path='/site.webmanifest') }}">
-    <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
-  </head>
-  <body>
-    <section class="section">
-    <div class="container">
-      <div class="notification is-primary is-danger is-light">
-	 <center>
-      <img src="{{ url_for('imgs', path='/lip_logo.png') }}" alt="Law in Progress" width="500">
-	    <h1 class="title">Something went wrong</h1>
-	 </center>
+
+<head>
+  <title>Law In Progress</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('css', path='/bulma.css') }}">
+  <link rel="stylesheet" href="{{ url_for('css', path='/style.css') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('imgs', path='/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('imgs', path='/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('imgs', path='/favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('imgs', path='/site.webmanifest') }}">
+  <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
+</head>
+
+<body>
+  <section class="hero">
+    <!-- Hero head: will stick at the top -->
+    <div class="hero-head">
+      <header class="navbar">
+        <div class="container">
+          <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+              <img src="{{ url_for('imgs', path='/lip-sym-frame-512.png') }}" alt="Law in Progress">
+            </a>
+          </div>
+          <div id="navbarMenuHeroA" class="navbar-menu">
+            <div class="navbar-end">
+              <span class="navbar-item">
+                <div class="buttons">
+                  <a class="button is-dark has-background-grey-dark" href="mailto: bug@lawinprogress.de">
+                    <span class="icon">
+                      <i class="fa fa-bug"></i>
+                    </span>
+                    <span>Report a bug</span>
+                  </a>
+                  <a class="button is-dark has-background-grey-dark" href="https://gitlab.com/nototast/lawinprogress"
+                    target="_blank">
+                    <span class="icon">
+                      <i class="fa fa-gitlab"></i>
+                    </span>
+                    <span>Source Code</span>
+                  </a>
+                </div>
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+    <!-- Hero content: will be in the middle -->
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="container">
+          <div class="notification is-primary is-danger is-light">
+            <center>
+              <img src="{{ url_for('imgs', path='/Logo_no_bg.png') }}" alt="Law in Progress" width="500">
+              <h1 class="title">Da ist etwas schiefgelaufen...</h1>
+              <a class="button is-dark has-background-grey-dark" href="/">
+                <span class="icon">
+                  <i class="fa fa-undo"></i>
+                </span>
+                <span>Nochmal versuchen</span>
+              </a>
+            </center>
+          </div>
+        </div>
       </div>
     </div>
-    </section>
-  </body>
+  </section>
+</body>
+
 </html>

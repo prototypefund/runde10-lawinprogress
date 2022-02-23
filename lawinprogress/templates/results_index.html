@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>Law In Progress</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('css', path='/bulma.css') }}">
-    <link rel="stylesheet" href="{{ url_for('css', path='/style.css') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('imgs', path='/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('imgs', path='/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('imgs', path='/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ url_for('imgs', path='/site.webmanifest') }}">
-    <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
+  <title>Law In Progress</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('css', path='/bulma.css') }}">
+  <link rel="stylesheet" href="{{ url_for('css', path='/style.css') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('imgs', path='/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('imgs', path='/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('imgs', path='/favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('imgs', path='/site.webmanifest') }}">
+  <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
 </head>
+
 <body>
   <section class="hero has-background-grey-dark is-dark is-small">
     <!--HEADER-->
@@ -19,32 +21,28 @@
       <div class="container is-fluid has-background-light">
         <nav class="navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
-            <a class="navbar-item has-background-light" href="#">
-              <img src="{{ url_for('imgs', path='/lip_logo.png') }}" alt="Law in Progress">
+            <a class="navbar-item has-background-light" href="/">
+              <img src="{{ url_for('imgs', path='/lip-sym-frame-512.png') }}" alt="Law in Progress">
             </a>
-            <span class="navbar-burger" data-target="navbarMenuHeroA">
-              <span></span>
-              <span></span>
-              <span></span>
-            </span>
           </div>
           <div id="navbarMenuHeroA" class="navbar-menu">
             <div class="navbar-end">
               <span class="navbar-item">
-              <div class="buttons">
-                <a class="button is-dark has-background-grey-dark" href="mailto: bug@lawinprogress.de">
-                  <span class="icon">
-                    <i class="fa fa-bug"></i>
-                  </span>
-                  <span>Report a bug</span>
-                </a>
-                <a class="button is-dark has-background-grey-dark" href="https://gitlab.com/nototast/lawinprogress" target="_blank">
-                  <span class="icon">
-                    <i class="fa fa-gitlab"></i>
-                  </span>
-                  <span>Source Code</span>
-                </a>
-              </div>
+                <div class="buttons">
+                  <a class="button is-dark has-background-grey-dark" href="mailto: bug@lawinprogress.de">
+                    <span class="icon">
+                      <i class="fa fa-bug"></i>
+                    </span>
+                    <span>Report a bug</span>
+                  </a>
+                  <a class="button is-dark has-background-grey-dark" href="https://gitlab.com/nototast/lawinprogress"
+                    target="_blank">
+                    <span class="icon">
+                      <i class="fa fa-gitlab"></i>
+                    </span>
+                    <span>Source Code</span>
+                  </a>
+                </div>
               </span>
             </div>
           </div>
@@ -52,7 +50,6 @@
       </div>
     </div>
     <div class="hero-body">
-      <!--Info bar-->
       <!--Info bar-->
       <div class="block">
         <div class="container is-fluid">
@@ -63,17 +60,18 @@
       </div>
       <!--Select law-->
       <div class="box container is-fluid">
-        <nav class="level">
+        <nav class="level is-inline-block-tablet-only">
           <!-- Left side -->
           <div class="level-left">
             <div class="level-item">
-                <strong>betroffenes Gesetz auswählen</strong>:
+              <strong>betroffenes Gesetz auswählen</strong>:
             </div>
             <div class="level-item">
               <div class="field has-addons">
                 <div class="dropdown is-active" onclick="this.classList.toggle('is-active')">
                   <div class="dropdown-trigger">
-                    <button class="button is-dark has-background-grey-dark" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <button class="button is-dark has-background-grey-dark" aria-haspopup="true"
+                      aria-controls="dropdown-menu">
                       <span id="active-law">{{ result[0][0] }}</span>
                       <span class="icon is-small">
                         <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -83,9 +81,11 @@
                   <div class="dropdown-menu" id="dropdown-menu" role="menu">
                     <div class="dropdown-content">
                       {% for law_title, n_changes, n_success, proposal_text in result %}
-                        <a class="dropdown-item tablinks" onclick="openLaw(event, '{{ law_title }}', '{{ n_changes }}', '{{ n_success }}')" id="defaultOpen">
-                          {{ law_title }}
-                        </a>
+                      <a class="dropdown-item tablinks"
+                        onclick="openLaw(event, '{{ law_title }}', '{{ n_changes }}', '{{ n_success }}')"
+                        id="defaultOpen">
+                        {{ law_title }}
+                      </a>
                       {% endfor %}
                     </div>
                   </div>
@@ -94,7 +94,7 @@
             </div>
           </div>
           <!-- Right side -->
-          <div class="level-right">
+          <div class="level-right py-2">
             <p class="level-item" id="n_changes"><strong>NaN Änderungen</strong></p>
             <p class="level-item tag is-success" id="n_success">NaN Angewandt</p>
             <p class="level-item tag is-danger" id="n_failure">NaN nicht zuortbar</p>
@@ -108,7 +108,7 @@
           <!-- Left side-->
           <div class="level-right">
           </div>
-        
+
           <!-- Right side -->
           <div class="level-right">
             <p class="level-item">
@@ -140,24 +140,27 @@
   <section class="hero">
     <!--Diff part-->
     <div class="hero-body">
-    {% for law_title, n_changes, n_success, proposal_texts in result %}
+      {% for law_title, n_changes, n_success, proposal_texts in result %}
       <div id="{{ law_title }}" class="tabcontent">
         <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
           <article class="message old is-grey" style="margin-bottom: 0rem;">
             <div class="message-header">
               Alte Fassung
               <div class="buttons has-addons">
-                <button class="button is-small is-light is-outlined" onclick="scrolldiv('back', '{{ law_title }}', 'old')">
+                <button class="button is-small is-light is-outlined"
+                  onclick="scrolldiv('back', '{{ law_title }}', 'old')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-up" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-light is-outlined" onclick="scrolldiv('forward', '{{ law_title }}', 'old')">
+                <button class="button is-small is-light is-outlined"
+                  onclick="scrolldiv('forward', '{{ law_title }}', 'old')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-light is-outlined" onclick="scrolldiv('top', '{{ law_title }}', 'old')">
+                <button class="button is-small is-light is-outlined"
+                  onclick="scrolldiv('top', '{{ law_title }}', 'old')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                   </span>
@@ -169,17 +172,20 @@
             <div class="message-header">
               Änderungsbefehl
               <div class="buttons has-addons">
-                <button class="button is-small is-light is-outlined" onclick="scrolldiv('back', '{{ law_title }}', 'change')">
+                <button class="button is-small is-light is-outlined"
+                  onclick="scrolldiv('back', '{{ law_title }}', 'change')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-up" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-light is-outlined" onclick="scrolldiv('forward', '{{ law_title }}', 'change')">
+                <button class="button is-small is-light is-outlined"
+                  onclick="scrolldiv('forward', '{{ law_title }}', 'change')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-light is-outlined" onclick="scrolldiv('top', '{{ law_title }}', 'change')">
+                <button class="button is-small is-light is-outlined"
+                  onclick="scrolldiv('top', '{{ law_title }}', 'change')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                   </span>
@@ -191,17 +197,20 @@
             <div class="message-header">
               Neue Fassung
               <div class="buttons has-addons">
-                <button class="button is-small is-light is-outlined" onclick="scrolldiv('back', '{{ law_title }}', 'new')">
+                <button class="button is-small is-light is-outlined"
+                  onclick="scrolldiv('back', '{{ law_title }}', 'new')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-up" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-light is-outlined" onclick="scrolldiv('forward', '{{ law_title }}', 'new')">
+                <button class="button is-small is-light is-outlined"
+                  onclick="scrolldiv('forward', '{{ law_title }}', 'new')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-                <button class="button is-small is-light is-outlined" onclick="scrolldiv('top', '{{ law_title }}', 'new')">
+                <button class="button is-small is-light is-outlined"
+                  onclick="scrolldiv('top', '{{ law_title }}', 'new')">
                   <span class="icon is-small">
                     <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                   </span>
@@ -209,7 +218,8 @@
               </div>
             </div>
           </article>
-          <p></p> <!--For some weird reason this removes the box under the last message header...-->
+          <p></p>
+          <!--For some weird reason this removes the box under the last message header...-->
         </div>
         <div class="scrollable">
           <div class="diff-layout" style="grid-template-columns: 1fr 1fr 1fr;">
@@ -217,100 +227,101 @@
             <p class="change" id="scrolltarget-change-{{ law_title }}"></p>
             <p class="new" id="scrolltarget-new-{{ law_title }}"></p>
             {% for line in proposal_texts %}
-              {{ line[0]|safe }}
-              {{ line[1]|safe }}
-              {{ line[2]|safe }}
+            {{ line[0]|safe }}
+            {{ line[1]|safe }}
+            {{ line[2]|safe }}
             {% endfor %}
           </div>
         </div>
       </div>
-    {% endfor %}
+      {% endfor %}
     </div>
   </section>
-<script>
-// manage the tab content
-function openLaw(evt, lawTitle, nChanges, nSuccess) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(lawTitle).style.display = "block";
-  evt.currentTarget.className += " active";
+  <script>
+    // manage the tab content
+    function openLaw(evt, lawTitle, nChanges, nSuccess) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(lawTitle).style.display = "block";
+      evt.currentTarget.className += " active";
 
-  // change the active law in dropdown
-  document.getElementById("active-law").innerHTML = lawTitle;
+      // change the active law in dropdown
+      document.getElementById("active-law").innerHTML = lawTitle;
 
-  // change the number of changes for the active law in UI
-  document.getElementById("n_changes").innerHTML = "<strong>" + nChanges + " Änderungen</strong>";
-  document.getElementById("n_success").innerHTML = nSuccess + " angewandt";
-  document.getElementById("n_failure").innerHTML = (parseInt(nChanges) - parseInt(nSuccess)) + " nicht zuortbar";
-}
-
-// Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
-</script>
-<script>
-// up and down buttons
-let num = 0;
-
-function scrolldiv(direction, lawTitle, type) {
-  if (direction === "top"){
-    var elem = document.getElementById("scrolltarget-new-" + lawTitle);
-    elem.scrollIntoView();
-    num = 0;
-  }
-  if (num < 0) {
-    num = 0;
-  }
-  try {
-    if (direction === "forward"){
-      var elem = document.getElementById(lawTitle + type + "-" + num);
-      elem.scrollIntoView();
-      num += 1;
+      // change the number of changes for the active law in UI
+      document.getElementById("n_changes").innerHTML = "<strong>" + nChanges + " Änderungen</strong>";
+      document.getElementById("n_success").innerHTML = nSuccess + " angewandt";
+      document.getElementById("n_failure").innerHTML = (parseInt(nChanges) - parseInt(nSuccess)) + " nicht zuortbar";
     }
-    if (direction === "back" && num > 0){
-      var elem = document.getElementById(lawTitle + type + "-" + num);
-      elem.scrollIntoView();
-      num -= 1;
-    }
-  }
-  catch {
-    num -= 1;
-  }
-}
-</script>
-<script>
-  // handle the hidding of columns with checkboxes
-  function toggleColumn(column) {
-    // Get the checkbox
-    var checkBox = document.getElementById("check_"+column);
-    // Get the column elements
-    column_elem = document.getElementsByClassName(column);
-    grid_layouts = document.getElementsByClassName("diff-layout");
 
-    // If the checkbox is checked, display the output text
-    if (checkBox.checked == true){
-      for (i = 0; i < column_elem.length; i++) {
-        column_elem[i].style.display = "block";
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+  </script>
+  <script>
+    // up and down buttons
+    let num = 0;
+
+    function scrolldiv(direction, lawTitle, type) {
+      if (direction === "top") {
+        var elem = document.getElementById("scrolltarget-new-" + lawTitle);
+        elem.scrollIntoView();
+        num = 0;
       }
-      for (i = 0; i < grid_layouts.length; i++) {
-        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns + " 1fr";
+      if (num < 0) {
+        num = 0;
       }
-    } else {
-      for (i = 0; i < column_elem.length; i++) {
-        column_elem[i].style.display = "none";
+      try {
+        if (direction === "forward") {
+          var elem = document.getElementById(lawTitle + type + "-" + num);
+          elem.scrollIntoView();
+          num += 1;
+        }
+        if (direction === "back" && num > 0) {
+          var elem = document.getElementById(lawTitle + type + "-" + num);
+          elem.scrollIntoView();
+          num -= 1;
+        }
       }
-      for (i = 0; i < grid_layouts.length; i++) {
-        grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns.slice(0, grid_layouts[i].style.gridTemplateColumns.length - 4);
+      catch {
+        num -= 1;
       }
     }
-  }
-  toggleColumn("change")
-</script>
+  </script>
+  <script>
+    // handle the hidding of columns with checkboxes
+    function toggleColumn(column) {
+      // Get the checkbox
+      var checkBox = document.getElementById("check_" + column);
+      // Get the column elements
+      column_elem = document.getElementsByClassName(column);
+      grid_layouts = document.getElementsByClassName("diff-layout");
+
+      // If the checkbox is checked, display the output text
+      if (checkBox.checked == true) {
+        for (i = 0; i < column_elem.length; i++) {
+          column_elem[i].style.display = "block";
+        }
+        for (i = 0; i < grid_layouts.length; i++) {
+          grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns + " 1fr";
+        }
+      } else {
+        for (i = 0; i < column_elem.length; i++) {
+          column_elem[i].style.display = "none";
+        }
+        for (i = 0; i < grid_layouts.length; i++) {
+          grid_layouts[i].style.gridTemplateColumns = grid_layouts[i].style.gridTemplateColumns.slice(0, grid_layouts[i].style.gridTemplateColumns.length - 4);
+        }
+      }
+    }
+    toggleColumn("change")
+  </script>
 </body>
-</html> 
+
+</html>
