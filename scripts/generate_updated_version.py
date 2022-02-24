@@ -1,7 +1,7 @@
 """Main script to generate an updated version of the source law due to a change law pdf.
 
 Example usage:
-    poetry run python ./lawinprogress/generate_updated_version.py -c data/0483-21.pdf
+    poetry run python ./scripts/generate_updated_version.py -c data/0483-21.pdf
 """
 import os
 
