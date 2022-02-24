@@ -1,5 +1,6 @@
 """Classes and functions to get and handle source laws from rechtsinformationsportal."""
 import json
+import logging
 import os
 from functools import lru_cache
 from itertools import chain
@@ -9,6 +10,16 @@ import requests
 from rapidfuzz import fuzz, process
 
 SOURCE_LAW_LOOKUP_PATH = "./data/source_laws/rechtsinformationsportalAPI.json"
+
+
+def retrieve_source_law(search_title: str) -> List[dict]:
+    """Retrieve the soruce law from the API."""
+    slug = FuzzyLawSlugRetriever.fuzzyfind(search_title)
+    logging.info(f"Identified slug: {slug}")
+
+    if slug:
+        return get_source_law_rechtsinformationsportal(slug)
+    return None
 
 
 @lru_cache(maxsize=16)

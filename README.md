@@ -36,30 +36,32 @@ Run `make app` to start the webapp at `localhost:8000`.
 ├── Makefile             --> Make target for setup, testing and cleaning
 ├── logging.conf         --> Configuration for the loggers used in this project
 ├── data/                --> Folder with some raw files of laws in text and pdf
+├── scripts/             --> Folder with scripts to process laws and update the app
 ├── doc/                 --> Documentation and notes
 ├── notebooks/           --> Experimental notebooks
 ├── lawinprogress/       --> Main package
 │   ├── __init__.py
-│   ├── generate_diff.py --> main script to generate a diff from a change law
-│   ├── parsing/         --> modules to parse source and change laws
-│   ├── apply_changes/   --> modules to apply the proposed changes to source laws
 │   ├── app/             --> contains the FastAPI webapp.
+│   ├── templates/       --> contains html templates that power the webapp
+│   ├── apply_changes/   --> modules to apply the proposed changes to source laws
+│   ├── processing/      --> modules to process change law pdfs and extract required text
+│   ├── parsing/         --> modules to parse source and change laws
 │   └── libdiff/         --> modules to generate a html diff of the changed law
-└── tests/               --> Test for the main package
+└── tests/               --> Test for the package
     ├── ...
     └── __init__.py
 ```
 
 
 ## Example usage as a script
-To generate a diff for an exisiting change law, run
+To generate an updated version of the affected source_laws given a change law pdf, run
 
 ```bash
-poetry run python ./lawinprogress/generate_diff.py -c data/0483-21.pdf --html
+poetry run python ./scripts/generate_updated_version.py -c data/2000275.pdf
 ```
 
-This will generate a before and after version of the changed laws, as well as a html file highlighting the diffs in `./output`.
-Currently only changes in laws present in `./data/source_laws/` are supported. Other changes will be skipped.
+This will generate a before and after version of the changed laws in `./output`.
+
 
 ## Code checks & tests
 

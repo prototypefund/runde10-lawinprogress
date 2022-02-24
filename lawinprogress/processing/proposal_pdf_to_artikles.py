@@ -1,8 +1,32 @@
 """Functions to process a raw pdf and extract clean titles and proposals."""
+import logging
 from typing import List, Tuple
 
 import pdfplumber
 import regex as re
+
+
+def process_pdf(change_law_path: str) -> Tuple[List[str], List[str]]:
+    """Wrapper function to process pdf of change law.
+
+    Args:
+      change_law_path: Path to the pdf in question.
+
+    Returns:
+      List of law titles affected by the change law.
+      List of texts of the change requests.
+    """
+    # read the change law
+    change_law_raw = read_pdf_law(change_law_path)
+
+    # idenfify the different laws affected
+    change_law_extract, full_law_title = extract_raw_proposal(change_law_raw)
+    proposals_list = extract_separate_change_proposals(change_law_extract)
+    law_titles = extract_law_titles(proposals_list)
+    law_titles, proposals_list = remove_inkrafttreten(law_titles, proposals_list)
+    logging.info(law_titles)
+    logging.info([proposal[:20] for proposal in proposals_list])
+    return law_titles, proposals_list, full_law_title
 
 
 def read_pdf_law(filename: str) -> str:

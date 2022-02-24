@@ -2,7 +2,7 @@
 import pytest
 import requests
 
-from lawinprogress.source_law_api import (
+from lawinprogress.processing.source_law_retrieval import (
     FuzzyLawSlugRetriever,
     get_source_law_rechtsinformationsportal,
 )
