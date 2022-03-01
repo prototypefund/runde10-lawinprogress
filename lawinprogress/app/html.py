@@ -52,7 +52,7 @@ async def log_requests(request: Request, call_next):
 @app.get("/")
 async def upload_pdf(request: Request):
     """Get the upload form page."""
-    result = "Lade einen Entwurf eines Änderungsgesetztes hoch:"
+    result = "Lade einen Entwurf eines Änderungsgesetzes hoch:"
     return templates.TemplateResponse(
         "upload_form.html", context={"request": request, "result": result}
     )
