@@ -54,7 +54,7 @@ def parse_source_law(source_law: List[dict], law_title: str) -> LawTextNode:
             elif law_item.get("body"):
                 law_text = law_item.get("body")
             else:
-                law_text = "EMPTY"
+                law_text = ""
 
         # if the text body contains more structure, parse it here
         if law_text and (law_text.count("<P>") > 1 or "<DL" in law_text):

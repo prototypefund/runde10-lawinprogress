@@ -4,10 +4,11 @@ from typing import List
 
 import regex as re
 
+from lawinprogress.parsing.change_law_utils import preprocess_raw_law
 from lawinprogress.parsing.lawtree import LawTextNode
 
 
-@dataclass  # (frozen=True)
+@dataclass
 class Change:
     """Class for storing a change request."""
 
@@ -16,6 +17,47 @@ class Change:
     text: List[str]
     change_type: str
     raw_text: str
+
+
+def parse_changes(
+    change_law_text: str,
+    law_title: str,
+) -> List[Change]:
+    """Wrapper function to parse and changes from the change law text.
+
+    Args:
+      change_law_text: Text of the change law.
+      law_title: Title of the affected law.
+
+    Returns:
+      List of requested Changes.
+    """
+    # format the change requests and parse them to tree
+    clean_change_law = preprocess_raw_law(change_law_text)
+    parsed_change_law_tree = LawTextNode(text=law_title, bulletpoint="Titel:")
+    parsed_change_law_tree = parse_change_law_tree(
+        text=clean_change_law, source_node=parsed_change_law_tree
+    )
+
+    # parse the change requests in a structured line format
+    all_change_lines = []
+    # collect all paths to tree leaves and join them in the right order
+    for leaf_node in parsed_change_law_tree.leaves:
+        path = [str(leaf_node)]
+        node = leaf_node
+        while node.parent:
+            node = node.parent
+            path.append(str(node))
+        change_line = " ".join(path[::-1][1:])
+        all_change_lines.append(change_line)
+
+    # parse the change request lines to changes
+    change_requests = []
+    for change_request_line in all_change_lines:
+        res = parse_change_request_line(change_request_line)
+        if res:
+            change_requests.extend(res)
+    return change_requests
 
 
 def parse_change_law_tree(text: str, source_node: LawTextNode) -> LawTextNode:

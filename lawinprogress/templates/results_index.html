@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
-  <title>Law In Progress</title>
+  <title>Law In Progress | App</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('css', path='/bulma.css') }}">
@@ -13,7 +13,6 @@
   <link rel="manifest" href="{{ url_for('imgs', path='/site.webmanifest') }}">
   <script src="https://use.fontawesome.com/b6e2d20fed.js"></script>
 </head>
-
 <body>
   <section class="hero has-background-grey-dark is-dark is-small">
     <!--HEADER-->
@@ -29,6 +28,12 @@
             <div class="navbar-end">
               <span class="navbar-item">
                 <div class="buttons">
+                  <a class="button is-dark has-background-grey-dark" href="https://lawinprogress.de/faq.html" target="_blank">
+                    <span class="icon">
+                      <i class="fa fa-question"></i>
+                    </span>
+                    <span>FAQ</span>
+                  </a>
                   <a class="button is-dark has-background-grey-dark" href="mailto: bug@lawinprogress.de">
                     <span class="icon">
                       <i class="fa fa-bug"></i>
@@ -323,5 +328,4 @@
     toggleColumn("change")
   </script>
 </body>
-
 </html>
