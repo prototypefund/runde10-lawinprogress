@@ -10,9 +10,11 @@
     Aktuell werden nur Entwürfe von Bundesgesetzen unterstützt. Später sollen auch Entwürfe von Landesgesetzen genutzt werden können.
     <br />
     <br />
-    <a href="https://www.app.lawinprogress.de">View Demo</a>
+    <a href="http://app.lawinprogress.de">View Demo</a>
     ·
-    <a href="">Report Bug</a>
+    <a href="https://gitlab.com/nototast/lawinprogress/-/issues">Report Bug</a>
+    ·
+    <a href="https://lawinprogress.de">Website</a>
     ·
     <a href="mailto: hello@lawinprogress.de">Request Feature</a>
     <br />
@@ -23,12 +25,25 @@
 
 ## Installation
 
-Clone the repo and run `make poetry` and `make install` to setup poetry and the relevant requriements.
+1. Clone the main branch of this repository
+2. Run `make poetry` and `make install` to setup poetry and the relevant requriements
+3. Verify the installation by running the testsuite with `make test`.
 
-
-## Web-App
+## Usage
+### How to run the web app
 
 Run `make app` to start the webapp at `localhost:8000`.
+An online version of the webapp is available at http://app.lawinprogress.de.
+### Example usage as a script
+
+To generate an updated version of the affected source_laws given a change law pdf, run
+
+```bash
+poetry run python ./scripts/generate_updated_version.py -c data/2000275.pdf
+```
+
+This will generate a before and after version of the changed laws in `./output`.
+
 
 ## Overview
 
@@ -56,26 +71,10 @@ Run `make app` to start the webapp at `localhost:8000`.
 ```
 
 
-## Example usage as a script
-To generate an updated version of the affected source_laws given a change law pdf, run
-
-```bash
-poetry run python ./scripts/generate_updated_version.py -c data/2000275.pdf
-```
-
-This will generate a before and after version of the changed laws in `./output`.
-
-
 ## Code checks & tests
 
-You can run the code checks (with isort, black and pylint) by running `make check`.
-This will first sort the imports with `isort` and then format the code with `black`.
-These tools might not agree on something, but in the end the code looks nice.
-Finally, some properties of code "quality" are checked with `pylint`.
-Try to resolve as many warnings as reasonably possible. If you are sure you want to ignore a warning,
-you can comment the line (or in the line before the warning) in the source code ```# pylint: disable=<name-of-the-warning>```.
-
-To run the tests, run `make test`.
+1. To run the code quality checks (with isort, black and pylint) by running `make check`.
+2. To run the tests, run `make test`.
 
 ## Acknowledgements
 
