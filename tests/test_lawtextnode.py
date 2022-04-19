@@ -97,3 +97,13 @@ def test_remove_child_failure(simple_lawtext_tree):
     with pytest.raises(ValueError) as execinfo:
         simple_lawtext_tree.remove_child(bulletpoint="(5)")
     assert str(execinfo.value) == "Child (5) not found"
+
+
+def test_json_conversion_invariance(simple_lawtext_tree):
+    """Test if dumping a tree as json and loading it again works well."""
+    tree_json = simple_lawtext_tree.to_json()
+    print(tree_json)
+    tree_from_json = LawTextNode.from_json(tree_json)
+    print(tree_from_json)
+
+    assert simple_lawtext_tree.to_text() == tree_from_json.to_text()
