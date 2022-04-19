@@ -1,4 +1,6 @@
 """Test the functions for change law parsing."""
+import dataclasses
+
 import pytest
 
 from lawinprogress.parsing.lawtree import LawTextNode
@@ -21,6 +23,20 @@ def test_create_change_object():
         change_type="cancelled",
         raw_text="1. - this is a raw text",
     )
+    assert change.change_type == "cancelled"
+
+
+def test_create_change_from_dict():
+    """Test if a change can be created from dict."""
+    change = Change(
+        location=["§ 1"],
+        sentences=[],
+        text=["test", "text"],
+        change_type="cancelled",
+        raw_text="1. - this is a raw text",
+    )
+
+    assert change == Change.fromdict(dataclasses.asdict(change))
 
 
 def test_parse_change_location_success():

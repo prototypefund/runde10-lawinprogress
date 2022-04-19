@@ -2,7 +2,7 @@
 import regex as re
 from anytree import NodeMixin, RenderTree
 from anytree.exporter import JsonExporter
-from anytree.importer import JsonImporter, DictImporter
+from anytree.importer import DictImporter, JsonImporter
 from natsort import natsorted
 
 
@@ -16,7 +16,9 @@ class LawTextNode(NodeMixin):
         self.text = text
         self.bulletpoint = bulletpoint
         self.parent = parent
-        self.changes = changes if changes else []  # store changes applied to this node here
+        self.changes = (
+            changes if changes else []
+        )  # store changes applied to this node here
         if children:  # set children only if given
             self.children = children
 
