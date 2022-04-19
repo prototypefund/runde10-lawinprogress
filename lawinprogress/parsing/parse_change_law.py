@@ -1,5 +1,5 @@
 """Functions to parse the change law from a line-by-line representation."""
-from dataclasses import dataclass
+import dataclasses
 from typing import List
 
 import regex as re
@@ -8,7 +8,7 @@ from lawinprogress.parsing.change_law_utils import preprocess_raw_law
 from lawinprogress.parsing.lawtree import LawTextNode
 
 
-@dataclass
+@dataclasses.dataclass
 class Change:
     """Class for storing a change request."""
 
@@ -17,6 +17,11 @@ class Change:
     text: List[str]
     change_type: str
     raw_text: str
+
+    @classmethod
+    def fromdict(cls, asdict: dict):
+        """Return an instance of a Change from a object dumped with dataclasses.asdict()."""
+        return cls(**asdict)
 
 
 def parse_changes(

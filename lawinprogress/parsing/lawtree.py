@@ -1,6 +1,8 @@
 """Implementation of the specific tree to parse laws to."""
 import regex as re
 from anytree import NodeMixin, RenderTree
+from anytree.exporter import JsonExporter
+from anytree.importer import DictImporter, JsonImporter
 from natsort import natsorted
 
 
@@ -10,11 +12,13 @@ class LawTextNode(NodeMixin):
     Used for parsing the source laws.
     """
 
-    def __init__(self, text, bulletpoint, parent=None, children=None):
+    def __init__(self, text, bulletpoint, parent=None, children=None, changes=None):
         self.text = text
         self.bulletpoint = bulletpoint
         self.parent = parent
-        self.changes = []  # store changes applied to this node here
+        self.changes = (
+            changes if changes else []
+        )  # store changes applied to this node here
         if children:  # set children only if given
             self.children = children
 
@@ -84,20 +88,33 @@ class LawTextNode(NodeMixin):
         for node in self.children[removal_index:]:
             node.bulletpoint = _decrement(node.bulletpoint)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "{} - {}".format(self.bulletpoint, self.text)
 
-    def to_text(self):
-        """return the full law text"""
+    def to_text(self) -> str:
+        """Return the full law text of the tree in a nice format."""
         treestr = ""
         for pre, _, node in RenderTree(self):
             treestr += "{}{} {}\n".format(" " * len(pre), node.bulletpoint, node.text)
         return treestr
 
     def _print(self):
+        "Print out the tree in a nice format" ""
         for pre, _, node in RenderTree(self):
             treestr = "{}{} - {}".format(pre, node.bulletpoint, node.text)
             print(treestr.ljust(8))
+
+    def to_json(self) -> str:
+        """Return the tree as a json string."""
+        exporter = JsonExporter(indent=2, sort_keys=True)
+        return exporter.export(self)
+
+    @classmethod
+    def from_json(cls, json_string: str):
+        """Create a tree object from a json string."""
+        dictimporter = DictImporter(nodecls=LawTextNode)
+        importer = JsonImporter(dictimporter=dictimporter)
+        return importer.import_(json_string)
 
 
 def _increment(bulletpoint: str) -> str:
