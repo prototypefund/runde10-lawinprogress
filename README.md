@@ -34,6 +34,7 @@
 
 Run `make app` to start the webapp at `localhost:8000`.
 An online version of the webapp is available at http://app.lawinprogress.de.
+
 ### Example usage as a script
 
 To generate an updated version of the affected source_laws given a change law pdf, run
@@ -43,6 +44,15 @@ poetry run python ./scripts/generate_updated_version.py -c data/2000275.pdf
 ```
 
 This will generate a before and after version of the changed laws in `./output`.
+
+### Process change laws to json
+You can also use the software to parse change laws to structured json files representing the changes to be made.
+
+```bash
+poetry run python ./scripts/parse_change_law_pdf.py -y data/2000275.pdf
+```
+
+Alternatively, you can have a look in the script on how to invoke the required functions yourself from python.
 
 
 ## Overview
