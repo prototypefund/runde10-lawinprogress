@@ -23,6 +23,9 @@ class Change:
         """Return an instance of a Change from a object dumped with dataclasses.asdict()."""
         return cls(**asdict)
 
+    def todict(self):
+        return dataclasses.asdict(self)
+
 
 def parse_changes(
     change_law_text: str,
