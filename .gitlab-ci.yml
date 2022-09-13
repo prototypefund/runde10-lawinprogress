@@ -2,7 +2,7 @@ image: python:3.9
 
 cache:
   paths:
-    - /.poetry/bin/
+    - /root/.local/bin/poetry
 
 variables:
   coverage_report_view: "true"
@@ -10,7 +10,7 @@ variables:
 before_script:
   - test -e $HOME/.poetry/bin/ || curl -sSL https://install.python-poetry.org | python -
   - export PATH="/root/.local/bin:$PATH"
-  - /root/.local/bin/poetry install
+  - poetry install
   - poetry --version
       
 stages:
