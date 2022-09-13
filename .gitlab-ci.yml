@@ -9,8 +9,8 @@ variables:
 
 before_script:
   - test -e $HOME/.poetry/bin/ || curl -sSL https://install.python-poetry.org | python -
-  - export PATH="$PATH:$HOME/.poetry/bin/" 
-  - source $HOME/.poetry/env 
+  - export PATH="/root/.local/bin:$PATH"
+  - source /root/.local/bin/poetry/env
   - make install
       
 stages:
