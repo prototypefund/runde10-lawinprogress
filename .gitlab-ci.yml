@@ -33,7 +33,7 @@ unit-test-job:
     - poetry run coverage report
     - poetry run coverage xml
   artifacts:
-    paths:
-    - ./coverage.xml
     reports:
-      cobertura: coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: ./coverage.xml
