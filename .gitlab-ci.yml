@@ -8,7 +8,7 @@ variables:
   coverage_report_view: "true"
 
 before_script:
-  - test -e $HOME/.poetry/bin/ || curl -sSL https://install.python-poetry.org | python -
+  - test -e /root/.local/bin/poetry || curl -sSL https://install.python-poetry.org | python -
   - export PATH="/root/.local/bin:$PATH"
   - poetry install
   - poetry --version
